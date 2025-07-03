@@ -5,14 +5,14 @@ import { Edit, Heart, Utensils, Star } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1621996346565-e326e20f545c?q=80&w=300&h=200&fit=crop", rating: 4 },
-  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1588166524941-3bf6129c4b19?q=80&w=300&h=200&fit=crop", rating: 5 },
-  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1599974579605-59dd79b18986?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1631292784640-2b242427d853?q=80&w=300&h=200&fit=crop", rating: 5 },
+  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 4 },
 ];
 
 const favoriteRecipes = [
-  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=300&h=200&fit=crop", cuisine: "American" },
-  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1623820141655-24b4a1a5b672?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
+  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=300&h=200&fit=crop", cuisine: "American" },
+  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1604513367455-d57615025750?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
 ];
 
 
