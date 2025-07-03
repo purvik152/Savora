@@ -5,12 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const recipeCategories = [
-  { name: 'Classic Italian Pizza', image: 'https://images.unsplash.com/photo-1594007654729-4072c43a443c?q=80&w=400&h=300&fit=crop', description: "Authentic, hand-tossed pizza with fresh mozzarella and basil.", hint: 'italian pizza' },
-  { name: 'Spicy Thai Green Curry', image: 'https://images.unsplash.com/photo-1628585352636-f024854e2069?q=80&w=400&h=300&fit=crop', description: "Aromatic and fiery curry made with coconut milk, herbs, and spices.", hint: 'thai curry' },
-  { name: 'Gourmet Beef Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&h=300&fit=crop', description: "Juicy, flame-grilled burgers with all the classic toppings.", hint: 'beef burger' },
-  { name: 'Fresh Summer Salads', image: 'https://images.unsplash.com/photo-1540420773420-2850a42b24af?q=80&w=400&h=300&fit=crop', description: "Vibrant and crisp salads perfect for a light and healthy meal.", hint: 'summer salad' },
-  { name: 'Decadent Chocolate Lava Cakes', image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?q=80&w=400&h=300&fit=crop', description: "Warm, molten-center chocolate cakes for the ultimate indulgence.", hint: 'lava cake' },
-  { name: 'Japanese Sushi Platter', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=400&h=300&fit=crop', description: "An exquisite selection of fresh, handcrafted sushi and sashimi.", hint: 'sushi platter' },
+  { name: 'Breakfast', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=400&h=300&fit=crop', description: "Start your day with a delicious and energizing meal.", hint: 'pancakes breakfast' },
+  { name: 'Lunch', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&h=300&fit=crop', description: "Quick and satisfying recipes to power through your afternoon.", hint: 'salad lunch' },
+  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1599305146604-a8f8d93a7e3d?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly.", hint: 'roast chicken' },
+  { name: 'Desserts', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=400&h=300&fit=crop', description: "Indulge your sweet tooth with our decadent treats.", hint: 'chocolate cake' },
+  { name: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=400&h=300&fit=crop', description: "Nutritious and tasty bites for any time of day.", hint: 'healthy snacks' },
+  { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals.", hint: 'diet meal' },
 ];
 
 export default function Home() {
@@ -97,7 +97,7 @@ export default function Home() {
               </Button>
             </div>
             <div className="animate-in fade-in-0 slide-in-from-right-12 duration-700 ease-out">
-              <Image src="https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=600&h=400&fit=crop" alt="News Feed" width={600} height={400} className="rounded-xl shadow-2xl" />
+              <Image src="https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=600&h=400&fit=crop" alt="News Feed" width={600} height={400} className="rounded-xl shadow-2xl" data-ai-hint="food news" />
             </div>
           </div>
         </div>
