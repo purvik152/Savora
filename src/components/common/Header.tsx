@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '../ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -24,7 +25,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, loading, signInWithGoogle, logout } = useAuth();
+  const { user, loading, signInWithGoogle, logout, firebaseEnabled } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,10 +110,23 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button onClick={signInWithGoogle} className="hidden md:flex">
-                <LogIn className="mr-2 h-4 w-4" />
-                Login with Google
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <span tabIndex={0} className="hidden md:flex">
+                         <Button onClick={signInWithGoogle} disabled={!firebaseEnabled}>
+                            <LogIn className="mr-2 h-4 w-4" />
+                            Login with Google
+                          </Button>
+                      </span>
+                  </TooltipTrigger>
+                  {!firebaseEnabled && (
+                      <TooltipContent>
+                          <p>Authentication is not configured.</p>
+                      </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             )}
             
             <div className="md:hidden">
@@ -152,9 +166,22 @@ export function Header() {
                       {loading ? (
                          <Skeleton className="h-10 w-full" />
                       ) : !user && (
-                        <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }}>
-                          <LogIn className="mr-2 h-4 w-4" /> Login with Google
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span tabIndex={0} className="w-full">
+                                    <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }} disabled={!firebaseEnabled}>
+                                      <LogIn className="mr-2 h-4 w-4" /> Login with Google
+                                    </Button>
+                                </span>
+                            </TooltipTrigger>
+                            {!firebaseEnabled && (
+                                <TooltipContent>
+                                    <p>Authentication is not configured.</p>
+                                </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
                       )}
                     </div>
                   </div>
