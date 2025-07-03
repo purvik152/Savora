@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChefHat, Newspaper, UtensilsCrossed } from 'lucide-react';
+import { Newspaper } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,19 +13,24 @@ const recipeCategories = [
   { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals." },
 ];
 
+const GridPattern = () => (
+    <div className="absolute inset-0 h-full w-full bg-transparent bg-[linear-gradient(to_right,hsl(var(--primary-foreground)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary-foreground)/0.05)_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_60%,transparent_100%)] -z-0"></div>
+);
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-primary to-accent text-primary-foreground">
-        <div className="container mx-auto px-4 md:px-6 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate-fade-in-up">
+      <section className="relative w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-primary/90 via-primary to-accent text-primary-foreground overflow-hidden">
+        <GridPattern />
+        <div className="container mx-auto px-4 md:px-6 text-center relative">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-12 duration-700 ease-out">
             Discover Your Next Favorite Meal
           </h1>
-          <p className="max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in-up animation-delay-300">
+          <p className="max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/90 mb-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200 ease-out fill-mode-forwards">
             Savora brings the world's kitchens to you. Explore thousands of recipes, get step-by-step guidance, and stay updated with the latest food news.
           </p>
-          <div className="animate-fade-in-up animation-delay-600">
-            <Button asChild size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-transform transform hover:scale-105">
+          <div className="animate-in fade-in slide-in-from-bottom-12 duration-700 delay-400 ease-out fill-mode-forwards">
+            <Button asChild size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-transform transform hover:scale-105 shadow-lg">
               <Link href="/#categories">Explore Recipes</Link>
             </Button>
           </div>
@@ -34,13 +39,17 @@ export default function Home() {
 
       <section id="categories" className="w-full py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 animate-in fade-in-0 slide-in-from-bottom-12 duration-700 ease-out">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">A World of Flavors Awaits</h2>
             <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick breakfasts to elaborate dinners, find the perfect recipe for any occasion.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {recipeCategories.map((category, index) => (
-              <Card key={category.name} className="overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+              <Card 
+                key={category.name} 
+                className="overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 animate-in fade-in zoom-in-95 fill-mode-forwards"
+                style={{ animationDelay: `${200 + index * 100}ms` }}
+              >
                 <CardHeader className="p-0">
                   <Image
                     src={category.image}
@@ -66,7 +75,7 @@ export default function Home() {
       <section className="w-full py-16 md:py-24 bg-secondary/50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-4">
+            <div className="space-y-4 animate-in fade-in-0 slide-in-from-left-12 duration-700 ease-out">
               <div className="inline-block rounded-lg bg-primary text-primary-foreground px-3 py-1 text-sm">New Feature</div>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Personalized Food News</h2>
               <p className="text-muted-foreground text-lg">
@@ -79,7 +88,7 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-            <div>
+            <div className="animate-in fade-in-0 slide-in-from-right-12 duration-700 ease-out">
               <Image src="https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=600&h=400&fit=crop" alt="News Feed" width={600} height={400} className="rounded-xl shadow-2xl" />
             </div>
           </div>
