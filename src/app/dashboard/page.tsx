@@ -5,14 +5,14 @@ import { Edit, Heart, Utensils, Star } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1588013273468-31508b946d4d?q=80&w=300&h=200&fit=crop", rating: 4 },
-  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1631292784640-2b24272b0472?q=80&w=300&h=200&fit=crop", rating: 5 },
-  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1621996346565-e326e20f545c?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1588166524941-3bf6129c4b19?q=80&w=300&h=200&fit=crop", rating: 5 },
+  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1599974579605-59dd79b18986?q=80&w=300&h=200&fit=crop", rating: 4 },
 ];
 
 const favoriteRecipes = [
-  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1584306670957-acf935f5033c?q=80&w=300&h=200&fit=crop", cuisine: "American" },
-  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1626201352467-5334e85744a6?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
+  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=300&h=200&fit=crop", cuisine: "American" },
+  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1623820141655-24b4a1a5b672?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
 ];
 
 
@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=128&h=128&fit=crop" alt="User" />
+            <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=128&h=128&fit=crop" alt="User" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8">

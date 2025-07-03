@@ -7,7 +7,7 @@ import Link from 'next/link';
 const recipeCategories = [
   { name: 'Breakfast', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=400&h=300&fit=crop', description: "Start your day with a delicious and energizing meal." },
   { name: 'Lunch', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&h=300&fit=crop', description: "Quick and satisfying recipes to power through your afternoon." },
-  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly." },
+  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly." },
   { name: 'Desserts', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=400&h=300&fit=crop', description: "Indulge your sweet tooth with our decadent treats." },
   { name: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=400&h=300&fit=crop', description: "Nutritious and tasty bites for any time of day." },
   { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals." },
@@ -16,7 +16,7 @@ const recipeCategories = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="relative w-full py-20 md:py-32 lg:py-40 text-primary-foreground overflow-hidden">
+      <section className="relative w-full py-20 md:py-32 lg:py-40 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&fit=crop"
@@ -27,17 +27,17 @@ export default function Home() {
             data-ai-hint="food spread"
             className="animate-zoom-in"
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/60" />
         </div>
         <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-12 duration-700 ease-out">
             Discover Your Next Favorite Meal
           </h1>
-          <p className="max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/90 mb-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200 ease-out fill-mode-forwards">
+          <p className="max-w-3xl mx-auto text-lg md:text-xl text-white/90 mb-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200 ease-out fill-mode-forwards">
             Savora brings the world's kitchens to you. Explore thousands of recipes, get step-by-step guidance, and stay updated with the latest food news.
           </p>
           <div className="animate-in fade-in slide-in-from-bottom-12 duration-700 delay-400 ease-out fill-mode-forwards">
-            <Button asChild size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-transform transform hover:scale-105 shadow-lg">
+            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 transition-transform transform hover:scale-105 shadow-lg">
               <Link href="/#categories">Explore Recipes</Link>
             </Button>
           </div>
