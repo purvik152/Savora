@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Newspaper, User, LogIn, Utensils, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LogIn, Utensils, LayoutDashboard } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from './ThemeToggle';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -66,6 +67,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             {isClient && (
               isLoggedIn ? (
                 <DropdownMenu>
