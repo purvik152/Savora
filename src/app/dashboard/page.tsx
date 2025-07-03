@@ -1,36 +1,68 @@
+'use client';
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Heart, Utensils, Star } from "lucide-react";
+import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?q=80&w=300&h=200&fit=crop", rating: 4 },
-  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1631292784640-2b242427d853?q=80&w=300&h=200&fit=crop", rating: 5 },
-  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1588166524941-3bf61aaddc4a?q=80&w=300&h=200&fit=crop", rating: 5 },
+  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=300&h=200&fit=crop", rating: 4 },
 ];
 
 const favoriteRecipes = [
-  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=300&h=200&fit=crop", cuisine: "American" },
-  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1604513367455-d57615025750?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
+  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=300&h=200&fit=crop", cuisine: "American" },
+  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1559462220-6a3bae0a8274?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
 ];
 
 
 export default function DashboardPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  const getAvatarFallback = (name: string | null | undefined) => {
+    if (!name) return 'U';
+    const parts = name.split(' ');
+    if (parts.length > 1) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return name[0].toUpperCase();
+  }
+
+  if (loading || !user) {
+    return (
+      <div className="container mx-auto px-4 py-8 md:py-12 flex justify-center items-center h-full">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=128&h=128&fit=crop" alt="User" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
+            <AvatarFallback>{getAvatarFallback(user.displayName)}</AvatarFallback>
           </Avatar>
           <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8">
             <Edit className="h-4 w-4" />
           </Button>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">John Doe</h1>
+          <h1 className="text-4xl font-bold">{user.displayName || 'Anonymous User'}</h1>
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
