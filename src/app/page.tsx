@@ -5,12 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const recipeCategories = [
-  { name: 'Breakfast', image: 'https://placehold.co/400x300.png', hint: 'pancakes breakfast', description: "Start your day with a delicious and energizing meal." },
-  { name: 'Lunch', image: 'https://placehold.co/400x300.png', hint: 'salad lunch', description: "Quick and satisfying recipes to power through your afternoon." },
-  { name: 'Dinner', image: 'https://placehold.co/400x300.png', hint: 'roast chicken', description: "Hearty and flavorful dishes to end your day perfectly." },
-  { name: 'Desserts', image: 'https://placehold.co/400x300.png', hint: 'chocolate cake', description: "Indulge your sweet tooth with our decadent treats." },
-  { name: 'Healthy Snacks', image: 'https://placehold.co/400x300.png', hint: 'healthy snacks', description: "Nutritious and tasty bites for any time of day." },
-  { name: 'Diet Plans', image: 'https://placehold.co/400x300.png', hint: 'diet meal', description: "Curated meal plans to help you achieve your health goals." },
+  { name: 'Breakfast', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=400&h=300&fit=crop', description: "Start your day with a delicious and energizing meal." },
+  { name: 'Lunch', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&h=300&fit=crop', description: "Quick and satisfying recipes to power through your afternoon." },
+  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1594041682319-158920244637?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly." },
+  { name: 'Desserts', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=400&h=300&fit=crop', description: "Indulge your sweet tooth with our decadent treats." },
+  { name: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=400&h=300&fit=crop', description: "Nutritious and tasty bites for any time of day." },
+  { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals." },
 ];
 
 export default function Home() {
@@ -48,7 +48,6 @@ export default function Home() {
                     width={400}
                     height={300}
                     className="w-full h-48 object-cover"
-                    data-ai-hint={category.hint}
                   />
                 </CardHeader>
                 <CardContent className="p-6">
@@ -81,7 +80,7 @@ export default function Home() {
               </Button>
             </div>
             <div>
-              <Image src="https://placehold.co/600x400.png" alt="News Feed" data-ai-hint="food news" width={600} height={400} className="rounded-xl shadow-2xl" />
+              <Image src="https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=600&h=400&fit=crop" alt="News Feed" width={600} height={400} className="rounded-xl shadow-2xl" />
             </div>
           </div>
         </div>

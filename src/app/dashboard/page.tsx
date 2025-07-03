@@ -5,14 +5,14 @@ import { Edit, Heart, Utensils, Star } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-  { id: 1, name: "Spaghetti Carbonara", image: "https://placehold.co/300x200.png", hint: "pasta italian", rating: 4 },
-  { id: 2, name: "Chicken Tikka Masala", image: "https://placehold.co/300x200.png", hint: "curry indian", rating: 5 },
-  { id: 3, name: "Classic Beef Tacos", image: "https://placehold.co/300x200.png", hint: "tacos mexican", rating: 4 },
+  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1588013273468-31508b946d4d?q=80&w=300&h=200&fit=crop", rating: 4 },
+  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1631292784640-2b24272b0472?q=80&w=300&h=200&fit=crop", rating: 5 },
+  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 4 },
 ];
 
 const favoriteRecipes = [
-  { id: 1, name: "Avocado Toast", image: "https://placehold.co/300x200.png", hint: "avocado toast", cuisine: "American" },
-  { id: 2, name: "Vegan Pad Thai", image: "https://placehold.co/300x200.png", hint: "pad thai", cuisine: "Thai" },
+  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1584306670957-acf935f5033c?q=80&w=300&h=200&fit=crop", cuisine: "American" },
+  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1626201352467-5334e85744a6?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
 ];
 
 
@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src="https://placehold.co/128x128.png" alt="User" />
+            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=128&h=128&fit=crop" alt="User" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8">
@@ -56,7 +56,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {pastRecipes.map(recipe => (
                   <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                    <Image src={recipe.image} alt={recipe.name} data-ai-hint={recipe.hint} width={80} height={60} className="rounded-md object-cover" />
+                    <Image src={recipe.image} alt={recipe.name} width={80} height={60} className="rounded-md object-cover" />
                     <div className="flex-grow">
                       <h3 className="font-semibold">{recipe.name}</h3>
                       <div className="flex items-center gap-1">
@@ -82,7 +82,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {favoriteRecipes.map(recipe => (
                   <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                     <Image src={recipe.image} alt={recipe.name} data-ai-hint={recipe.hint} width={64} height={64} className="rounded-full object-cover" />
+                     <Image src={recipe.image} alt={recipe.name} width={64} height={64} className="rounded-full object-cover" />
                      <div>
                        <h3 className="font-semibold">{recipe.name}</h3>
                        <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
