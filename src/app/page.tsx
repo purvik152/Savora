@@ -13,16 +13,23 @@ const recipeCategories = [
   { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals." },
 ];
 
-const GridPattern = () => (
-    <div className="absolute inset-0 h-full w-full bg-transparent bg-[linear-gradient(to_right,hsl(var(--primary-foreground)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary-foreground)/0.05)_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_60%,transparent_100%)] -z-0"></div>
-);
-
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="relative w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-primary/90 via-primary to-accent text-primary-foreground overflow-hidden">
-        <GridPattern />
-        <div className="container mx-auto px-4 md:px-6 text-center relative">
+      <section className="relative w-full py-20 md:py-32 lg:py-40 text-primary-foreground overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&fit=crop"
+            alt="A beautiful spread of food"
+            fill
+            style={{ objectFit: 'cover' }}
+            priority
+            data-ai-hint="food spread"
+            className="animate-zoom-in"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-12 duration-700 ease-out">
             Discover Your Next Favorite Meal
           </h1>
