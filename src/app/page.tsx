@@ -7,7 +7,7 @@ import Link from 'next/link';
 const recipeCategories = [
   { name: 'Breakfast', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=400&h=300&fit=crop', description: "Start your day with a delicious and energizing meal." },
   { name: 'Lunch', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&h=300&fit=crop', description: "Quick and satisfying recipes to power through your afternoon." },
-  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1594041682319-158920244637?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly." },
+  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?q=80&w=400&h=300&fit=crop', description: "Hearty and flavorful dishes to end your day perfectly." },
   { name: 'Desserts', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=400&h=300&fit=crop', description: "Indulge your sweet tooth with our decadent treats." },
   { name: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590?q=80&w=400&h=300&fit=crop', description: "Nutritious and tasty bites for any time of day." },
   { name: 'Diet Plans', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=400&h=300&fit=crop', description: "Curated meal plans to help you achieve your health goals." },
