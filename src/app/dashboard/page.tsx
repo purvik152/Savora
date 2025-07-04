@@ -1,8 +1,8 @@
 
 'use client';
 
-import { Suspense, useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,20 +20,52 @@ const pastRecipes = [
     { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1629896599245-75b51079315d?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
   ];
 
+interface User {
+  username: string;
+  email: string;
+}
 
-function DashboardContent() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get('username');
+function LoadingDashboard() {
+  return (
+    <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
+      <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // This code runs only on the client
+    const storedUser = localStorage.getItem('savora-user');
+    const storedAvatar = localStorage.getItem('savora-avatar');
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      // If no user, redirect to login
+      router.push('/login');
+    }
+
+    if (storedAvatar) {
+      setAvatarSrc(storedAvatar);
+    }
+  }, [router]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (typeof e.target?.result === 'string') {
-          setAvatarSrc(e.target.result);
+        const result = e.target?.result;
+        if (typeof result === 'string') {
+          setAvatarSrc(result);
+          localStorage.setItem('savora-avatar', result); // Save avatar to localStorage
         }
       };
       reader.readAsDataURL(file);
@@ -44,13 +76,17 @@ function DashboardContent() {
     fileInputRef.current?.click();
   };
   
+  if (!user) {
+    return <LoadingDashboard />;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={avatarSrc} alt={username || 'User'} data-ai-hint="avatar user" />
-            <AvatarFallback>{username ? username.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
+            <AvatarImage src={avatarSrc} alt={user.username} data-ai-hint="avatar user" />
+            <AvatarFallback>{user.username ? user.username.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
           </Avatar>
            <input
             type="file"
@@ -64,7 +100,7 @@ function DashboardContent() {
           </Button>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{username || 'Savora User'}</h1>
+          <h1 className="text-4xl font-bold">{user.username}</h1>
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
@@ -129,22 +165,5 @@ function DashboardContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-function LoadingDashboard() {
-  return (
-    <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
-      <Loader2 className="h-16 w-16 animate-spin text-primary" />
-      <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
-    </div>
-  );
-}
-
-export default function DashboardPage() {
-  return (
-    <Suspense fallback={<LoadingDashboard />}>
-      <DashboardContent />
-    </Suspense>
   )
 }

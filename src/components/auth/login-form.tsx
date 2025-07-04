@@ -45,12 +45,18 @@ export function LoginForm() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         toast({
           title: 'Login Successful',
           description: 'Redirecting to your dashboard...',
         });
-        router.push(`/dashboard?username=${values.username}`);
+        
+        // Save user data to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('savora-user', JSON.stringify(data.user));
+        }
+
+        router.push(`/dashboard`);
       } else {
         toast({
           variant: 'destructive',
