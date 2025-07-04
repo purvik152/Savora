@@ -3,17 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, LogIn, Utensils, LayoutDashboard, LogOut } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
-import { useAuth } from '@/contexts/AuthContext';
-import { Skeleton } from '../ui/skeleton';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -25,7 +20,6 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, loading, signInWithGoogle, logout, firebaseEnabled } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,74 +33,6 @@ export function Header() {
   }, []);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  const getAvatarFallback = (name: string | null | undefined) => {
-    if (!name) return 'U';
-    const parts = name.split(' ');
-    if (parts.length > 1) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name[0].toUpperCase();
-  }
-
-  const AuthButton = () => {
-    if (!firebaseEnabled) {
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span tabIndex={0}> {/* Wrapper for disabled button */}
-                <Button disabled>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login Disabled
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Firebase is not configured. Please add credentials to .env and restart the server.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    }
-
-    return (
-      <Button onClick={signInWithGoogle}>
-        <LogIn className="mr-2 h-4 w-4" />
-        Login with Google
-      </Button>
-    );
-  };
-  
-  const MobileAuthButton = () => {
-     if (!firebaseEnabled) {
-      return (
-         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="w-full" tabIndex={0}>
-                <Button className="w-full" disabled>
-                  <LogIn className="mr-2 h-4 w-4" /> Login Disabled
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Firebase is not configured.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    }
-    
-    return (
-      <Button 
-        className="w-full" 
-        onClick={() => { signInWithGoogle(); closeMobileMenu(); }} 
-      >
-        <LogIn className="mr-2 h-4 w-4" /> Login with Google
-      </Button>
-    )
-  }
 
   return (
     <header className={cn("sticky top-0 z-50 w-full transition-all duration-300", isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent")}>
@@ -133,49 +59,6 @@ export function Header() {
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            {loading ? (
-               <div className="flex items-center gap-2">
-                 <Skeleton className="h-10 w-10 rounded-full" />
-                 <Skeleton className="h-6 w-20 hidden md:block" />
-               </div>
-            ) : user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
-                      <AvatarFallback>{getAvatarFallback(user.displayName)}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                     <Link href="#"><Utensils className="mr-2 h-4 w-4" /> My Recipes</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="hidden md:flex">
-                <AuthButton />
-              </div>
-            )}
             
             <div className="md:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -210,9 +93,6 @@ export function Header() {
                         </Link>
                       ))}
                     </nav>
-                    <div className="mt-8 border-t pt-6">
-                      {!loading && !user && <MobileAuthButton />}
-                    </div>
                   </div>
                 </SheetContent>
               </Sheet>

@@ -1,13 +1,9 @@
 'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
+import { Edit, Heart, Utensils, Star } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
@@ -23,56 +19,21 @@ const pastRecipes = [
 
 
 export default function DashboardPage() {
-  const { user, loading, firebaseEnabled } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !user && firebaseEnabled) {
-      router.push('/');
-    }
-  }, [user, loading, router, firebaseEnabled]);
-
-  const getAvatarFallback = (name: string | null | undefined) => {
-    if (!name) return 'U';
-    const parts = name.split(' ');
-    if (parts.length > 1) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name[0].toUpperCase();
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8 md:py-12 flex justify-center items-center min-h-[calc(100vh-200px)]">
-        <Loader2 className="h-16 w-16 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!user) {
-     return (
-      <div className="container mx-auto px-4 py-8 md:py-12 text-center">
-        <h1 className="text-3xl font-bold">Access Denied</h1>
-        <p className="text-muted-foreground mt-2">Please log in to view your dashboard.</p>
-        <Button onClick={() => router.push('/')} className="mt-4">Go to Homepage</Button>
-      </div>
-    )
-  }
-
+  
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
-            <AvatarFallback>{getAvatarFallback(user.displayName)}</AvatarFallback>
+            <AvatarImage src={'https://placehold.co/128x128.png'} alt={'User'} data-ai-hint="avatar user" />
+            <AvatarFallback>SU</AvatarFallback>
           </Avatar>
           <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8">
             <Edit className="h-4 w-4" />
           </Button>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{user.displayName || 'Anonymous User'}</h1>
+          <h1 className="text-4xl font-bold">Savora User</h1>
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">

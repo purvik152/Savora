@@ -5,7 +5,6 @@ import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
-import { AuthProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Savora',
@@ -38,12 +37,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
             <Toaster />
-          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
