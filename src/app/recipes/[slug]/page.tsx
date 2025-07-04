@@ -1,10 +1,16 @@
 
+'use client';
+
+import { useState } from 'react';
 import { notFound } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, CheckCircle } from "lucide-react";
+import { Clock, Users, Flame, CheckCircle, Mic, Loader2 } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
+import { Button } from '@/components/ui/button';
+import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
+import { useToast } from '@/hooks/use-toast';
 
 interface RecipePageProps {
   params: {
@@ -14,9 +20,34 @@ interface RecipePageProps {
 
 export default function RecipePage({ params }: RecipePageProps) {
   const recipe = getRecipeBySlug(params.slug);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const { toast } = useToast();
 
   if (!recipe) {
     notFound();
+  }
+
+  const handleVoiceAssistant = async () => {
+    setIsLoadingAudio(true);
+    setAudioSrc(null);
+
+    const instructionsText = recipe.instructions.map((step, index) => `Step ${index + 1}. ${step}`).join('\n\n');
+    const fullText = `Now, let's cook ${recipe.title}. \n\nHere are the instructions. \n\n${instructionsText}`;
+
+    try {
+        const result = await recipeToSpeech(fullText);
+        setAudioSrc(result.audioDataUri);
+    } catch (error) {
+        console.error("Failed to generate recipe audio:", error);
+        toast({
+            variant: "destructive",
+            title: "Voice Assistant Error",
+            description: "Sorry, I couldn't generate the audio instructions. Please try again."
+        });
+    } finally {
+        setIsLoadingAudio(false);
+    }
   }
 
   return (
@@ -60,7 +91,29 @@ export default function RecipePage({ params }: RecipePageProps) {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">Instructions</h2>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold">Instructions</h2>
+                    <Button onClick={handleVoiceAssistant} disabled={isLoadingAudio}>
+                        {isLoadingAudio ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Generating...
+                            </>
+                        ) : (
+                            <>
+                                <Mic className="mr-2 h-4 w-4" />
+                                Cook with Voice
+                            </>
+                        )}
+                    </Button>
+                  </div>
+                  {audioSrc && (
+                    <div className="mb-6">
+                        <audio controls autoPlay src={audioSrc} className="w-full">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                  )}
                   <ol className="space-y-6">
                     {recipe.instructions.map((step, index) => (
                       <li key={index} className="flex items-start gap-4">
