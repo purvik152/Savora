@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
@@ -46,6 +47,65 @@ export function Header() {
       return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
     }
     return name[0].toUpperCase();
+  }
+
+  const AuthButton = () => {
+    if (!firebaseEnabled) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span tabIndex={0}> {/* Wrapper for disabled button */}
+                <Button disabled>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Login Disabled
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Firebase is not configured. Please add credentials to .env and restart the server.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return (
+      <Button onClick={signInWithGoogle}>
+        <LogIn className="mr-2 h-4 w-4" />
+        Login with Google
+      </Button>
+    );
+  };
+  
+  const MobileAuthButton = () => {
+     if (!firebaseEnabled) {
+      return (
+         <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="w-full" tabIndex={0}>
+                <Button className="w-full" disabled>
+                  <LogIn className="mr-2 h-4 w-4" /> Login Disabled
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Firebase is not configured.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
+    
+    return (
+      <Button 
+        className="w-full" 
+        onClick={() => { signInWithGoogle(); closeMobileMenu(); }} 
+      >
+        <LogIn className="mr-2 h-4 w-4" /> Login with Google
+      </Button>
+    )
   }
 
   return (
@@ -113,10 +173,7 @@ export function Header() {
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex">
-                <Button onClick={signInWithGoogle} disabled={!firebaseEnabled}>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login with Google
-                </Button>
+                <AuthButton />
               </div>
             )}
             
@@ -154,15 +211,7 @@ export function Header() {
                       ))}
                     </nav>
                     <div className="mt-8 border-t pt-6">
-                      {!loading && !user && (
-                         <Button 
-                          className="w-full" 
-                          onClick={() => { signInWithGoogle(); closeMobileMenu(); }} 
-                          disabled={!firebaseEnabled}
-                        >
-                          <LogIn className="mr-2 h-4 w-4" /> Login with Google
-                        </Button>
-                      )}
+                      {!loading && !user && <MobileAuthButton />}
                     </div>
                   </div>
                 </SheetContent>
