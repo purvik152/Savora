@@ -17,6 +17,7 @@ let firebaseEnabled = false;
 // We need to check for the required keys to initialize Firebase.
 if (
   firebaseConfig.apiKey &&
+  firebaseConfig.apiKey !== 'YOUR_API_KEY' &&
   firebaseConfig.authDomain &&
   firebaseConfig.projectId &&
   firebaseConfig.storageBucket &&
@@ -32,7 +33,7 @@ if (
     // Keep firebaseEnabled as false
   }
 } else {
-    console.warn("Firebase configuration is incomplete. Authentication features will be disabled.");
+    console.warn("Firebase configuration is incomplete or uses placeholder values. Authentication features will be disabled.");
 }
 
 export { app, auth, firebaseEnabled };

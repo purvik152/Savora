@@ -11,26 +11,26 @@ import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-  { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?q=80&w=300&h=200&fit=crop", rating: 4 },
-  { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1588166524941-3bf61aaddc4a?q=80&w=300&h=200&fit=crop", rating: 5 },
-  { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=300&h=200&fit=crop", rating: 4 },
-];
-
-const favoriteRecipes = [
-  { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=300&h=200&fit=crop", cuisine: "American" },
-  { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1559462220-6a3bae0a8274?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
-];
+    { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=300&h=200&fit=crop", rating: 4 },
+    { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 5 },
+    { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1599423300042-4c89e578a934?q=80&w=300&h=200&fit=crop", rating: 4 },
+  ];
+  
+  const favoriteRecipes = [
+    { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1584308666744-8480436158ae?q=80&w=300&h=200&fit=crop", cuisine: "American" },
+    { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1629896599245-75b51079315d?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
+  ];
 
 
 export default function DashboardPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, firebaseEnabled } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && firebaseEnabled) {
       router.push('/');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, firebaseEnabled]);
 
   const getAvatarFallback = (name: string | null | undefined) => {
     if (!name) return 'U';
@@ -41,12 +41,22 @@ export default function DashboardPage() {
     return name[0].toUpperCase();
   }
 
-  if (loading || !user) {
+  if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 md:py-12 flex justify-center items-center h-full">
+      <div className="container mx-auto px-4 py-8 md:py-12 flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (!user) {
+     return (
+      <div className="container mx-auto px-4 py-8 md:py-12 text-center">
+        <h1 className="text-3xl font-bold">Access Denied</h1>
+        <p className="text-muted-foreground mt-2">Please log in to view your dashboard.</p>
+        <Button onClick={() => router.push('/')} className="mt-4">Go to Homepage</Button>
+      </div>
+    )
   }
 
   return (

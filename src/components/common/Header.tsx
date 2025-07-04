@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/#categories', label: 'Recipes' },
+  { href: '/#recipes', label: 'Recipes' },
   { href: '/news', label: 'News' },
 ];
 
@@ -75,7 +75,10 @@ export function Header() {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             {loading ? (
-              <Skeleton className="h-10 w-24 hidden md:block" />
+               <div className="flex items-center gap-2">
+                 <Skeleton className="h-10 w-10 rounded-full" />
+                 <Skeleton className="h-6 w-20 hidden md:block" />
+               </div>
             ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -163,9 +166,7 @@ export function Header() {
                       ))}
                     </nav>
                     <div className="mt-8 border-t pt-6">
-                      {loading ? (
-                         <Skeleton className="h-10 w-full" />
-                      ) : !user && (
+                      {!loading && !user && (
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
