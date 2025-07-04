@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
 import { Utensils, MapPin } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
   <Link href={`/recipes/${recipe.slug}`} className="block h-full">
@@ -40,7 +42,7 @@ export default function RecipesPage() {
       </div>
 
       <section id="cuisines" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8">Explore by Cuisine</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center">Explore by Cuisine</h2>
         {cuisines.map((cuisine) => {
           const cuisineRecipes = recipes
             .filter((r) => r.cuisine === cuisine)
@@ -62,25 +64,41 @@ export default function RecipesPage() {
         })}
       </section>
 
-      <section id="breakfast" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3"><Utensils className="text-primary" /> Breakfast</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {breakfastRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-        </div>
-      </section>
+      <Separator className="my-16" />
 
-      <section id="lunch" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3"><Utensils className="text-primary" /> Lunch</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {lunchRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-        </div>
-      </section>
-      
-      <section id="dinner">
-        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3"><Utensils className="text-primary" /> Dinner</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {dinnerRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-        </div>
+      <section id="meal-types">
+         <h2 className="text-3xl font-bold mb-8 text-center">Or Browse by Meal Type</h2>
+        <Tabs defaultValue="breakfast" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="breakfast">
+               Breakfast
+            </TabsTrigger>
+            <TabsTrigger value="lunch">
+               Lunch
+            </TabsTrigger>
+            <TabsTrigger value="dinner">
+               Dinner
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="breakfast">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {breakfastRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="lunch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {lunchRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="dinner">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {dinnerRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
+            </div>
+          </TabsContent>
+        </Tabs>
       </section>
     </div>
   );
