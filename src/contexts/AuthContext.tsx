@@ -21,7 +21,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // If firebase is not enabled, we don't need to listen for auth changes.
     if (!firebaseEnabled || !auth) {
       setLoading(false);
       return;
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = async () => {
-    console.log("Attempting to sign in with Google...");
     if (!firebaseEnabled || !auth) {
        toast({
         variant: "destructive",
@@ -52,12 +50,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         title: "Logged In",
         description: "Successfully logged in with Google.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with Google: ", error);
+      let description = "Could not log in with Google. Please try again.";
+      if (error.code === 'auth/popup-blocked') {
+        description = "Pop-up blocked by browser. Please allow pop-ups for this site.";
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        description = "Login was cancelled. Please try again.";
+      }
        toast({
         variant: "destructive",
         title: "Login Failed",
-        description: "Could not log in with Google. Please try again.",
+        description: description,
       });
     }
   };

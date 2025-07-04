@@ -114,21 +114,26 @@ export function Header() {
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button onClick={signInWithGoogle} disabled={!firebaseEnabled}>
-                          <LogIn className="mr-2 h-4 w-4" />
-                          Login with Google
-                        </Button>
-                    </TooltipTrigger>
-                    {!firebaseEnabled && (
-                        <TooltipContent>
-                            <p>Authentication is not configured.</p>
-                        </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
+                {firebaseEnabled ? (
+                    <Button onClick={signInWithGoogle}>
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Login with Google
+                    </Button>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                          <Button disabled>
+                            <LogIn className="mr-2 h-4 w-4" />
+                            Login with Google
+                          </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                          <p>Authentication is not configured.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
             )}
             
@@ -167,20 +172,24 @@ export function Header() {
                     </nav>
                     <div className="mt-8 border-t pt-6">
                       {!loading && !user && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }} disabled={!firebaseEnabled}>
-                                  <LogIn className="mr-2 h-4 w-4" /> Login with Google
-                                </Button>
-                            </TooltipTrigger>
-                            {!firebaseEnabled && (
-                                <TooltipContent>
-                                    <p>Authentication is not configured.</p>
-                                </TooltipContent>
-                            )}
-                          </Tooltip>
-                        </TooltipProvider>
+                        firebaseEnabled ? (
+                          <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }}>
+                            <LogIn className="mr-2 h-4 w-4" /> Login with Google
+                          </Button>
+                        ) : (
+                           <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                  <Button className="w-full" disabled>
+                                    <LogIn className="mr-2 h-4 w-4" /> Login with Google
+                                  </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                  <p>Authentication is not configured.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )
                       )}
                     </div>
                   </div>
