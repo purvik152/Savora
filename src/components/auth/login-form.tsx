@@ -10,8 +10,10 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
+  username: z.string().min(3, { message: 'Username must be at least 3 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
@@ -19,10 +21,12 @@ const formSchema = z.object({
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: '',
       email: '',
       password: '',
     },
@@ -38,14 +42,26 @@ export function LoginForm() {
         title: 'Login Successful',
         description: 'Redirecting to your dashboard...',
       });
-      // In a real app, you would redirect here:
-      // router.push('/dashboard');
+      router.push(`/dashboard?username=${values.username}`);
     }, 1000);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="your_username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"

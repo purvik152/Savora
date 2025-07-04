@@ -1,11 +1,12 @@
 
 'use client';
 
-import { useState, useRef } from "react";
+import { Suspense, useState, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Heart, Utensils, Star } from "lucide-react";
+import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
@@ -20,7 +21,9 @@ const pastRecipes = [
   ];
 
 
-export default function DashboardPage() {
+function DashboardContent() {
+  const searchParams = useSearchParams();
+  const username = searchParams.get('username');
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,8 +49,8 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={avatarSrc} alt={'User'} data-ai-hint="avatar user" />
-            <AvatarFallback>SU</AvatarFallback>
+            <AvatarImage src={avatarSrc} alt={username || 'User'} data-ai-hint="avatar user" />
+            <AvatarFallback>{username ? username.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
           </Avatar>
            <input
             type="file"
@@ -61,7 +64,7 @@ export default function DashboardPage() {
           </Button>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">Savora User</h1>
+          <h1 className="text-4xl font-bold">{username || 'Savora User'}</h1>
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
@@ -126,5 +129,22 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function LoadingDashboard() {
+  return (
+    <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
+      <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<LoadingDashboard />}>
+      <DashboardContent />
+    </Suspense>
   )
 }
