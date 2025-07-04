@@ -13,10 +13,10 @@ import {z} from 'genkit';
 import wav from 'wav';
 import {googleAI} from '@genkit-ai/googleai';
 
-export const RecipeToSpeechInputSchema = z.string();
+const RecipeToSpeechInputSchema = z.string();
 export type RecipeToSpeechInput = z.infer<typeof RecipeToSpeechInputSchema>;
 
-export const RecipeToSpeechOutputSchema = z.object({
+const RecipeToSpeechOutputSchema = z.object({
   audioDataUri: z.string().describe("The generated audio as a data URI in WAV format. Expected format: 'data:audio/wav;base64,<encoded_data>'."),
 });
 export type RecipeToSpeechOutput = z.infer<typeof RecipeToSpeechOutputSchema>;
