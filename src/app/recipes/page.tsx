@@ -27,6 +27,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
 );
 
 export default function RecipesPage() {
+  const featuredRecipes = recipes.slice(0, 6);
   const breakfastRecipes = recipes.filter(r => r.category === 'Breakfast');
   const lunchRecipes = recipes.filter(r => r.category === 'Lunch');
   const dinnerRecipes = recipes.filter(r => r.category === 'Dinner');
@@ -37,6 +38,13 @@ export default function RecipesPage() {
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Explore Our Recipes</h1>
         <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick bites to family feasts, find your next favorite meal here.</p>
       </div>
+
+      <section id="featured" className="mb-16">
+        <h2 className="text-3xl font-bold mb-8">Featured Recipes</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
+        </div>
+      </section>
 
       <section id="breakfast" className="mb-16">
         <h2 className="text-3xl font-bold mb-8 flex items-center gap-3"><Utensils className="text-primary" /> Breakfast</h2>
