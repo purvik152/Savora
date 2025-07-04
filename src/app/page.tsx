@@ -35,10 +35,9 @@ export default function Home() {
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&fit=crop"
             alt="A beautiful spread of food"
             fill
-            style={{ objectFit: 'cover' }}
             priority
             data-ai-hint="food spread"
-            className="animate-zoom-in"
+            className="animate-zoom-in object-cover"
           />
           <div className="absolute inset-0 bg-black/60" />
         </div>
