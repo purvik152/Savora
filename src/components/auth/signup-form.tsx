@@ -35,18 +35,41 @@ export function SignUpForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log(values);
-    // Mock API call
-    setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: 'Account Created',
-        description: 'You have successfully signed up!',
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: values.email, password: values.password }),
       });
-      // In a real app, you would likely switch to the login tab or log the user in directly.
-    }, 1000);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: 'Account Created',
+          description: 'You have successfully signed up! Please log in.',
+        });
+        form.reset();
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Sign Up Failed',
+          description: data.message || 'An unexpected error occurred.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign Up Error',
+        description: 'Could not connect to the server. Please try again later.',
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

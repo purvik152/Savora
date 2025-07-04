@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 const formSchema = z.object({
   username: z.string().min(3, { message: 'Username must be at least 3 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
+  password: z.string().min(1, { message: 'Password is required. (Hint: use "password123")' }),
 });
 
 export function LoginForm() {
@@ -32,18 +32,41 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log(values);
-    // Mock API call
-    setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: 'Login Successful',
-        description: 'Redirecting to your dashboard...',
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
       });
-      router.push(`/dashboard?username=${values.username}`);
-    }, 1000);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: 'Login Successful',
+          description: 'Redirecting to your dashboard...',
+        });
+        router.push(`/dashboard?username=${values.username}`);
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: data.message || 'An unexpected error occurred.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Error',
+        description: 'Could not connect to the server. Please try again later.',
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
