@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,14 +12,11 @@ import { Button } from '@/components/ui/button';
 import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
 import { useToast } from '@/hooks/use-toast';
 
-interface RecipePageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default function RecipePage({ params }: RecipePageProps) {
-  const recipe = getRecipeBySlug(params.slug);
+export default function RecipePage() {
+  const params = useParams();
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const recipe = getRecipeBySlug(slug);
+  
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const { toast } = useToast();
