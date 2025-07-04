@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/#recipes', label: 'Recipes' },
   { href: '/news', label: 'News' },
+  { href: '/dashboard', label: 'Dashboard' },
 ];
 
 export function Header() {
@@ -57,8 +59,11 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <ThemeToggle />
+            <Button asChild>
+                <Link href="/login">Login</Link>
+            </Button>
             
             <div className="md:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -92,6 +97,9 @@ export function Header() {
                           {link.label}
                         </Link>
                       ))}
+                       <Button asChild onClick={closeMobileMenu}>
+                          <Link href="/login">Login</Link>
+                       </Button>
                     </nav>
                   </div>
                 </SheetContent>
