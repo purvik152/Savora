@@ -98,7 +98,7 @@ export const recipes: Recipe[] = [
     title: 'Berry Smoothie Bowl',
     category: 'Breakfast',
     cuisine: 'American',
-    image: 'https://images.unsplash.com/photo-1533611495278-b1a8a2a78436?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1727243831783-7ebaafc9ac26?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YmVycnklMjBzbW90aGklMjBib3dsfGVufDB8fDB8fHwy',
     imageHint: 'smoothie bowl',
     description: 'A vibrant and antioxidant-rich smoothie bowl topped with fresh fruits and granola.',
     prepTime: '10 mins',
