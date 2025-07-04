@@ -9,17 +9,19 @@ import { Separator } from "@/components/ui/separator";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
   <Link href={`/recipes/${recipe.slug}`} className="block h-full">
-    <Card className="h-full flex flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2">
-      <div className="relative w-full h-48">
-        <Image
-          src={recipe.image}
-          alt={recipe.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          data-ai-hint={recipe.imageHint}
-        />
-      </div>
+    <Card className="h-full flex flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
+      <CardHeader className="p-0 border-0">
+        <div className="relative w-full h-48 overflow-hidden">
+          <Image
+            src={recipe.image}
+            alt={recipe.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            data-ai-hint={recipe.imageHint}
+          />
+        </div>
+      </CardHeader>
       <CardContent className="p-6 flex flex-col flex-grow">
         <CardTitle className="text-xl font-semibold mb-2 line-clamp-2">{recipe.title}</CardTitle>
         <p className="text-muted-foreground line-clamp-3 flex-grow">{recipe.description}</p>
