@@ -21,9 +21,14 @@ const navLinks = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    // Check login status from localStorage
+    const user = localStorage.getItem('savora-user');
+    setIsLoggedIn(!!user);
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -32,7 +37,7 @@ export function Header() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [pathname]); // Re-check on route change
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -61,9 +66,11 @@ export function Header() {
 
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            <Button asChild>
-                <Link href="/login">Login</Link>
-            </Button>
+            {!isLoggedIn && (
+                <Button asChild>
+                    <Link href="/login">Login</Link>
+                </Button>
+            )}
             
             <div className="md:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -97,9 +104,11 @@ export function Header() {
                           {link.label}
                         </Link>
                       ))}
-                       <Button asChild onClick={closeMobileMenu}>
-                          <Link href="/login">Login</Link>
-                       </Button>
+                      {!isLoggedIn && (
+                         <Button asChild onClick={closeMobileMenu}>
+                            <Link href="/login">Login</Link>
+                         </Button>
+                      )}
                     </nav>
                   </div>
                 </SheetContent>

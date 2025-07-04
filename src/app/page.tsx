@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Newspaper } from 'lucide-react';
@@ -50,7 +51,7 @@ export default function Home() {
           </p>
           <div className="animate-in fade-in slide-in-from-bottom-12 duration-700 delay-400 ease-out fill-mode-forwards">
             <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 transition-transform transform hover:scale-105 shadow-lg">
-              <Link href="/#recipes">Explore Recipes</Link>
+              <Link href="/recipes">Explore Recipes</Link>
             </Button>
           </div>
         </div>
@@ -83,7 +84,7 @@ export default function Home() {
                   <CardTitle className="text-2xl font-semibold mb-2">{category.name}</CardTitle>
                   <p className="text-muted-foreground">{category.description}</p>
                    <Button variant="link" className="p-0 mt-4 text-primary" asChild>
-                    <Link href="#">View Recipes &rarr;</Link>
+                    <Link href="/recipes">View Recipes &rarr;</Link>
                   </Button>
                 </CardContent>
               </Card>
