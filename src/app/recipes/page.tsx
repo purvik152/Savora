@@ -1,27 +1,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
-import { Utensils, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
-  <Link href={`/recipes/${recipe.slug}`} className="block h-full">
-    <Card className="h-full flex flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
-      <CardHeader className="p-0 border-0">
-        <div className="relative w-full h-48 overflow-hidden">
-          <Image
-            src={recipe.image}
-            alt={recipe.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            data-ai-hint={recipe.imageHint}
-          />
-        </div>
-      </CardHeader>
+  <Link href={`/recipes/${recipe.slug}`} className="block">
+    <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
+      <div className="relative w-full h-48">
+        <Image
+          src={recipe.image}
+          alt={recipe.title}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          data-ai-hint={recipe.imageHint}
+        />
+      </div>
       <CardContent className="p-6 flex flex-col flex-grow">
         <CardTitle className="text-xl font-semibold mb-2 line-clamp-2">{recipe.title}</CardTitle>
         <p className="text-muted-foreground line-clamp-3 flex-grow">{recipe.description}</p>
