@@ -64,7 +64,7 @@ export const recipes: Recipe[] = [
     title: 'Avocado Toast with Egg',
     category: 'Breakfast',
     cuisine: 'American',
-    image: 'https://images.unsplash.com/photo-1484723051597-62b14d852138?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=600&h=400&fit=crop',
     imageHint: 'avocado toast',
     description: 'A simple, healthy, and satisfying breakfast. Packed with protein and healthy fats.',
     prepTime: '5 mins',
