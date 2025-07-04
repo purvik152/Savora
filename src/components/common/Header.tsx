@@ -113,23 +113,23 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                      <span tabIndex={0} className="hidden md:flex">
-                         <Button onClick={signInWithGoogle} disabled={!firebaseEnabled}>
-                            <LogIn className="mr-2 h-4 w-4" />
-                            Login with Google
-                          </Button>
-                      </span>
-                  </TooltipTrigger>
-                  {!firebaseEnabled && (
-                      <TooltipContent>
-                          <p>Authentication is not configured.</p>
-                      </TooltipContent>
-                  )}
-                </Tooltip>
-              </TooltipProvider>
+              <div className="hidden md:flex">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button onClick={signInWithGoogle} disabled={!firebaseEnabled}>
+                          <LogIn className="mr-2 h-4 w-4" />
+                          Login with Google
+                        </Button>
+                    </TooltipTrigger>
+                    {!firebaseEnabled && (
+                        <TooltipContent>
+                            <p>Authentication is not configured.</p>
+                        </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             )}
             
             <div className="md:hidden">
@@ -170,11 +170,9 @@ export function Header() {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                                <span tabIndex={0} className="w-full">
-                                    <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }} disabled={!firebaseEnabled}>
-                                      <LogIn className="mr-2 h-4 w-4" /> Login with Google
-                                    </Button>
-                                </span>
+                                <Button className="w-full" onClick={() => { signInWithGoogle(); closeMobileMenu(); }} disabled={!firebaseEnabled}>
+                                  <LogIn className="mr-2 h-4 w-4" /> Login with Google
+                                </Button>
                             </TooltipTrigger>
                             {!firebaseEnabled && (
                                 <TooltipContent>
