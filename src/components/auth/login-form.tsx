@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 const formSchema = z.object({
   username: z.string().min(3, { message: 'Username must be at least 3 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email.' }),
-  password: z.string().min(1, { message: 'Password is required. (Hint: use "password123")' }),
+  password: z.string().min(1, { message: 'Password is required.' }),
 });
 
 export function LoginForm() {

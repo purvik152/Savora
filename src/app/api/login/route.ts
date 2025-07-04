@@ -13,8 +13,8 @@ export async function POST(request: Request) {
     }
 
     // MOCK: In a real app, you would validate credentials against a database.
-    // For this demo, we'll check for a mock password. Use 'password123' to log in.
-    if (password === 'password123') {
+    // For this demo, we'll accept any password to simulate a successful login.
+    if (password) {
       // MOCK: In a real app, you'd generate a session token (e.g., JWT) here.
       return NextResponse.json({
         success: true,
