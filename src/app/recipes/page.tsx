@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
-import { Utensils } from "lucide-react";
+import { Utensils, MapPin } from "lucide-react";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
   <Link href={`/recipes/${recipe.slug}`} className="block h-full">
@@ -27,7 +27,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
 );
 
 export default function RecipesPage() {
-  const featuredRecipes = recipes.slice(0, 6);
+  const cuisines = [...new Set(recipes.map((r) => r.cuisine))];
   const breakfastRecipes = recipes.filter(r => r.category === 'Breakfast');
   const lunchRecipes = recipes.filter(r => r.category === 'Lunch');
   const dinnerRecipes = recipes.filter(r => r.category === 'Dinner');
@@ -39,11 +39,27 @@ export default function RecipesPage() {
         <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick bites to family feasts, find your next favorite meal here.</p>
       </div>
 
-      <section id="featured" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8">Featured Recipes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-        </div>
+      <section id="cuisines" className="mb-16">
+        <h2 className="text-3xl font-bold mb-8">Explore by Cuisine</h2>
+        {cuisines.map((cuisine) => {
+          const cuisineRecipes = recipes
+            .filter((r) => r.cuisine === cuisine)
+            .slice(0, 3);
+          if (cuisineRecipes.length === 0) return null;
+
+          return (
+            <div key={cuisine} className="mb-12">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <MapPin className="text-primary h-6 w-6" /> {cuisine}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {cuisineRecipes.map((recipe) => (
+                  <RecipeCard key={recipe.id} recipe={recipe} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </section>
 
       <section id="breakfast" className="mb-16">
