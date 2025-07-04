@@ -64,7 +64,7 @@ export const recipes: Recipe[] = [
     title: 'Avocado Toast with Egg',
     category: 'Breakfast',
     cuisine: 'American',
-    image: 'https://images.unsplash.com/photo-1650330144131-84c9ba7661f4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXZvY2FkbyUyMHRvYXN0JTIwd2l0aCUyMGVnZ3xlbnwwfHwwfHx8Mg%3D%3D',
+    image: 'https://images.unsplash.com/photo-1676471970358-1cff04452e7b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZvY2FkbyUyMHRvYXN0JTIwd2l0aCUyMGVnZ3xlbnwwfHwwfHx8Mg%3D%3D',
     imageHint: 'avocado toast',
     description: 'A simple, healthy, and satisfying breakfast. Packed with protein and healthy fats.',
     prepTime: '5 mins',
@@ -166,7 +166,7 @@ export const recipes: Recipe[] = [
     title: 'Hearty Breakfast Burrito',
     category: 'Breakfast',
     cuisine: 'Mexican',
-    image: 'https://images.unsplash.com/photo-1563502882399-3f4153513364?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1599941897233-a44a6f790204?q=80&w=600&h=400&fit=crop',
     imageHint: 'breakfast burrito',
     description: 'A filling and customizable breakfast burrito to keep you energized all morning.',
     prepTime: '10 mins',
@@ -277,7 +277,7 @@ export const recipes: Recipe[] = [
     title: 'Quick Chicken Caesar Wrap',
     category: 'Lunch',
     cuisine: 'American',
-    image: 'https://images.unsplash.com/photo-1598373182133-52452f7691ef?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1624552184280-9e9631bbeee9?q=80&w=600&h=400&fit=crop',
     imageHint: 'chicken wrap',
     description: 'A classic salad turned into a convenient and delicious wrap for an easy lunch.',
     prepTime: '15 mins',
@@ -517,7 +517,7 @@ export const recipes: Recipe[] = [
     title: 'Lemon Herb Roast Chicken',
     category: 'Dinner',
     cuisine: 'French',
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=600&h=400&fit=crop',
     imageHint: 'roast chicken',
     description: 'A juicy, flavorful roast chicken that is impressive enough for guests but easy enough for a weeknight.',
     prepTime: '15 mins',
@@ -666,7 +666,7 @@ export const recipes: Recipe[] = [
     title: 'Chicken Tikka Masala',
     category: 'Dinner',
     cuisine: 'Indian',
-    image: 'https://images.unsplash.com/photo-1628294896516-344152572ee8?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600&h=400&fit=crop',
     imageHint: 'chicken curry',
     description: 'A rich and creamy curry that is a staple in Indian cuisine. Perfect with naan or rice.',
     prepTime: '20 mins (plus marination)',
@@ -709,7 +709,7 @@ export const recipes: Recipe[] = [
     title: 'Classic Beef Tacos',
     category: 'Dinner',
     cuisine: 'Mexican',
-    image: 'https://images.unsplash.com/photo-1565299712547-418a1a399462?q=80&w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1599423300042-4c89e578a934?q=80&w=600&h=400&fit=crop',
     imageHint: 'beef tacos',
     description: 'A family-favorite taco recipe that is quick, easy, and endlessly customizable.',
     prepTime: '10 mins',
@@ -867,3 +867,5 @@ export const recipes: Recipe[] = [
 export const getRecipeBySlug = (slug: string) => {
   return recipes.find(recipe => recipe.slug === slug);
 }
+
+    
