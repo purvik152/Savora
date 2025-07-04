@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = async () => {
+    console.log("Attempting to sign in with Google...");
     if (!firebaseEnabled || !auth) {
        toast({
         variant: "destructive",
