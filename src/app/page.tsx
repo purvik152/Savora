@@ -37,7 +37,7 @@ export default function Home() {
             fill
             priority
             data-ai-hint="food spread"
-            className="animate-zoom-in object-cover"
+            className="object-cover animate-zoom-in"
           />
           <div className="absolute inset-0 bg-black/60" />
         </div>
@@ -69,16 +69,16 @@ export default function Home() {
                 className="overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 animate-in fade-in zoom-in-95 fill-mode-forwards"
                 style={{ animationDelay: `${200 + index * 100}ms` }}
               >
-                <CardHeader className="p-0">
+                <div className="relative w-full h-48">
                   <Image
                     src={category.image}
                     alt={category.name}
-                    width={400}
-                    height={300}
-                    className="w-full h-48 object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     data-ai-hint={category.hint}
                   />
-                </CardHeader>
+                </div>
                 <CardContent className="p-6">
                   <CardTitle className="text-2xl font-semibold mb-2">{category.name}</CardTitle>
                   <p className="text-muted-foreground">{category.description}</p>
