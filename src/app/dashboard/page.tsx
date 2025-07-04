@@ -1,5 +1,7 @@
+
 'use client';
 
+import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,16 +21,42 @@ const pastRecipes = [
 
 
 export default function DashboardPage() {
+  const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (typeof e.target?.result === 'string') {
+          setAvatarSrc(e.target.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditClick = () => {
+    fileInputRef.current?.click();
+  };
   
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={'https://placehold.co/128x128.png'} alt={'User'} data-ai-hint="avatar user" />
+            <AvatarImage src={avatarSrc} alt={'User'} data-ai-hint="avatar user" />
             <AvatarFallback>SU</AvatarFallback>
           </Avatar>
-          <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8">
+           <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+            accept="image/*"
+          />
+          <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleEditClick}>
             <Edit className="h-4 w-4" />
           </Button>
         </div>
