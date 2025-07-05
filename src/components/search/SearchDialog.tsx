@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -21,7 +21,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const popularRecipes = recipes.slice(0, 4); // Show first 4 as popular
+  const popularRecipes = useMemo(() => recipes.slice(0, 4), []);
 
   const handleSearch = useCallback((searchQuery: string) => {
     if (searchQuery.trim().length > 1) {
