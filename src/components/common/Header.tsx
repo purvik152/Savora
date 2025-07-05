@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { Input } from '@/components/ui/input';
+import { Recipe, recipes } from '@/lib/recipes';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -25,7 +26,13 @@ export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<Recipe[]>([]);
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
+
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check login status from localStorage
@@ -37,8 +44,20 @@ export function Header() {
     };
     window.addEventListener('scroll', handleScroll);
     
+    // Close suggestions on outside click
+    const handleClickOutside = (event: MouseEvent) => {
+        if (
+            (!desktopSearchRef.current || !desktopSearchRef.current.contains(event.target as Node)) &&
+            (!mobileSearchRef.current || !mobileSearchRef.current.contains(event.target as Node))
+        ) {
+            setIsSuggestionsVisible(false);
+        }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [pathname]); // Re-check on route change
   
@@ -46,13 +65,56 @@ export function Header() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/recipes?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSuggestions([]);
+      setIsSuggestionsVisible(false);
       if (isMobileMenuOpen) {
         closeMobileMenu();
       }
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim().length > 1) {
+        const filteredSuggestions = recipes.filter(recipe =>
+            recipe.title.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 5); // Limit suggestions
+        setSuggestions(filteredSuggestions);
+        setIsSuggestionsVisible(true);
+    } else {
+        setSuggestions([]);
+        setIsSuggestionsVisible(false);
+    }
+  };
+
+  const handleSuggestionClick = () => {
+    setSearchQuery('');
+    setSuggestions([]);
+    setIsSuggestionsVisible(false);
+    if(isMobileMenuOpen) {
+        closeMobileMenu();
+    }
+  };
+
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const suggestionList = (
+    <ul className="absolute top-full mt-2 w-full bg-background border border-border rounded-md shadow-lg z-50 py-1">
+      {suggestions.map(recipe => (
+        <li key={recipe.id}>
+          <Link
+            href={`/recipes/${recipe.slug}`}
+            className="block px-4 py-2 text-sm text-foreground hover:bg-accent"
+            onClick={handleSuggestionClick}
+          >
+            {recipe.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <header className={cn("sticky top-0 z-50 w-full transition-all duration-300", isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent")}>
@@ -79,16 +141,21 @@ export function Header() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <form onSubmit={handleSearchSubmit} className="hidden md:block relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                  type="search"
-                  placeholder="Search recipes..."
-                  className="pl-10 h-9 w-40 lg:w-64"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </form>
+            <div ref={desktopSearchRef} className="hidden md:block relative">
+              <form onSubmit={handleSearchSubmit}>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search recipes..."
+                    className="pl-10 h-9 w-40 lg:w-64"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onFocus={() => { if (suggestions.length > 0) setIsSuggestionsVisible(true); }}
+                    autoComplete="off"
+                />
+              </form>
+              {isSuggestionsVisible && suggestions.length > 0 && suggestionList}
+            </div>
             <ThemeToggle />
             {!isLoggedIn && (
                 <Button asChild>
@@ -116,19 +183,24 @@ export function Header() {
                        </Button>
                     </div>
 
-                    <form onSubmit={handleSearchSubmit} className="mt-6">
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="search"
-                          placeholder="Search for recipes..."
-                          className="w-full pl-10"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                      </div>
-                      <Button type="submit" className="w-full mt-2">Search</Button>
-                    </form>
+                    <div ref={mobileSearchRef} className="relative">
+                      <form onSubmit={handleSearchSubmit} className="mt-6">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            type="search"
+                            placeholder="Search for recipes..."
+                            className="w-full pl-10"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            onFocus={() => { if (suggestions.length > 0) setIsSuggestionsVisible(true); }}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <Button type="submit" className="w-full mt-2">Search</Button>
+                      </form>
+                      {isSuggestionsVisible && suggestions.length > 0 && suggestionList}
+                    </div>
 
                     <nav className="flex flex-col space-y-4 mt-4">
                       {navLinks.map((link) => (
