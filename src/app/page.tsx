@@ -97,8 +97,8 @@ export default function Home() {
           <CarouselContent>
             {featuredRecipes.map((recipe, index) => (
               <CarouselItem key={index}>
-                <div className="relative h-[450px] w-full overflow-hidden rounded-lg">
-                  <Link href={recipe.href} className="block w-full h-full group">
+                <div className="h-[450px] w-full overflow-hidden rounded-lg">
+                  <Link href={recipe.href} className="relative block w-full h-full group">
                     <Image
                       src={recipe.image}
                       alt={recipe.name}
