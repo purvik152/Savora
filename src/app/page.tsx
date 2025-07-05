@@ -1,6 +1,42 @@
 
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import React from 'react';
+
+const featuredRecipes = [
+  {
+    name: 'Ultimate Creamy Tomato Pasta',
+    image: 'https://images.unsplash.com/photo-1598866594240-a3b5a9502621?q=80&w=1200&h=500&fit=crop',
+    hint: 'creamy pasta',
+    description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
+    href: '/recipes/creamy-tomato-pasta',
+  },
+  {
+    name: 'Lemon Herb Roast Chicken',
+    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=1200&h=500&fit=crop',
+    hint: 'roast chicken',
+    description: 'Impressive enough for guests, easy enough for a weeknight.',
+    href: '/recipes/lemon-herb-roast-chicken',
+  },
+  {
+    name: 'Classic Beef Lasagna',
+    image: 'https://images.unsplash.com/photo-1574894709920-31b2e3d5b706?q=80&w=1200&h=500&fit=crop',
+    hint: 'lasagna dinner',
+    description: 'Layers of rich meat sauce, creamy béchamel, and tender pasta.',
+    href: '/recipes/classic-beef-lasagna',
+  },
+   {
+    name: 'Thai Green Curry',
+    image: 'https://images.unsplash.com/photo-1572455014639-9d96952d921b?q=80&w=1200&h=500&fit=crop',
+    hint: 'thai curry',
+    description: 'Fragrant and spicy Thai green curry with tender chicken and vegetables.',
+    href: '/recipes/thai-green-curry-chicken',
+  }
+];
 
 // Data for main categories
 const mainCategories = [
@@ -44,9 +80,47 @@ const subCategories = [
 ];
 
 export default function Home() {
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       
+      {/* Hero Carousel Section */}
+      <section className="mb-16">
+        <Carousel
+          plugins={[plugin.current]}
+          className="w-full"
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
+        >
+          <CarouselContent>
+            {featuredRecipes.map((recipe, index) => (
+              <CarouselItem key={index}>
+                <div className="relative h-[450px] w-full overflow-hidden rounded-lg">
+                  <Link href={recipe.href} className="block w-full h-full group">
+                    <Image
+                      src={recipe.image}
+                      alt={recipe.name}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                      data-ai-hint={recipe.hint}
+                      priority={index === 0}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+                    <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
+                      <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
+                      <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
+                    </div>
+                  </Link>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </section>
+
       {/* Main Categories Section */}
       <section className="mb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
