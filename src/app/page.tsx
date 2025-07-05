@@ -9,7 +9,7 @@ import React from 'react';
 const featuredRecipes = [
   {
     name: 'Ultimate Creamy Tomato Pasta',
-    image: 'https://images.unsplash.com/photo-1598866594240-a3b5a9502621?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=1200&h=500&fit=crop',
     hint: 'creamy pasta',
     description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
     href: '/recipes/creamy-tomato-pasta',
