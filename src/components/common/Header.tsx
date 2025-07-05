@@ -78,14 +78,21 @@ export function Header() {
     setSearchQuery(query);
 
     if (query.trim().length > 1) {
-        const filteredSuggestions = recipes.filter(recipe =>
-            recipe.title.toLowerCase().includes(query.toLowerCase())
-        ).slice(0, 5); // Limit suggestions
-        setSuggestions(filteredSuggestions);
-        setIsSuggestionsVisible(true);
+      const queryLower = query.toLowerCase();
+      const filteredSuggestions = recipes
+        .filter(
+          (recipe) =>
+            recipe.title.toLowerCase().includes(queryLower) ||
+            recipe.description.toLowerCase().includes(queryLower) ||
+            recipe.cuisine.toLowerCase().includes(queryLower) ||
+            recipe.category.toLowerCase().includes(queryLower)
+        )
+        .slice(0, 5); // Limit suggestions
+      setSuggestions(filteredSuggestions);
+      setIsSuggestionsVisible(true);
     } else {
-        setSuggestions([]);
-        setIsSuggestionsVisible(false);
+      setSuggestions([]);
+      setIsSuggestionsVisible(false);
     }
   };
 
