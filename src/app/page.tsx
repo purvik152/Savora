@@ -9,7 +9,7 @@ import React from 'react';
 const featuredRecipes = [
   {
     name: 'Ultimate Creamy Tomato Pasta',
-    image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1598866594240-a3b5a9502621?q=80&w=1200&h=500&fit=crop',
     hint: 'creamy pasta',
     description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
     href: '/recipes/creamy-tomato-pasta',
@@ -67,15 +67,15 @@ const mainCategories = [
 
 // Data for sub-categories
 const subCategories = [
-  { name: 'Quick and Easy', image: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=200&h=200&fit=crop', hint: 'rice bowl', href: '/recipes' },
-  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=200&h=200&fit=crop', hint: 'salmon dinner', href: '/recipes?q=dinner' },
-  { name: 'Vegetarian', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=200&h=200&fit=crop', hint: 'vegetarian tacos', href: '/recipes?q=vegetarian' },
-  { name: 'Healthy', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=200&h=200&fit=crop', hint: 'healthy food', href: '/recipes?q=healthy' },
-  { name: 'Instant Pot', image: 'https://images.unsplash.com/photo-1606834017346-b63c4a259d28?q=80&w=200&h=200&fit=crop', hint: 'instant pot', href: '/recipes?q=instant%20pot' },
-  { name: 'Vegan', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=200&h=200&fit=crop', hint: 'vegan salad', href: '/recipes?q=vegan' },
-  { name: 'Meal Prep', image: 'https://images.unsplash.com/photo-1540950989335-0b7c2164212a?q=80&w=200&h=200&fit=crop', hint: 'meal prep', href: '/recipes?q=meal%20prep' },
-  { name: 'Soups', image: 'https://images.unsplash.com/photo-1547592180-85f1d35a8554?q=80&w=200&h=200&fit=crop', hint: 'soup bowl', href: '/recipes?q=soup' },
-  { name: 'Salads', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=200&h=200&fit=crop', hint: 'salad bowl', href: '/recipes?q=salad' },
+  { name: 'Quick and Easy', image: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=300&h=300&fit=crop', hint: 'rice bowl', href: '/recipes' },
+  { name: 'Dinner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=300&h=300&fit=crop', hint: 'salmon dinner', href: '/recipes?q=dinner' },
+  { name: 'Vegetarian', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=300&h=300&fit=crop', hint: 'vegetarian tacos', href: '/recipes?q=vegetarian' },
+  { name: 'Healthy', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=300&h=300&fit=crop', hint: 'healthy food', href: '/recipes?q=healthy' },
+  { name: 'Instant Pot', image: 'https://images.unsplash.com/photo-1590212239841-3843503e4f3a?q=80&w=300&h=300&fit=crop', hint: 'instant pot', href: '/recipes?q=instant%20pot' },
+  { name: 'Vegan', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=300&h=300&fit=crop', hint: 'vegan salad', href: '/recipes?q=vegan' },
+  { name: 'Meal Prep', image: 'https://images.unsplash.com/photo-1543353071-873f6b6a4a48?q=80&w=300&h=300&fit=crop', hint: 'meal prep', href: '/recipes?q=meal%20prep' },
+  { name: 'Soups', image: 'https://images.unsplash.com/photo-1534947817444-a9b0c243c397?q=80&w=300&h=300&fit=crop', hint: 'soup bowl', href: '/recipes?q=soup' },
+  { name: 'Salads', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=300&h=300&fit=crop', hint: 'salad bowl', href: '/recipes?q=salad' },
 ];
 
 export default function Home() {
