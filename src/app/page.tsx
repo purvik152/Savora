@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -81,7 +80,7 @@ const subCategories = [
 
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: true })
   );
 
   return (
