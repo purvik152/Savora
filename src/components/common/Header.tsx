@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -45,8 +44,9 @@ export function Header() {
     <header className={cn("sticky top-0 z-50 w-full transition-all duration-300", isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent")}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <SavoraLogo className="h-8 w-auto text-primary" />
+          <Link href="/" className="flex items-center gap-2">
+            <SavoraLogo className="h-7 w-7 text-primary" />
+            <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
@@ -83,8 +83,9 @@ export function Header() {
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <div className="p-4">
                     <div className="flex justify-between items-center mb-8">
-                       <Link href="/" onClick={closeMobileMenu}>
-                         <SavoraLogo className="h-8 w-auto text-primary" />
+                       <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
+                         <SavoraLogo className="h-7 w-7 text-primary" />
+                         <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
                        </Link>
                        <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
                          <X className="h-6 w-6"/>

@@ -8,8 +8,9 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <SavoraLogo className="h-8 w-auto" />
+            <Link href="/" className="flex items-center gap-2">
+              <SavoraLogo className="h-7 w-7 text-primary" />
+              <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               Discover and share amazing recipes from around the world.
