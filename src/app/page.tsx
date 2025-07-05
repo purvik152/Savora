@@ -1,9 +1,11 @@
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Newspaper } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { recipes } from '@/lib/recipes';
 
 const recipeCategories = [
   {
@@ -26,10 +28,15 @@ const recipeCategories = [
   },
 ];
 
+// Select a few featured recipes
+const featuredRecipes = recipes.filter(r => [11, 12, 16].includes(r.id));
+
+
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <section className="relative w-full py-20 md:py-32 lg:py-40 text-white overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative w-full py-24 md:py-32 lg:py-48 text-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&fit=crop"
@@ -39,27 +46,67 @@ export default function Home() {
             data-ai-hint="food spread"
             className="object-cover animate-zoom-in"
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/30" />
         </div>
-        <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-12 duration-700 ease-out text-white drop-shadow-lg dark:text-white">
-            Discover Your Next Favorite Meal
+            Cook. Create. Inspire.
           </h1>
           <p className="max-w-3xl mx-auto text-lg md:text-xl text-white/90 mb-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200 ease-out fill-mode-forwards drop-shadow-md dark:text-white/90">
-            Savora brings the world's kitchens to you. Explore thousands of recipes, get step-by-step guidance, and stay updated with the latest food news.
+            Your culinary adventure starts here. Find recipes that delight your senses and make every meal memorable.
           </p>
           <div className="animate-in fade-in slide-in-from-bottom-12 duration-700 delay-400 ease-out fill-mode-forwards">
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 transition-transform transform hover:scale-105 shadow-lg">
-              <Link href="/recipes">Explore Recipes</Link>
+            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 transition-transform transform hover:scale-105 shadow-xl">
+              <Link href="/recipes">Find a Recipe</Link>
             </Button>
           </div>
         </div>
       </section>
 
+      {/* Featured Recipes Section */}
+      <section id="featured-recipes" className="w-full py-16 md:py-24 bg-secondary/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12 animate-in fade-in-0 slide-in-from-bottom-12 duration-700 ease-out">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">This Week's Featured Recipes</h2>
+            <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">Hand-picked by our chefs, these dishes are sure to impress.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredRecipes.map((recipe, index) => (
+              <Card 
+                key={recipe.id}
+                className="overflow-hidden group transition-all duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 animate-in fade-in zoom-in-95 fill-mode-forwards"
+                style={{ animationDelay: `${200 + index * 100}ms` }}
+              >
+                <Link href={`/recipes/${recipe.slug}`} className="block">
+                  <div className="relative w-full h-56">
+                    <Image
+                      src={recipe.image}
+                      alt={recipe.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      data-ai-hint={recipe.imageHint}
+                    />
+                     <Badge variant="secondary" className="absolute top-3 right-3">{recipe.cuisine}</Badge>
+                  </div>
+                  <CardContent className="p-6">
+                    <CardTitle className="text-xl font-bold mb-2 line-clamp-2">{recipe.title}</CardTitle>
+                    <p className="text-muted-foreground text-sm line-clamp-3">{recipe.description}</p>
+                     <Button variant="link" className="p-0 mt-4 text-primary">View Recipe &rarr;</Button>
+                  </CardContent>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Categories Section */}
       <section id="recipes" className="w-full py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12 animate-in fade-in-0 slide-in-from-bottom-12 duration-700 ease-out">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">A World of Flavors Awaits</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Browse by Category</h2>
             <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick breakfasts to elaborate dinners, find the perfect recipe for any occasion.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -92,6 +139,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* News Feature Section */}
       <section className="w-full py-16 md:py-24 bg-secondary/50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
