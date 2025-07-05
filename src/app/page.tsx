@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -16,7 +17,7 @@ const featuredRecipes = [
   },
   {
     name: 'Lemon Herb Roast Chicken',
-    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1604503468593-3e1a8a5f8e52?q=80&w=1200&h=500&fit=crop',
     hint: 'roast chicken',
     description: 'Impressive enough for guests, easy enough for a weeknight.',
     href: '/recipes/lemon-herb-roast-chicken',
