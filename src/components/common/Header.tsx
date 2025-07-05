@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -24,19 +23,26 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check login status from localStorage
-    const user = localStorage.getItem('savora-user');
-    setIsLoggedIn(!!user);
+    setHasMounted(true);
+  }, []);
 
+  useEffect(() => {
+    if (hasMounted) {
+      const user = localStorage.getItem('savora-user');
+      setIsLoggedIn(!!user);
+    }
+  }, [pathname, hasMounted]);
+
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
 
-    // Keyboard shortcut for search
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -49,7 +55,7 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('keydown', down);
     };
-  }, [pathname]); // Re-check on route change
+  }, []);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -93,7 +99,7 @@ export function Header() {
                 </Button>
               </div>
               <ThemeToggle />
-              {!isLoggedIn && (
+              {hasMounted && !isLoggedIn && (
                   <Button asChild>
                       <Link href="/login">Login</Link>
                   </Button>
@@ -147,7 +153,7 @@ export function Header() {
                             {link.label}
                           </Link>
                         ))}
-                        {!isLoggedIn && (
+                        {hasMounted && !isLoggedIn && (
                            <Button asChild onClick={closeMobileMenu}>
                               <Link href="/login">Login</Link>
                            </Button>
