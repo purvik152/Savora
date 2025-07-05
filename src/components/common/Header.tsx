@@ -1,18 +1,20 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Menu, X, Search } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
+import { Input } from '@/components/ui/input';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/#recipes', label: 'Recipes' },
+  { href: '/recipes', label: 'Recipes' },
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
 ];
@@ -22,6 +24,8 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Check login status from localStorage
@@ -37,6 +41,16 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [pathname]); // Re-check on route change
+  
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/recipes?q=${encodeURIComponent(searchQuery.trim())}`);
+      if (isMobileMenuOpen) {
+        closeMobileMenu();
+      }
+    }
+  };
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -56,7 +70,7 @@ export function Header() {
                 href={link.href}
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-primary",
-                  pathname === link.href ? "text-primary" : "text-foreground/60"
+                  (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/60"
                 )}
               >
                 {link.label}
@@ -65,6 +79,16 @@ export function Header() {
           </nav>
 
           <div className="flex items-center space-x-2">
+            <form onSubmit={handleSearchSubmit} className="hidden md:block relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                  type="search"
+                  placeholder="Search recipes..."
+                  className="pl-10 h-9 w-40 lg:w-64"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
             <ThemeToggle />
             {!isLoggedIn && (
                 <Button asChild>
@@ -91,7 +115,22 @@ export function Header() {
                          <X className="h-6 w-6"/>
                        </Button>
                     </div>
-                    <nav className="flex flex-col space-y-4">
+
+                    <form onSubmit={handleSearchSubmit} className="mt-6">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="search"
+                          placeholder="Search for recipes..."
+                          className="w-full pl-10"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                      </div>
+                      <Button type="submit" className="w-full mt-2">Search</Button>
+                    </form>
+
+                    <nav className="flex flex-col space-y-4 mt-4">
                       {navLinks.map((link) => (
                         <Link
                           key={link.href}

@@ -28,7 +28,46 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     </Link>
 );
 
-export default function RecipesPage() {
+export default function RecipesPage({
+  searchParams,
+}: {
+  searchParams?: { q?: string };
+}) {
+  const query = searchParams?.q?.toLowerCase();
+
+  const filteredRecipes = query
+    ? recipes.filter(
+        (recipe) =>
+          recipe.title.toLowerCase().includes(query) ||
+          recipe.description.toLowerCase().includes(query) ||
+          recipe.cuisine.toLowerCase().includes(query) ||
+          recipe.category.toLowerCase().includes(query)
+      )
+    : [];
+
+  if (query) {
+    return (
+      <div className="container mx-auto px-4 py-8 md:py-16">
+        <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Search Results</h1>
+            <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
+              {filteredRecipes.length > 0
+                ? `Found ${filteredRecipes.length} recipe(s) for "${searchParams?.q}"`
+                : `No recipes found for "${searchParams?.q}". Try a different search.`}
+            </p>
+        </div>
+        {filteredRecipes.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Original page content for when there's no search query
   const cuisines = [...new Set(recipes.map((r) => r.cuisine))];
   const breakfastRecipes = recipes.filter(r => r.category === 'Breakfast');
   const lunchRecipes = recipes.filter(r => r.category === 'Lunch');
