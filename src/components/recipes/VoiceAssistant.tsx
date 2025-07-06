@@ -1,7 +1,6 @@
 'use client';
 
 import { recipeAssistant, RecipeAssistantInput } from '@/ai/flows/recipe-assistant-flow';
-import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
@@ -34,26 +33,60 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   
   // Refs
   const recognitionRef = useRef<any>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const finalTranscriptRef = useRef('');
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     setHasMounted(true);
+    // Cleanup synthesis on component unmount
+    return () => {
+        window.speechSynthesis.cancel();
+    }
   }, []);
 
-  // --- Audio Controls ---
-  const stopAudio = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+  // --- Audio Controls using Web Speech API ---
+  const playAudio = useCallback((text: string) => {
+    if (!('speechSynthesis' in window)) {
+        console.error("Speech Synthesis not supported.");
+        setAssistantResponse("Sorry, your browser doesn't support voice output.");
+        return;
     }
+    window.speechSynthesis.cancel(); // Stop any previous speech
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = navigator.language || 'en-US';
+    utterance.onstart = () => {
+        setIsSpeaking(true);
+        setIsPaused(false);
+        setIsProcessing(false);
+    };
+    utterance.onend = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+    };
+    utterance.onerror = (event) => {
+        console.error("SpeechSynthesis Error", event);
+        setIsSpeaking(false);
+        setIsPaused(false);
+        toast({
+            variant: "destructive",
+            title: "Voice Error",
+            description: "Sorry, I couldn't play the audio.",
+        });
+    };
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  }, [toast]);
+
+  const stopAudio = useCallback(() => {
+    window.speechSynthesis.cancel();
     setIsSpeaking(false);
     setIsPaused(false);
   }, []);
 
   const pauseAudio = useCallback(() => {
-    if (audioRef.current?.played && !audioRef.current.paused) {
-      audioRef.current.pause();
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
       setIsSpeaking(false);
       setIsPaused(true);
       setAssistantResponse('Paused.');
@@ -61,8 +94,8 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   }, []);
 
   const resumeAudio = useCallback(() => {
-    if (audioRef.current?.paused) {
-      audioRef.current.play().catch(e => console.error("Audio play failed on resume", e));
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
       setIsSpeaking(true);
       setIsPaused(false);
       setAssistantResponse('Resuming...');
@@ -75,7 +108,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     
     setIsProcessing(true);
     setAssistantResponse('Thinking...');
-    stopAudio(); // Stop any current speech before processing a new user command.
+    stopAudio();
 
     try {
       const lang = navigator.language || 'en-US';
@@ -89,6 +122,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       };
 
       const assistantResult = await recipeAssistant(assistantInput);
+      
       setAssistantResponse(assistantResult.responseText);
       
       if (assistantResult.nextStep === -1) {
@@ -105,21 +139,8 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         return;
       }
 
-      const ttsResult = await recipeToSpeech(assistantResult.responseText);
-      
-      setIsProcessing(false);
+      playAudio(assistantResult.responseText);
 
-      if (audioRef.current && ttsResult.audioDataUri) {
-        audioRef.current.src = ttsResult.audioDataUri;
-        audioRef.current.play().catch(e => {
-            console.error("Audio play failed", e);
-            setIsSpeaking(false);
-        });
-        setIsSpeaking(true);
-        setIsPaused(false);
-      } else {
-        setIsSpeaking(false);
-      }
     } catch (error) {
       console.error("Error processing voice command:", error);
       toast({
@@ -130,7 +151,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       setAssistantResponse('An error occurred. Please try again.');
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio, playAudio]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
@@ -197,21 +218,6 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       }
     }
   }, [hasMounted, handleUserQuery, toast]);
-
-  // --- Audio Player Event Listeners ---
-  useEffect(() => {
-    const audioEl = audioRef.current;
-    const onAudioEnd = () => {
-        setIsSpeaking(false);
-        setIsPaused(false);
-    };
-    if (audioEl) {
-      audioEl.addEventListener('ended', onAudioEnd);
-    }
-    return () => {
-      if (audioEl) audioEl.removeEventListener('ended', onAudioEnd);
-    };
-  }, []);
   
   // --- User Actions ---
   const startSession = () => {
@@ -233,7 +239,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (isListening) {
       recognitionRef.current?.stop();
     } else {
-      stopAudio(); // Interrupt any current speech to listen for a command
+      stopAudio(); 
       try {
         recognitionRef.current?.start();
       } catch (e) {
@@ -331,7 +337,6 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
             </div>
         )}
         
-        <audio ref={audioRef} className="hidden" />
       </CardContent>
     </Card>
   );
