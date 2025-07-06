@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { Loader2, Mic, Bot, Play, Pause, Power } from 'lucide-react';
+import { Loader2, Mic, Bot, Play, Pause, Power, Square } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 
 // Check for browser support
@@ -32,7 +32,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   // Conversation State
   const [currentStep, setCurrentStep] = useState(0);
   const [transcript, setTranscript] = useState('');
-  const [assistantResponse, setAssistantResponse] = useState('Press the mic and say "start cooking" to begin.');
+  const [assistantResponse, setAssistantResponse] = useState('Press Start to begin your guided recipe.');
   
   // Refs
   const recognitionRef = useRef<any>(null);
@@ -44,7 +44,6 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      audioRef.current.src = ""; // Detach the source to ensure it stops
     }
     setIsSpeaking(false);
     setIsPaused(false);
@@ -69,27 +68,6 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   // --- Core AI Interaction ---
   const handleUserQuery = useCallback(async (query: string) => {
     if (!query.trim()) return;
-
-    const lowerQuery = query.toLowerCase().trim();
-
-    // Client-side handling for immediate commands during an active session
-    if (sessionActive) {
-        if (lowerQuery.includes('pause')) {
-            pauseAudio();
-            return;
-        }
-        if (lowerQuery.includes('resume') || lowerQuery.includes('continue')) {
-            resumeAudio();
-            return;
-        }
-    }
-
-    // Start session on initial command, but don't process others if not started
-    if (!sessionActive && !lowerQuery.includes('start')) {
-        setAssistantResponse('Please say "start cooking" to begin the recipe.');
-        // Optionally, play a pre-canned audio response for this
-        return;
-    }
     
     setIsProcessing(true);
     setAssistantResponse('Thinking...');
@@ -107,32 +85,28 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       };
 
       const assistantResult = await recipeAssistant(assistantInput);
-      const ttsResult = await recipeToSpeech(assistantResult.responseText);
-
-      // AI work is done. Allow user to interact again.
-      setIsProcessing(false);
       setAssistantResponse(assistantResult.responseText);
       
-      // Officially start the session in the state
-      if (!sessionActive && lowerQuery.includes('start')) {
-          setSessionActive(true);
+      if (assistantResult.nextStep === -1) {
+        setSessionActive(false);
+        setCurrentStep(0);
+      } else {
+        setCurrentStep(assistantResult.nextStep);
       }
 
-      if (audioRef.current) {
+      const ttsResult = await recipeToSpeech(assistantResult.responseText);
+      
+      setIsProcessing(false);
+
+      if (audioRef.current && ttsResult.audioDataUri) {
         audioRef.current.src = ttsResult.audioDataUri;
         audioRef.current.play().catch(e => {
             console.error("Audio play failed", e);
-            setIsSpeaking(false); // Ensure state is correct if play fails
+            setIsSpeaking(false);
         });
         setIsSpeaking(true);
-
-        // Update the step *after* we start speaking, so UI is in sync.
-        if (assistantResult.nextStep === -1) {
-            setSessionActive(false);
-            setCurrentStep(0);
-        } else {
-            setCurrentStep(assistantResult.nextStep);
-        }
+      } else {
+        setIsSpeaking(false);
       }
     } catch (error) {
       console.error("Error processing voice command:", error);
@@ -142,9 +116,9 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         description: "Sorry, I couldn't process that. Please try again."
       });
       setAssistantResponse('An error occurred. Please try again.');
-      setIsProcessing(false); // Ensure we reset on error
+      setIsProcessing(false);
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio, pauseAudio, resumeAudio, sessionActive]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
@@ -155,12 +129,13 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     setIsBrowserSupported(true);
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = false; // We process one command at a time
+    recognition.continuous = false;
     recognition.interimResults = true;
     recognition.lang = navigator.language || 'en-US';
     
     recognition.onstart = () => {
       finalTranscriptRef.current = '';
+      setTranscript('');
       setIsListening(true);
     }
     
@@ -222,28 +197,12 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   }, []);
   
   // --- User Actions ---
-  const toggleListening = () => {
-    if (isProcessing) return; // Don't allow listening while AI is thinking
-
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      // If assistant is speaking or paused, interrupt it.
-      stopAudio();
-      try {
-        recognitionRef.current?.start();
-      } catch(e) {
-        console.error("Could not start recognition", e);
-        try {
-            recognitionRef.current?.abort();
-            recognitionRef.current?.start();
-        } catch (e2) {
-            console.error("Could not start recognition on retry", e2);
-        }
-      }
-    }
+  const startSession = () => {
+    setSessionActive(true);
+    setAssistantResponse('Starting session...');
+    handleUserQuery("start cooking");
   };
-
+  
   const endSession = () => {
     stopAudio();
     if(isListening) recognitionRef.current?.abort();
@@ -251,7 +210,20 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     setIsListening(false);
     setIsProcessing(false);
     setCurrentStep(0);
-    setAssistantResponse('Press the mic and say "start cooking" to begin.');
+    setAssistantResponse('Press Start to begin your guided recipe.');
+  };
+  
+  const handleMicClick = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      stopAudio(); 
+      try {
+        recognitionRef.current?.start();
+      } catch (e) {
+        console.error("Could not start recognition", e);
+      }
+    }
   };
 
   // --- UI ---
@@ -268,7 +240,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (isProcessing) return 'Thinking...';
     if (isListening) return 'Listening...';
     if (isSpeaking) return 'Speaking...';
-    if (isPaused) return 'Paused.';
+    if (isPaused) return 'Paused';
     if (sessionActive) return 'Ready for your command.';
     return 'Ready to start.';
   };
@@ -286,29 +258,34 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-4">
-            <Button onClick={toggleListening} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 scale-110")} disabled={isProcessing}>
-              {isProcessing ? <Loader2 className="h-8 w-8 animate-spin" /> : <Mic className="h-8 w-8" />}
+        {!sessionActive ? (
+            <Button onClick={startSession} size="lg" disabled={isProcessing}>
+                {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2"/>}
+                Start Cooking
             </Button>
-        </div>
+        ) : (
+            <div className="flex flex-col items-center gap-4">
+                <div className="flex items-center justify-center gap-4">
+                    <Button onClick={handleMicClick} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 scale-110")} disabled={isProcessing}>
+                        {isProcessing ? <Loader2 className="h-8 w-8 animate-spin" /> : (isListening ? <Square className="h-8 w-8" /> :<Mic className="h-8 w-8" />)}
+                    </Button>
+                </div>
+                
+                <div className="flex items-center justify-center gap-4">
+                    <Button onClick={isPaused ? resumeAudio : pauseAudio} size="lg" variant="outline" title={isPaused ? "Resume" : "Pause"} disabled={!isSpeaking && !isPaused}>
+                        {isPaused ? <Play className="mr-2"/> : <Pause className="mr-2"/>}
+                        {isPaused ? "Resume" : "Pause"}
+                    </Button>
+                    <Button onClick={endSession} size="lg" variant="destructive" title="End Session"><Power className="mr-2"/> End</Button>
+                </div>
 
-        {sessionActive && (
-            <>
-            <div className="flex items-center justify-center gap-4">
-              {(isSpeaking || isPaused) && (
-                <Button onClick={isPaused ? resumeAudio : pauseAudio} size="lg" variant="outline" title={isPaused ? "Resume" : "Pause"}>
-                    {isPaused ? <Play className="mr-2"/> : <Pause className="mr-2"/>}
-                    {isPaused ? "Resume" : "Pause"}
-                </Button>
-              )}
-               <Button onClick={endSession} size="lg" variant="destructive" title="End Session"><Power className="mr-2"/> End</Button>
+                {instructions[currentStep] && (
+                    <div>
+                        <p className="font-bold">Current Step: {currentStep + 1} / {instructions.length}</p>
+                        <p className="text-muted-foreground text-sm px-4">{instructions[currentStep]}</p>
+                    </div>
+                )}
             </div>
-
-            <div>
-              <p className="font-bold">Current Step: {currentStep + 1} / {instructions.length}</p>
-              <p className="text-muted-foreground text-sm px-4">{instructions[currentStep]}</p>
-            </div>
-            </>
         )}
         
         <audio ref={audioRef} className="hidden" />
