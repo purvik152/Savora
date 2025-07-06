@@ -69,8 +69,8 @@ Based on the user's query, determine the next logical step and generate the appr
   - 'responseText' MUST be a short confirmation like "Paused."
   - 'nextStep' MUST remain the same. The app will handle pausing.
 - For "resume" or "continue":
-  - 'responseText' MUST be "Resuming."
-  - 'nextStep' MUST remain the same. The app will handle resuming.
+  - 'responseText' MUST be the text of the current instruction again.
+  - 'nextStep' MUST remain the same as the current step.
 - For questions about the current step (e.g., "how much flour?"):
   - Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
 {{#each instructions}}

@@ -54,6 +54,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       audioRef.current.pause();
       setIsSpeaking(false);
       setIsPaused(true);
+      setAssistantResponse('Paused.');
     }
   }, []);
 
@@ -62,6 +63,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       audioRef.current.play().catch(e => console.error("Audio play failed on resume", e));
       setIsSpeaking(true);
       setIsPaused(false);
+      setAssistantResponse('Resuming...');
     }
   }, []);
   
@@ -71,7 +73,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     
     setIsProcessing(true);
     setAssistantResponse('Thinking...');
-    stopAudio(); // Stop any current speech before processing a new query
+    stopAudio(); // Stop any current speech before processing a new user command.
 
     try {
       const lang = navigator.language || 'en-US';
@@ -93,6 +95,14 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       } else {
         setCurrentStep(assistantResult.nextStep);
       }
+      
+      const lowerResponse = assistantResult.responseText.toLowerCase();
+      // Don't generate audio for a simple "Paused." confirmation.
+      if (lowerResponse === 'paused.') {
+        setIsProcessing(false);
+        setIsPaused(true); // Update state to reflect pause.
+        return;
+      }
 
       const ttsResult = await recipeToSpeech(assistantResult.responseText);
       
@@ -105,6 +115,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
             setIsSpeaking(false);
         });
         setIsSpeaking(true);
+        setIsPaused(false);
       } else {
         setIsSpeaking(false);
       }
@@ -199,7 +210,6 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   // --- User Actions ---
   const startSession = () => {
     setSessionActive(true);
-    setAssistantResponse('Starting session...');
     handleUserQuery("start cooking");
   };
   
@@ -217,11 +227,16 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (isListening) {
       recognitionRef.current?.stop();
     } else {
-      stopAudio(); 
+      stopAudio(); // Interrupt any current speech to listen for a command
       try {
         recognitionRef.current?.start();
       } catch (e) {
         console.error("Could not start recognition", e);
+        toast({
+            variant: "destructive",
+            title: "Microphone Error",
+            description: "Could not start listening. Please check your browser permissions."
+        })
       }
     }
   };
