@@ -88,7 +88,7 @@ export function Header() {
               <div className="hidden md:block">
                 <Button
                   variant="outline"
-                  className="h-9 w-40 lg:w-64 justify-start text-muted-foreground"
+                  className="h-10 w-60 lg:w-72 justify-start text-muted-foreground"
                   onClick={() => setIsSearchOpen(true)}
                 >
                   <Search className="mr-2 h-4 w-4" />
