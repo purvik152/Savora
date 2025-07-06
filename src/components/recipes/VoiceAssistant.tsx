@@ -23,10 +23,10 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   
   // Component State
   const [isBrowserSupported, setIsBrowserSupported] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false); // When AI is thinking
+  const [isListening, setIsListening] = useState(false);  // When mic is on
+  const [isSpeaking, setIsSpeaking] = useState(false);  // When audio is playing
+  const [isPaused, setIsPaused] = useState(false);      // When audio is paused
   const [sessionActive, setSessionActive] = useState(false);
   
   // Conversation State
@@ -44,6 +44,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      audioRef.current.src = ""; // Detach the source to ensure it stops
     }
     setIsSpeaking(false);
     setIsPaused(false);
@@ -75,32 +76,24 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (sessionActive) {
         if (lowerQuery.includes('pause')) {
             pauseAudio();
-            // No need to call AI, just pause the current audio playback.
-            // The status text will update via the `isPaused` state.
             return;
         }
         if (lowerQuery.includes('resume') || lowerQuery.includes('continue')) {
             resumeAudio();
-            // No need to call AI, just resume the current audio playback.
-            // The status text will update via the `isSpeaking` state.
             return;
         }
     }
 
-
-    // Start session on initial command
-    if (!sessionActive) {
-      if (lowerQuery.includes('start')) {
-        setSessionActive(true);
-      } else {
-        // Don't process other commands if session hasn't started
+    // Start session on initial command, but don't process others if not started
+    if (!sessionActive && !lowerQuery.includes('start')) {
+        setAssistantResponse('Please say "start cooking" to begin the recipe.');
+        // Optionally, play a pre-canned audio response for this
         return;
-      }
     }
-
+    
     setIsProcessing(true);
-    setAssistantResponse('');
-    stopAudio(); // Stop any current speech
+    setAssistantResponse('Thinking...');
+    stopAudio(); // Stop any current speech before processing a new query
 
     try {
       const lang = navigator.language || 'en-US';
@@ -114,22 +107,32 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       };
 
       const assistantResult = await recipeAssistant(assistantInput);
-      
-      setAssistantResponse(assistantResult.responseText);
-
-      // End session
-      if (assistantResult.nextStep === -1) {
-        setSessionActive(false);
-        setCurrentStep(0);
-      } else {
-        setCurrentStep(assistantResult.nextStep);
-      }
-      
       const ttsResult = await recipeToSpeech(assistantResult.responseText);
+
+      // AI work is done. Allow user to interact again.
+      setIsProcessing(false);
+      setAssistantResponse(assistantResult.responseText);
+      
+      // Officially start the session in the state
+      if (!sessionActive && lowerQuery.includes('start')) {
+          setSessionActive(true);
+      }
+
       if (audioRef.current) {
         audioRef.current.src = ttsResult.audioDataUri;
-        audioRef.current.play().catch(e => console.error("Audio play failed", e));
+        audioRef.current.play().catch(e => {
+            console.error("Audio play failed", e);
+            setIsSpeaking(false); // Ensure state is correct if play fails
+        });
         setIsSpeaking(true);
+
+        // Update the step *after* we start speaking, so UI is in sync.
+        if (assistantResult.nextStep === -1) {
+            setSessionActive(false);
+            setCurrentStep(0);
+        } else {
+            setCurrentStep(assistantResult.nextStep);
+        }
       }
     } catch (error) {
       console.error("Error processing voice command:", error);
@@ -139,10 +142,9 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         description: "Sorry, I couldn't process that. Please try again."
       });
       setAssistantResponse('An error occurred. Please try again.');
-    } finally {
-      setIsProcessing(false);
+      setIsProcessing(false); // Ensure we reset on error
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio, sessionActive, pauseAudio, resumeAudio]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio, pauseAudio, resumeAudio, sessionActive]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
@@ -153,7 +155,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     setIsBrowserSupported(true);
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = false;
+    recognition.continuous = false; // We process one command at a time
     recognition.interimResults = true;
     recognition.lang = navigator.language || 'en-US';
     
@@ -164,7 +166,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     
     recognition.onend = () => {
       setIsListening(false);
-      if (finalTranscriptRef.current && !isProcessing) {
+      if (finalTranscriptRef.current) {
         handleUserQuery(finalTranscriptRef.current);
       }
     };
@@ -199,11 +201,10 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
 
     recognitionRef.current = recognition;
     
-    // Cleanup on unmount
     return () => {
       recognition.abort();
     }
-  }, [handleUserQuery, toast, isProcessing]);
+  }, [handleUserQuery, toast]);
 
   // --- Audio Player Event Listeners ---
   useEffect(() => {
@@ -222,15 +223,23 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   
   // --- User Actions ---
   const toggleListening = () => {
-    if (isProcessing) return;
+    if (isProcessing) return; // Don't allow listening while AI is thinking
+
     if (isListening) {
       recognitionRef.current?.stop();
     } else {
-      stopAudio(); // Interrupt any speech to start listening
+      // If assistant is speaking or paused, interrupt it.
+      stopAudio();
       try {
         recognitionRef.current?.start();
       } catch(e) {
         console.error("Could not start recognition", e);
+        try {
+            recognitionRef.current?.abort();
+            recognitionRef.current?.start();
+        } catch (e2) {
+            console.error("Could not start recognition on retry", e2);
+        }
       }
     }
   };
@@ -240,6 +249,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if(isListening) recognitionRef.current?.abort();
     setSessionActive(false);
     setIsListening(false);
+    setIsProcessing(false);
     setCurrentStep(0);
     setAssistantResponse('Press the mic and say "start cooking" to begin.');
   };
@@ -247,26 +257,26 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   // --- UI ---
   if (!isBrowserSupported) {
     return (
-      <Card className="bg-destructive/10 text-destructive text-center">
-        <CardHeader><CardTitle className="flex items-center gap-2"><Mic className="h-6 w-6"/> Voice Assistant Not Available</CardTitle></CardHeader>
-        <CardContent><p>Your browser does not support the Web Speech API.</p></CardContent>
+      <Card className="bg-destructive/10 text-destructive-foreground">
+        <CardHeader><CardTitle className="flex items-center justify-center gap-2"><Mic className="h-6 w-6"/> Voice Assistant Not Available</CardTitle></CardHeader>
+        <CardContent><p>Your browser does not support the Web Speech API. Please try Google Chrome.</p></CardContent>
       </Card>
     );
   }
 
   const getStatusText = () => {
-    if (!sessionActive && !isProcessing) return 'Ready to start.';
     if (isProcessing) return 'Thinking...';
     if (isListening) return 'Listening...';
     if (isSpeaking) return 'Speaking...';
     if (isPaused) return 'Paused.';
-    return 'Ready.';
+    if (sessionActive) return 'Ready for your command.';
+    return 'Ready to start.';
   };
 
   return (
     <Card className="bg-secondary/30">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Bot /> Voice Assistant</CardTitle>
+        <CardTitle className="flex items-center justify-center gap-2"><Bot /> Voice Assistant</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6 text-center">
         <div className="p-4 bg-background/50 rounded-lg min-h-[120px] flex flex-col justify-center items-center">
@@ -285,11 +295,11 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         {sessionActive && (
             <>
             <div className="flex items-center justify-center gap-4">
-              {isSpeaking && !isPaused && (
-                <Button onClick={pauseAudio} size="lg" variant="outline" title="Pause"><Pause className="mr-2"/> Pause</Button>
-              )}
-              {isPaused && (
-                <Button onClick={resumeAudio} size="lg" variant="outline" title="Resume"><Play className="mr-2"/> Resume</Button>
+              {(isSpeaking || isPaused) && (
+                <Button onClick={isPaused ? resumeAudio : pauseAudio} size="lg" variant="outline" title={isPaused ? "Resume" : "Pause"}>
+                    {isPaused ? <Play className="mr-2"/> : <Pause className="mr-2"/>}
+                    {isPaused ? "Resume" : "Pause"}
+                </Button>
               )}
                <Button onClick={endSession} size="lg" variant="destructive" title="End Session"><Power className="mr-2"/> End</Button>
             </div>
