@@ -10,14 +10,14 @@ import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-    { id: 1, name: "Spaghetti Carbonara", image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=300&h=200&fit=crop", rating: 4 },
-    { id: 2, name: "Chicken Tikka Masala", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=300&h=200&fit=crop", rating: 5 },
-    { id: 3, name: "Classic Beef Tacos", image: "https://images.unsplash.com/photo-1599423300042-4c89e578a934?q=80&w=300&h=200&fit=crop", rating: 4 },
+    { id: 1, name: "Spaghetti Carbonara", image: "https://spoonacular.com/recipeImages/660261-636x393.jpg", rating: 4 },
+    { id: 2, name: "Chicken Tikka Masala", image: "https://spoonacular.com/recipeImages/638329-636x393.jpg", rating: 5 },
+    { id: 3, name: "Classic Beef Tacos", image: "https://spoonacular.com/recipeImages/634458-636x393.jpg", rating: 4 },
   ];
   
   const favoriteRecipes = [
-    { id: 1, name: "Avocado Toast", image: "https://images.unsplash.com/photo-1584308666744-8480436158ae?q=80&w=300&h=200&fit=crop", cuisine: "American" },
-    { id: 2, name: "Vegan Pad Thai", image: "https://images.unsplash.com/photo-1629896599245-75b51079315d?q=80&w=300&h=200&fit=crop", cuisine: "Thai" },
+    { id: 1, name: "Avocado Toast", image: "https://spoonacular.com/recipeImages/633221-636x393.jpg", cuisine: "American" },
+    { id: 2, name: "Vegan Pad Thai", image: "https://spoonacular.com/recipeImages/664547-636x393.jpg", cuisine: "Thai" },
   ];
 
 interface User {

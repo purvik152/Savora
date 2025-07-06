@@ -15,28 +15,28 @@ import { Recipe, recipes } from '@/lib/recipes';
 const featuredRecipes = [
   {
     name: 'Ultimate Creamy Tomato Pasta',
-    image: 'https://images.unsplash.com/photo-1598866594240-a3b5a9502621?q=80&w=1200&h=500&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/639923-636x393.jpg',
     hint: 'creamy pasta',
     description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
     href: '/recipes/creamy-tomato-pasta',
   },
   {
     name: 'Lemon Herb Roast Chicken',
-    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=1200&h=500&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/649886-636x393.jpg',
     hint: 'roast chicken',
     description: 'Impressive enough for guests, easy enough for a weeknight.',
     href: '/recipes/lemon-herb-roast-chicken',
   },
   {
     name: 'Classic Beef Lasagna',
-    image: 'https://images.unsplash.com/photo-1574894709920-31b2e3d5b706?q=80&w=1200&h=500&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/638971-636x393.jpg',
     hint: 'lasagna dinner',
     description: 'Layers of rich meat sauce, creamy béchamel, and tender pasta.',
     href: '/recipes/classic-beef-lasagna',
   },
    {
     name: 'Thai Green Curry',
-    image: 'https://images.unsplash.com/photo-1572455014639-9d96952d921b?q=80&w=1200&h=500&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/663321-636x393.jpg',
     hint: 'thai curry',
     description: 'Fragrant and spicy Thai green curry with tender chicken and vegetables.',
     href: '/recipes/thai-green-curry-chicken',
@@ -44,40 +44,40 @@ const featuredRecipes = [
 ];
 
 const subCategories = [
-  { name: 'Quick and Easy', href: '/recipes?q=quick', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=200&h=200&fit=crop', hint: 'quick meal' },
-  { name: 'Dinner', href: '/recipes?q=dinner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=200&h=200&fit=crop', hint: 'salmon dinner' },
-  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17025?q=80&w=200&h=200&fit=crop', hint: 'vegetarian dish' },
-  { name: 'Healthy', href: '/recipes?q=healthy', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=200&h=200&fit=crop', hint: 'healthy food' },
-  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: 'https://images.unsplash.com/photo-1604213410393-8e54324d95a2?q=80&w=200&h=200&fit=crop', hint: 'pot roast' },
-  { name: 'Vegan', href: '/recipes?q=vegan', image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=200&h=200&fit=crop', hint: 'vegan pasta' },
-  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: 'https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=200&h=200&fit=crop', hint: 'meal prep' },
-  { name: 'Soups', href: '/recipes?q=soup', image: 'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?q=80&w=200&h=200&fit=crop', hint: 'tortilla soup' },
-  { name: 'Salads', href: '/recipes?q=salad', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=200&h=200&fit=crop', hint: 'fresh salad' },
+  { name: 'Quick and Easy', href: '/recipes?q=quick', image: 'https://spoonacular.com/recipeImages/657351-636x393.jpg', hint: 'quick meal' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: 'https://spoonacular.com/recipeImages/660306-636x393.jpg', hint: 'salmon dinner' },
+  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: 'https://spoonacular.com/recipeImages/664429-636x393.jpg', hint: 'vegetarian dish' },
+  { name: 'Healthy', href: '/recipes?q=healthy', image: 'https://spoonacular.com/recipeImages/646654-636x393.jpg', hint: 'healthy food' },
+  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: 'https://spoonacular.com/recipeImages/1005313-636x393.jpg', hint: 'pot roast' },
+  { name: 'Vegan', href: '/recipes?q=vegan', image: 'https://spoonacular.com/recipeImages/664539-636x393.jpg', hint: 'vegan pasta' },
+  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: 'https://spoonacular.com/recipeImages/651337-636x393.jpg', hint: 'meal prep' },
+  { name: 'Soups', href: '/recipes?q=soup', image: 'https://spoonacular.com/recipeImages/661925-636x393.jpg', hint: 'tortilla soup' },
+  { name: 'Salads', href: '/recipes?q=salad', image: 'https://spoonacular.com/recipeImages/659135-636x393.jpg', hint: 'fresh salad' },
 ];
 
 const mainCategories = [
   {
     name: 'Quick and Easy',
     href: '/recipes?q=quick',
-    image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983d34?q=80&w=600&h=800&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/657351-636x393.jpg',
     hint: 'chicken rice bowl',
   },
   {
     name: 'Dinner',
     href: '/recipes?q=dinner',
-    image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=600&h=800&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/660306-636x393.jpg',
     hint: 'creamy pasta',
   },
   {
     name: 'Most Popular',
     href: '/recipes?q=pasta',
-    image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=600&h=800&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/654959-636x393.jpg',
     hint: 'noodle stirfry',
   },
   {
     name: 'Salads',
     href: '/recipes?q=salad',
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&h=800&fit=crop',
+    image: 'https://spoonacular.com/recipeImages/659135-636x393.jpg',
     hint: 'salad bowl',
   },
 ];
