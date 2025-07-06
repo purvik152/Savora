@@ -15,6 +15,7 @@ const RecipeAssistantInputSchema = z.object({
   recipeTitle: z.string().describe('The title of the recipe.'),
   instructions: z.array(z.string()).describe('The list of recipe instructions.'),
   currentStep: z.number().describe('The index of the current instruction step (0-based).'),
+  currentInstruction: z.string().describe('The text for the current instruction step.'),
   userQuery: z.string().describe("The user's spoken query or command."),
   language: z.string().describe("The user's preferred language (e.g., 'en-US', 'es-ES')."),
 });
@@ -22,7 +23,7 @@ export type RecipeAssistantInput = z.infer<typeof RecipeAssistantInputSchema>;
 
 const RecipeAssistantOutputSchema = z.object({
   responseText: z.string().describe("The assistant's spoken response to the user."),
-  nextStep: z.number().describe("The updated step index after the interaction. This should be the index of the step the user should be on now."),
+  nextStep: z.number().describe("The updated step index after the interaction. This should be the index of the step the user should be on now, or -1 to end the session."),
 });
 export type RecipeAssistantOutput = z.infer<typeof RecipeAssistantOutputSchema>;
 
@@ -38,25 +39,24 @@ const prompt = ai.definePrompt({
 
 The user's preferred language is {{language}}. YOU MUST respond clearly and concisely in this language.
 
-Here are all the steps for the recipe, provided as a list. The steps are 0-indexed.
-{{#each instructions}}
-- {{{this}}}
-{{/each}}
-
-The user is currently on step with index {{currentStep}}. The instruction for this step is: "{{lookup instructions currentStep}}"
+The user is currently on step with index {{currentStep}}. The instruction for this step is: "{{currentInstruction}}"
 
 The user just said: "{{userQuery}}"
 
 Based on the user's query, provide a helpful, conversational response and determine the next logical step index.
-- If the user asks for the "next" step, provide the next instruction and set 'nextStep' to the index of that instruction.
-- If the user asks to "repeat" the step, provide the current instruction again and keep 'nextStep' the same.
-- If the user asks to go "back" or to the "previous" step, provide the previous instruction and update 'nextStep' to the index of that previous step.
-- If the user asks a question about the current step (e.g., "how much flour?"), answer it based on the recipe context if possible, and keep 'nextStep' the same unless they also ask to move on.
-- If the query is unclear or off-topic, politely ask for clarification and keep 'nextStep' the same.
+- For commands like "next step" or "skip": Respond with the next instruction and update 'nextStep' to the next index. If it is the last step, inform the user they have reached the end.
+- For "repeat": Say the current instruction again. 'nextStep' remains the same.
+- For "go back" or "previous step": Respond with the previous instruction and update 'nextStep' to the previous index.
+- For "start over": Respond with the first instruction and set 'nextStep' to 0.
+- For "end" or "stop cooking": Give a friendly closing message (e.g., "Happy cooking!") and set 'nextStep' to -1 to end the session.
+- For questions about the current step (e.g., "how much flour?"): Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
+{{#each instructions}}
+- Step {{@index}}: {{{this}}}
+{{/each}}
+- If the query is unclear: Ask the user to repeat or clarify, and keep 'nextStep' as the current step.
 
-Your entire response MUST be in the user's language: {{language}}.
 Your 'responseText' should be what you would say out loud.
-Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array.`,
+Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array, or -1 to end the session. Ensure the nextStep is always within the valid range of indices (from 0 to the last index).`,
 });
 
 const recipeAssistantFlow = ai.defineFlow(
@@ -67,9 +67,15 @@ const recipeAssistantFlow = ai.defineFlow(
   },
   async (input) => {
     const {output} = await prompt(input);
+    
     // Add a safeguard for the nextStep index.
-    if (output && (output.nextStep < 0 || output.nextStep >= input.instructions.length)) {
-        output.nextStep = input.currentStep; // Fallback to current step if index is out of bounds
+    if (output) {
+        // Allow -1 for ending the session
+        const isOutOfBounds = output.nextStep < -1 || output.nextStep >= input.instructions.length;
+        if (isOutOfBounds) {
+            // If the AI gives an invalid step, fallback to the current step.
+            output.nextStep = input.currentStep; 
+        }
     }
     return output!;
   }
