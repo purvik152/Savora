@@ -7,7 +7,6 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Loader2 } from 'lucide-react';
@@ -171,8 +170,7 @@ export default function Home() {
       </section>
 
       {/* Sub-Categories Section */}
-      <section className="mb-16 relative">
-        <FloatingDoodles />
+      <section className="mb-16">
         <div className="flex flex-col items-center gap-y-12">
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow1.map((category) => (

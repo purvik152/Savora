@@ -5,6 +5,7 @@ import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
+import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 
 export const metadata: Metadata = {
   title: 'Savora',
@@ -37,6 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+            <FloatingDoodles />
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
