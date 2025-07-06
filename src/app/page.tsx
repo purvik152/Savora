@@ -145,8 +145,7 @@ export default function Home() {
             {featuredRecipes.map((recipe, index) => (
               <CarouselItem key={index}>
                 <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
-                  <Link href={recipe.href} legacyBehavior passHref>
-                    <a className="block h-full w-full group">
+                  <Link href={recipe.href} className="block h-full w-full group">
                       <Image
                         src={recipe.image}
                         alt={recipe.name}
@@ -160,7 +159,6 @@ export default function Home() {
                         <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
                         <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
                       </div>
-                    </a>
                   </Link>
                 </div>
               </CarouselItem>
@@ -174,8 +172,7 @@ export default function Home() {
         <div className="flex flex-col items-center gap-y-12">
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow1.map((category) => (
-              <Link key={category.name} href={category.href} legacyBehavior passHref>
-                <a className="group flex flex-col items-center gap-3 text-center w-28">
+              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
                   <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -189,14 +186,12 @@ export default function Home() {
                   <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
                     {category.name}
                   </span>
-                </a>
               </Link>
             ))}
           </div>
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow2.map((category) => (
-              <Link key={category.name} href={category.href} legacyBehavior passHref>
-                <a className="group flex flex-col items-center gap-3 text-center w-28">
+              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
                   <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -210,7 +205,6 @@ export default function Home() {
                   <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
                     {category.name}
                   </span>
-                </a>
               </Link>
             ))}
           </div>
@@ -221,8 +215,7 @@ export default function Home() {
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {mainCategories.map((category) => (
-            <Link key={category.name} href={category.href} legacyBehavior passHref>
-              <a className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <Image
                   src={category.image}
                   alt={category.name}
@@ -237,7 +230,6 @@ export default function Home() {
                           {category.name}
                       </div>
                   </div>
-              </a>
             </Link>
             ))}
         </div>
@@ -272,9 +264,8 @@ export default function Home() {
                       <li key={recipe.id}>
                         <Link
                           href={`/recipes/${recipe.slug}`}
-                          legacyBehavior passHref
+                          className="flex items-center gap-4 p-3 hover:bg-secondary/50 transition-colors"
                         >
-                          <a className="flex items-center gap-4 p-3 hover:bg-secondary/50 transition-colors">
                             <Image
                               src={recipe.image}
                               alt={recipe.title}
@@ -284,7 +275,6 @@ export default function Home() {
                               data-ai-hint={recipe.imageHint}
                             />
                             <span className="font-medium">{recipe.title}</span>
-                          </a>
                         </Link>
                       </li>
                     ))}
