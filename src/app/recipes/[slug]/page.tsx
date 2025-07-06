@@ -3,8 +3,9 @@
 import { notFound } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, CheckCircle, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2 } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -28,7 +29,6 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
   const [displayedInstructions, setDisplayedInstructions] = useState(recipe?.instructions || []);
   const [isAdjusting, setIsAdjusting] = useState(false);
   
-  // New state for grocery list
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [isOrdering, setIsOrdering] = useState(false);
 
@@ -36,7 +36,6 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     setHasMounted(true);
   }, []);
 
-  // When recipe scales, clear checkboxes.
   useEffect(() => {
     setCheckedIngredients(new Set());
   }, [displayedIngredients]);
@@ -50,7 +49,6 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
 
     setServings(newServings);
 
-    // If returning to original serving size, just reset from static data
     if (newServings === initialServings) {
       setDisplayedIngredients(recipe.ingredients);
       setDisplayedInstructions(recipe.instructions);
@@ -79,7 +77,6 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         title: "Adjustment Failed",
         description: "Could not adjust the recipe. Please try again.",
       });
-      // Revert serving count if AI fails
       setServings(servings);
     } finally {
       setIsAdjusting(false);
@@ -147,6 +144,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
               alt={recipe.title}
               fill
               className="object-cover"
+              sizes="100vw"
               data-ai-hint={recipe.imageHint}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -157,8 +155,8 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
             </div>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="md:col-span-2 relative">
+            <div className="max-w-4xl mx-auto">
+              <div className="relative">
                 {isAdjusting && (
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10 rounded-lg">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -209,63 +207,56 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                     ))}
                   </ol>
                 </div>
-
-                {hasMounted && (
-                  <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
-                    <VoiceAssistant recipeTitle={recipe.title} instructions={displayedInstructions} />
-                  </div>
-                )}
-              </div>
-
-              <div className="relative">
-                <div className="sticky top-24">
-                  {isAdjusting && (
-                      <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10 rounded-lg">
-                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                      </div>
-                  )}
-                  <Card className="bg-secondary/30">
-                    <CardHeader>
-                      <h3 className="text-xl font-bold">Ingredients</h3>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {displayedIngredients.map((ingredient, index) => (
-                          <li key={index} className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                            <span>{ingredient}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="mt-6 bg-secondary/30">
-                    <CardHeader>
-                        <h3 className="text-xl font-bold flex items-center gap-2">
-                            <ShoppingCart className="h-5 w-5 text-primary"/> Grocery List
-                        </h3>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {displayedIngredients.map((ingredient, index) => (
-                            <div key={index} className="flex items-center space-x-2">
-                                <Checkbox 
-                                    id={`ingredient-${index}`} 
-                                    onCheckedChange={(checked) => handleCheckboxChange(index, checked)}
-                                    checked={checkedIngredients.has(index)}
-                                />
-                                <label
-                                    htmlFor={`ingredient-${index}`}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    {ingredient}
-                                </label>
-                            </div>
-                            ))}
+                
+                <div className="mt-12">
+                  <Accordion type="multiple" className="w-full space-y-4">
+                    <AccordionItem value="ingredients" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
+                      <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
+                        <div className="flex items-center gap-3">
+                          <ClipboardList className="h-6 w-6 text-primary" />
+                          Ingredients
                         </div>
-                        <Button onClick={handleOrderOnInstamart} className="w-full mt-6" disabled={isOrdering}>
-                           {isOrdering ? (
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 bg-background/50">
+                        <ul className="space-y-3 pt-4 pb-4 border-t">
+                          {displayedIngredients.map((ingredient, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                              <Check className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                              <span>{ingredient}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+              
+                    <AccordionItem value="grocery-list" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
+                      <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
+                        <div className="flex items-center gap-3">
+                          <ShoppingCart className="h-6 w-6 text-primary" />
+                          Grocery List
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 bg-background/50">
+                        <div className="pt-4 pb-4 border-t">
+                            <div className="space-y-4">
+                                {displayedIngredients.map((ingredient, index) => (
+                                <div key={index} className="flex items-center space-x-3">
+                                    <Checkbox 
+                                        id={`ingredient-${index}`} 
+                                        onCheckedChange={(checked) => handleCheckboxChange(index, checked)}
+                                        checked={checkedIngredients.has(index)}
+                                    />
+                                    <label
+                                        htmlFor={`ingredient-${index}`}
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        {ingredient}
+                                    </label>
+                                </div>
+                                ))}
+                            </div>
+                            <Button onClick={handleOrderOnInstamart} className="w-full mt-6" disabled={isOrdering}>
+                            {isOrdering ? (
                                 <>
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                     Processing...
@@ -276,24 +267,36 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                                     <ExternalLink className="h-4 w-4 ml-2" />
                                 </>
                             )}
-                        </Button>
-                    </CardContent>
-                  </Card>
-                                    
-                  <Card className="mt-6 bg-secondary/30">
-                    <CardHeader>
-                        <h3 className="text-xl font-bold">Nutrition Facts</h3>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                           <p><strong>Calories:</strong> {recipe.nutrition.calories}</p>
-                           <p><strong>Protein:</strong> {recipe.nutrition.protein}</p>
-                           <p><strong>Carbs:</strong> {recipe.nutrition.carbohydrates}</p>
-                           <p><strong>Fat:</strong> {recipe.nutrition.fat}</p>
+                            </Button>
                         </div>
-                    </CardContent>
-                  </Card>
+                      </AccordionContent>
+                    </AccordionItem>
+              
+                    <AccordionItem value="nutrition" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
+                      <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
+                        <div className="flex items-center gap-3">
+                          <HeartPulse className="h-6 w-6 text-primary" />
+                          Nutrition Facts
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 bg-background/50">
+                          <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-sm pt-4 pb-4 border-t">
+                            <p><strong>Calories:</strong> {recipe.nutrition.calories}</p>
+                            <p><strong>Protein:</strong> {recipe.nutrition.protein}</p>
+                            <p><strong>Carbs:</strong> {recipe.nutrition.carbohydrates}</p>
+                            <p><strong>Fat:</strong> {recipe.nutrition.fat}</p>
+                          </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
+
+
+                {hasMounted && (
+                  <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
+                    <VoiceAssistant recipeTitle={recipe.title} instructions={displayedInstructions} />
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
