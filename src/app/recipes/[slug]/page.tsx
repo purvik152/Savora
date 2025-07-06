@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { adjustRecipe } from '@/ai/flows/adjust-recipe-flow';
+import { parseIngredientsForSearch } from '@/ai/flows/parse-ingredients-flow';
 
 export default function RecipePage() {
   const params = useParams();
@@ -27,10 +28,19 @@ export default function RecipePage() {
   const [displayedIngredients, setDisplayedIngredients] = useState(recipe?.ingredients || []);
   const [displayedInstructions, setDisplayedInstructions] = useState(recipe?.instructions || []);
   const [isAdjusting, setIsAdjusting] = useState(false);
+  
+  // New state for grocery list
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
+  const [isOrdering, setIsOrdering] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
+  // When recipe scales, clear checkboxes.
+  useEffect(() => {
+    setCheckedIngredients(new Set());
+  }, [displayedIngredients]);
 
   if (!recipe) {
     notFound();
@@ -81,11 +91,51 @@ export default function RecipePage() {
   const handleScrollToVoiceAssistant = () => {
     voiceAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  
+  const handleCheckboxChange = (index: number, checked: boolean | 'indeterminate') => {
+    const newChecked = new Set(checkedIngredients);
+    if(checked) {
+      newChecked.add(index);
+    } else {
+      newChecked.delete(index);
+    }
+    setCheckedIngredients(newChecked);
+  };
 
-  const handleOrderOnInstamart = () => {
-    const ingredientsQuery = displayedIngredients.join(', ');
-    const instamartUrl = `https://www.swiggy.com/instamart/search?query=${encodeURIComponent(ingredientsQuery)}`;
-    window.open(instamartUrl, '_blank');
+  const handleOrderOnInstamart = async () => {
+    if (checkedIngredients.size === 0) {
+      toast({
+        variant: "destructive",
+        title: "No Items Selected",
+        description: "Please check the ingredients you want to order.",
+      });
+      return;
+    }
+    
+    setIsOrdering(true);
+    
+    try {
+      const ingredientsToOrder = Array.from(checkedIngredients).map(index => displayedIngredients[index]);
+      
+      const result = await parseIngredientsForSearch({ ingredients: ingredientsToOrder });
+      
+      if (!result.searchTerms || result.searchTerms.length === 0) {
+        throw new Error("AI could not parse ingredients for search.");
+      }
+
+      const ingredientsQuery = result.searchTerms.join(', ');
+      const instamartUrl = `https://www.swiggy.com/instamart/search?query=${encodeURIComponent(ingredientsQuery)}`;
+      window.open(instamartUrl, '_blank');
+    } catch (error) {
+      console.error("Failed to parse ingredients for ordering:", error);
+      toast({
+        variant: "destructive",
+        title: "Order Failed",
+        description: "Could not process ingredients for Instamart. Please try again.",
+      });
+    } finally {
+      setIsOrdering(false);
+    }
   };
 
   return (
@@ -201,7 +251,11 @@ export default function RecipePage() {
                         <div className="space-y-4">
                             {displayedIngredients.map((ingredient, index) => (
                             <div key={index} className="flex items-center space-x-2">
-                                <Checkbox id={`ingredient-${index}`} />
+                                <Checkbox 
+                                    id={`ingredient-${index}`} 
+                                    onCheckedChange={(checked) => handleCheckboxChange(index, checked)}
+                                    checked={checkedIngredients.has(index)}
+                                />
                                 <label
                                     htmlFor={`ingredient-${index}`}
                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -211,9 +265,18 @@ export default function RecipePage() {
                             </div>
                             ))}
                         </div>
-                        <Button onClick={handleOrderOnInstamart} className="w-full mt-6">
-                            Order with Instamart
-                            <ExternalLink className="h-4 w-4 ml-2" />
+                        <Button onClick={handleOrderOnInstamart} className="w-full mt-6" disabled={isOrdering}>
+                           {isOrdering ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    Order Selected with Instamart
+                                    <ExternalLink className="h-4 w-4 ml-2" />
+                                </>
+                            )}
                         </Button>
                     </CardContent>
                   </Card>
