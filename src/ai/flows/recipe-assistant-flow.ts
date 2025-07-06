@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
-export const RecipeAssistantInputSchema = z.object({
+const RecipeAssistantInputSchema = z.object({
   recipeTitle: z.string().describe('The title of the recipe.'),
   instructions: z.array(z.string()).describe('The list of recipe instructions.'),
   currentStep: z.number().describe('The index of the current instruction step (0-based).'),
@@ -20,7 +20,7 @@ export const RecipeAssistantInputSchema = z.object({
 });
 export type RecipeAssistantInput = z.infer<typeof RecipeAssistantInputSchema>;
 
-export const RecipeAssistantOutputSchema = z.object({
+const RecipeAssistantOutputSchema = z.object({
   responseText: z.string().describe("The assistant's spoken response to the user."),
   nextStep: z.number().describe("The updated step index after the interaction. This should be the index of the step the user should be on now."),
 });
