@@ -66,6 +66,14 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
       label: 'Fat (g)',
       color: 'hsl(var(--chart-3))',
     },
+    fiber: {
+        label: 'Fiber (g)',
+        color: 'hsl(var(--chart-4))',
+    },
+    sugar: {
+        label: 'Sugar (g)',
+        color: 'hsl(var(--chart-5))',
+    },
   } satisfies ChartConfig), []);
 
   const nutritionData = useMemo(() => {
@@ -74,6 +82,8 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
       { name: 'Protein', value: parseInt(recipe.nutrition.protein, 10) || 0 },
       { name: 'Carbohydrates', value: parseInt(recipe.nutrition.carbohydrates, 10) || 0 },
       { name: 'Fat', value: parseInt(recipe.nutrition.fat, 10) || 0 },
+      { name: 'Fiber', value: parseInt(recipe.nutrition.fiber, 10) || 0 },
+      { name: 'Sugar', value: parseInt(recipe.nutrition.sugar, 10) || 0 },
     ];
   }, [recipe]);
 
@@ -318,7 +328,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                                 <p className="text-muted-foreground">Calories</p>
                                 <p className="text-3xl font-bold text-foreground">{recipe.nutrition.calories}</p>
                                 </div>
-                                <ChartContainer config={chartConfig} className="w-full h-[150px]">
+                                <ChartContainer config={chartConfig} className="w-full h-[250px]">
                                 <BarChart accessibilityLayer data={nutritionData} layout="vertical" margin={{ left: 10, right: 20 }}>
                                     <CartesianGrid horizontal={false} />
                                     <YAxis
@@ -342,6 +352,10 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                                     </Bar>
                                 </BarChart>
                                 </ChartContainer>
+                                <div className="flex justify-between items-center text-sm px-4 pt-4 border-t">
+                                    <span className="font-medium text-muted-foreground">Sodium</span>
+                                    <span className="font-bold text-foreground">{recipe.nutrition.sodium}</span>
+                                </div>
                             </div>
                       </AccordionContent>
                     </AccordionItem>

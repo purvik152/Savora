@@ -18,6 +18,9 @@ export interface Recipe {
     protein: string;
     carbohydrates: string;
     fat: string;
+    fiber: string;
+    sugar: string;
+    sodium: string;
   };
 }
 
@@ -56,6 +59,9 @@ export const recipes: Recipe[] = [
       protein: '8g',
       carbohydrates: '40g',
       fat: '12g',
+      fiber: '2g',
+      sugar: '7g',
+      sodium: '450mg',
     },
   },
   {
@@ -90,6 +96,9 @@ export const recipes: Recipe[] = [
       protein: '15g',
       carbohydrates: '30g',
       fat: '20g',
+      fiber: '10g',
+      sugar: '2g',
+      sodium: '300mg',
     },
   },
    {
@@ -123,6 +132,9 @@ export const recipes: Recipe[] = [
       protein: '10g',
       carbohydrates: '70g',
       fat: '10g',
+      fiber: '12g',
+      sugar: '35g',
+      sodium: '50mg',
     },
   },
   {
@@ -158,6 +170,9 @@ export const recipes: Recipe[] = [
       protein: '15g',
       carbohydrates: '50g',
       fat: '20g',
+      fiber: '3g',
+      sugar: '15g',
+      sodium: '380mg',
     },
   },
   {
@@ -193,6 +208,9 @@ export const recipes: Recipe[] = [
       protein: '30g',
       carbohydrates: '50g',
       fat: '25g',
+      fiber: '8g',
+      sugar: '5g',
+      sodium: '950mg',
     },
   },
   // Lunch
@@ -234,6 +252,9 @@ export const recipes: Recipe[] = [
       protein: '15g',
       carbohydrates: '60g',
       fat: '18g',
+      fiber: '15g',
+      sugar: '8g',
+      sodium: '400mg',
     },
   },
   {
@@ -269,6 +290,9 @@ export const recipes: Recipe[] = [
       protein: '20g',
       carbohydrates: '45g',
       fat: '28g',
+      fiber: '5g',
+      sugar: '10g',
+      sodium: '800mg',
     },
   },
   {
@@ -304,6 +328,9 @@ export const recipes: Recipe[] = [
       protein: '25g',
       carbohydrates: '40g',
       fat: '25g',
+      fiber: '4g',
+      sugar: '4g',
+      sodium: '1100mg',
     },
   },
   {
@@ -344,6 +371,9 @@ export const recipes: Recipe[] = [
       protein: '18g',
       carbohydrates: '50g',
       fat: '4g',
+      fiber: '20g',
+      sugar: '7g',
+      sodium: '900mg',
     },
   },
   {
@@ -378,6 +408,9 @@ export const recipes: Recipe[] = [
       protein: '30g',
       carbohydrates: '15g',
       fat: '32g',
+      fiber: '12g',
+      sugar: '3g',
+      sodium: '500mg',
     },
   },
    {
@@ -422,6 +455,9 @@ export const recipes: Recipe[] = [
       protein: '45g',
       carbohydrates: '15g',
       fat: '35g',
+      fiber: '6g',
+      sugar: '8g',
+      sodium: '850mg',
     }
   },
   {
@@ -468,6 +504,9 @@ export const recipes: Recipe[] = [
       protein: '40g',
       carbohydrates: '50g',
       fat: '35g',
+      fiber: '8g',
+      sugar: '20g',
+      sodium: '1400mg',
     }
   },
   // Dinner
@@ -508,6 +547,9 @@ export const recipes: Recipe[] = [
       protein: "25g",
       carbohydrates: "80g",
       fat: "28g",
+      fiber: '7g',
+      sugar: '12g',
+      sodium: '1200mg',
     },
   },
   {
@@ -543,6 +585,9 @@ export const recipes: Recipe[] = [
       protein: '70g',
       carbohydrates: '5g',
       fat: '45g',
+      fiber: '1g',
+      sugar: '2g',
+      sodium: '600mg',
     },
   },
   {
@@ -581,6 +626,9 @@ export const recipes: Recipe[] = [
       protein: '20g',
       carbohydrates: '60g',
       fat: '10g',
+      fiber: '15g',
+      sugar: '9g',
+      sodium: '750mg',
     },
   },
   {
@@ -618,6 +666,9 @@ export const recipes: Recipe[] = [
       protein: '40g',
       carbohydrates: '20g',
       fat: '35g',
+      fiber: '8g',
+      sugar: '10g',
+      sodium: '450mg',
     },
   },
   {
@@ -657,6 +708,9 @@ export const recipes: Recipe[] = [
       protein: '35g',
       carbohydrates: '40g',
       fat: '22g',
+      fiber: '5g',
+      sugar: '15g',
+      sodium: '1500mg',
     },
   },
   {
@@ -700,6 +754,9 @@ export const recipes: Recipe[] = [
       protein: '50g',
       carbohydrates: '20g',
       fat: '38g',
+      fiber: '4g',
+      sugar: '10g',
+      sodium: '1300mg',
     },
   },
   {
@@ -733,6 +790,9 @@ export const recipes: Recipe[] = [
       protein: '25g',
       carbohydrates: '30g',
       fat: '25g',
+      fiber: '6g',
+      sugar: '5g',
+      sodium: '1000mg',
     },
   },
   {
@@ -775,6 +835,9 @@ export const recipes: Recipe[] = [
       protein: '45g',
       carbohydrates: '25g',
       fat: '35g',
+      fiber: '6g',
+      sugar: '10g',
+      sodium: '1600mg',
     }
   },
   {
@@ -812,6 +875,9 @@ export const recipes: Recipe[] = [
       protein: '22g',
       carbohydrates: '5g',
       fat: '25g',
+      fiber: '1g',
+      sugar: '1g',
+      sodium: '700mg',
     }
   },
   {
@@ -859,6 +925,9 @@ export const recipes: Recipe[] = [
       protein: '45g',
       carbohydrates: '60g',
       fat: '38g',
+      fiber: '8g',
+      sugar: '15g',
+      sodium: '1800mg',
     }
   },
   {
@@ -892,7 +961,7 @@ export const recipes: Recipe[] = [
         'Drizzle with Caesar dressing and toss gently to coat.',
         'Serve immediately.'
     ],
-    nutrition: { calories: '550 kcal', protein: '40g', carbohydrates: '15g', fat: '35g' }
+    nutrition: { calories: '550 kcal', protein: '40g', carbohydrates: '15g', fat: '35g', fiber: '4g', sugar: '5g', sodium: '900mg' }
   },
   {
     id: 24,
@@ -929,7 +998,7 @@ export const recipes: Recipe[] = [
         'Cover and refrigerate for at least 30 minutes to allow the flavors to meld.',
         'Serve chilled or at room temperature.'
     ],
-    nutrition: { calories: '480 kcal', protein: '15g', carbohydrates: '55g', fat: '22g' }
+    nutrition: { calories: '480 kcal', protein: '15g', carbohydrates: '55g', fat: '22g', fiber: '6g', sugar: '8g', sodium: '1200mg' }
   }
 ];
 
