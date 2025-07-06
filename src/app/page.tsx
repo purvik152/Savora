@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from 'react';
+import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 
 const featuredRecipes = [
   {
@@ -123,7 +124,8 @@ export default function Home() {
       </section>
 
       {/* Sub-Categories Section */}
-      <section className="mb-16">
+      <section className="mb-16 relative">
+        <FloatingDoodles />
         <div className="flex flex-col items-center gap-y-12">
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow1.map((category) => (
