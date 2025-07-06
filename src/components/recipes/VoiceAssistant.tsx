@@ -36,6 +36,11 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const sessionActiveRef = useRef(sessionActive);
+
+  useEffect(() => {
+    sessionActiveRef.current = sessionActive;
+  }, [sessionActive]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -89,7 +94,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         setIsSpeaking(false);
         setIsPaused(false);
         // Automatically start listening for the next command if the session is active
-        if (sessionActive && !isFinal && autoListen) {
+        if (sessionActiveRef.current && !isFinal && autoListen) {
             startListening();
         }
     };
@@ -105,7 +110,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [toast, sessionActive, startListening]);
+  }, [toast, startListening]);
 
   const pauseAudio = useCallback(() => {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
