@@ -85,7 +85,7 @@ const mainCategories = [
 
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
+    Autoplay({ delay: 4000, stopOnInteraction: true })
   );
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
