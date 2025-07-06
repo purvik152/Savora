@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import { adjustRecipe } from '@/ai/flows/adjust-recipe-flow';
 import { parseIngredientsForSearch } from '@/ai/flows/parse-ingredients-flow';
 
-export default function RecipePage() {
-  const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+export default function RecipePage({ params }: { params: { slug: string } }) {
+  const slug = params.slug;
   const recipe = getRecipeBySlug(slug);
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
