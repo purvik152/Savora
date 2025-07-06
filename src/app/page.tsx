@@ -45,10 +45,10 @@ const featuredRecipes = [
 
 const subCategories = [
   { name: 'Quick and Easy', href: '/recipes?q=quick', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=200&h=200&fit=crop', hint: 'quick meal' },
-  { name: 'Dinner', href: '/recipes?q=dinner', image: 'https://images.unsplash.com/photo-1608897013039-887f21d8c804?q=80&w=200&h=200&fit=crop', hint: 'penne pasta' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=200&h=200&fit=crop', hint: 'salmon dinner' },
   { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17025?q=80&w=200&h=200&fit=crop', hint: 'vegetarian dish' },
   { name: 'Healthy', href: '/recipes?q=healthy', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=200&h=200&fit=crop', hint: 'healthy food' },
-  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: 'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=200&h=200&fit=crop', hint: 'tacos' },
+  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: 'https://images.unsplash.com/photo-1604213410393-8e54324d95a2?q=80&w=200&h=200&fit=crop', hint: 'pot roast' },
   { name: 'Vegan', href: '/recipes?q=vegan', image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=200&h=200&fit=crop', hint: 'vegan pasta' },
   { name: 'Meal Prep', href: '/recipes?q=meal prep', image: 'https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=200&h=200&fit=crop', hint: 'meal prep' },
   { name: 'Soups', href: '/recipes?q=soup', image: 'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?q=80&w=200&h=200&fit=crop', hint: 'tortilla soup' },
