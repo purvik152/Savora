@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound } from 'next/navigation';
@@ -8,12 +9,20 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { adjustRecipe } from '@/ai/flows/adjust-recipe-flow';
 import { parseIngredientsForSearch } from '@/ai/flows/parse-ingredients-flow';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
+import {
+  ChartContainer,
+  ChartConfig,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+
 
 export default function RecipePage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
@@ -43,6 +52,30 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
   if (!recipe) {
     notFound();
   }
+
+  const chartConfig = useMemo(() => ({
+    protein: {
+      label: 'Protein (g)',
+      color: 'hsl(var(--chart-1))',
+    },
+    carbohydrates: {
+      label: 'Carbs (g)',
+      color: 'hsl(var(--chart-2))',
+    },
+    fat: {
+      label: 'Fat (g)',
+      color: 'hsl(var(--chart-3))',
+    },
+  } satisfies ChartConfig), []);
+
+  const nutritionData = useMemo(() => {
+    if (!recipe) return [];
+    return [
+      { name: 'Protein', value: parseInt(recipe.nutrition.protein, 10) || 0 },
+      { name: 'Carbohydrates', value: parseInt(recipe.nutrition.carbohydrates, 10) || 0 },
+      { name: 'Fat', value: parseInt(recipe.nutrition.fat, 10) || 0 },
+    ];
+  }, [recipe]);
 
   const handleServingsChange = useCallback(async (newServings: number) => {
     if (newServings < 1 || isAdjusting) return;
@@ -280,12 +313,36 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="px-6 bg-background/50">
-                          <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-sm pt-4 pb-4 border-t">
-                            <p><strong>Calories:</strong> {recipe.nutrition.calories}</p>
-                            <p><strong>Protein:</strong> {recipe.nutrition.protein}</p>
-                            <p><strong>Carbs:</strong> {recipe.nutrition.carbohydrates}</p>
-                            <p><strong>Fat:</strong> {recipe.nutrition.fat}</p>
-                          </div>
+                          <div className="pt-4 pb-4 border-t space-y-4">
+                                <div className="text-center">
+                                <p className="text-muted-foreground">Calories</p>
+                                <p className="text-3xl font-bold text-foreground">{recipe.nutrition.calories}</p>
+                                </div>
+                                <ChartContainer config={chartConfig} className="w-full h-[150px]">
+                                <BarChart accessibilityLayer data={nutritionData} layout="vertical" margin={{ left: 10, right: 20 }}>
+                                    <CartesianGrid horizontal={false} />
+                                    <YAxis
+                                        dataKey="name"
+                                        type="category"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={10}
+                                        width={100}
+                                        tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                                    />
+                                    <XAxis type="number" hide />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent indicator="dot" />}
+                                    />
+                                    <Bar dataKey="value" layout="vertical" radius={5}>
+                                        {nutritionData.map((entry) => (
+                                            <Cell key={entry.name} fill={chartConfig[entry.name.toLowerCase() as keyof typeof chartConfig]?.color} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                                </ChartContainer>
+                            </div>
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
