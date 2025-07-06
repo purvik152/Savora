@@ -1,7 +1,6 @@
-
 'use client';
 
-import { recipeAssistant } from '@/ai/flows/recipe-assistant-flow';
+import { recipeAssistant, RecipeAssistantInput } from '@/ai/flows/recipe-assistant-flow';
 import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,9 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Loader2, Mic, Bot, Play, Pause, Power, Square } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
-
-// Check for browser support
-const SpeechRecognition = typeof window !== 'undefined' ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition : undefined;
 
 interface VoiceAssistantProps {
   recipeTitle: string;
@@ -21,8 +17,10 @@ interface VoiceAssistantProps {
 export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProps) {
   const { toast } = useToast();
   
+  const [hasMounted, setHasMounted] = useState(false);
+  
   // Component State
-  const [isBrowserSupported, setIsBrowserSupported] = useState(false);
+  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false); // When AI is thinking
   const [isListening, setIsListening] = useState(false);  // When mic is on
   const [isSpeaking, setIsSpeaking] = useState(false);  // When audio is playing
@@ -38,6 +36,10 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const finalTranscriptRef = useRef('');
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   // --- Audio Controls ---
   const stopAudio = useCallback(() => {
@@ -77,7 +79,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
 
     try {
       const lang = navigator.language || 'en-US';
-      const assistantInput = {
+      const assistantInput: RecipeAssistantInput = {
         recipeTitle,
         instructions,
         currentStep,
@@ -97,10 +99,9 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       }
       
       const lowerResponse = assistantResult.responseText.toLowerCase();
-      // Don't generate audio for a simple "Paused." confirmation.
       if (lowerResponse === 'paused.') {
         setIsProcessing(false);
-        setIsPaused(true); // Update state to reflect pause.
+        setIsPaused(true);
         return;
       }
 
@@ -133,12 +134,15 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
+    if (!hasMounted) return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
       setIsBrowserSupported(false);
       return;
     }
-    setIsBrowserSupported(true);
-
+    
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = true;
@@ -188,9 +192,11 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     recognitionRef.current = recognition;
     
     return () => {
-      recognition.abort();
+      if(recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
     }
-  }, [handleUserQuery, toast]);
+  }, [hasMounted, handleUserQuery, toast]);
 
   // --- Audio Player Event Listeners ---
   useEffect(() => {
@@ -213,15 +219,15 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     handleUserQuery("start cooking");
   };
   
-  const endSession = () => {
+  const endSession = useCallback(() => {
     stopAudio();
-    if(isListening) recognitionRef.current?.abort();
+    if(recognitionRef.current && isListening) recognitionRef.current.abort();
     setSessionActive(false);
     setIsListening(false);
     setIsProcessing(false);
     setCurrentStep(0);
     setAssistantResponse('Press Start to begin your guided recipe.');
-  };
+  }, [stopAudio, isListening]);
   
   const handleMicClick = () => {
     if (isListening) {
@@ -242,6 +248,28 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   };
 
   // --- UI ---
+
+  // Loading state for server-render and initial client render
+  if (!hasMounted) {
+    return (
+        <Card className="bg-secondary/30">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center gap-2"><Bot /> Voice Assistant</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 text-center">
+             <div className="p-4 bg-background/50 rounded-lg min-h-[120px] flex flex-col justify-center items-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="mt-4 text-muted-foreground">Loading Assistant...</p>
+             </div>
+             <Button size="lg" disabled>
+                <Play className="mr-2"/>
+                Start Cooking
+            </Button>
+          </CardContent>
+        </Card>
+      );
+  }
+
   if (!isBrowserSupported) {
     return (
       <Card className="bg-destructive/10 text-destructive-foreground">
