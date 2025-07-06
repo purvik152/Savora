@@ -10,14 +10,14 @@ import React from 'react';
 const featuredRecipes = [
   {
     name: 'Ultimate Creamy Tomato Pasta',
-    image: 'https://images.unsplash.com/photo-1671401314169-43a79c948037?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1598866594240-a3b5a9502621?q=80&w=1200&h=500&fit=crop',
     hint: 'creamy pasta',
     description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
     href: '/recipes/creamy-tomato-pasta',
   },
   {
     name: 'Lemon Herb Roast Chicken',
-    image: 'https://images.unsplash.com/photo-1604503468593-3e1a8a5f8e52?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=1200&h=500&fit=crop',
     hint: 'roast chicken',
     description: 'Impressive enough for guests, easy enough for a weeknight.',
     href: '/recipes/lemon-herb-roast-chicken',
@@ -38,32 +38,31 @@ const featuredRecipes = [
   }
 ];
 
-// Data for main recipes
-const mainRecipes = [
-  {
-    name: 'Greek Salad',
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&h=800&fit=crop',
-    hint: 'greek salad',
-    href: '/recipes/greek-salad-with-grilled-chicken',
-  },
-  {
-    name: 'Creamy Tomato Pasta',
-    image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=600&h=800&fit=crop',
-    hint: 'creamy pasta',
-    href: '/recipes/creamy-tomato-pasta',
-  },
-  {
-    name: 'Sheet Pan Salmon',
-    image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=600&h=800&fit=crop',
-    hint: 'salmon dinner',
-    href: '/recipes/sheet-pan-salmon-and-veggies',
-  },
-  {
-    name: 'Easy Beef Stir-Fry',
-    image: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=600&h=800&fit=crop',
-    hint: 'beef stir fry',
-    href: '/recipes/easy-beef-stir-fry',
-  },
+const mainCategories = [
+    {
+        name: 'Salads',
+        image: 'https://images.unsplash.com/photo-1551248429-40974011e716?q=80&w=600&h=700&fit=crop',
+        hint: 'strawberry salad',
+        href: '/recipes?q=salad',
+    },
+    {
+        name: 'Most Popular',
+        image: 'https://images.unsplash.com/photo-1618451316508-34811e51275d?q=80&w=600&h=700&fit=crop',
+        hint: 'noodle stir fry',
+        href: '/recipes',
+    },
+    {
+        name: 'Dinner',
+        image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=600&h=700&fit=crop',
+        hint: 'creamy pasta',
+        href: '/recipes?q=dinner',
+    },
+    {
+        name: 'Quick and Easy',
+        image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=600&h=700&fit=crop',
+        hint: 'salmon rice bowl',
+        href: '/recipes?q=quick',
+    }
 ];
 
 
@@ -120,25 +119,24 @@ export default function Home() {
         </Carousel>
       </section>
 
-      {/* Main Recipes Section */}
+      {/* Main Categories Section */}
       <section className="mb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {mainRecipes.map((recipe) => (
-            <Link key={recipe.name} href={recipe.href} className="group relative block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-              <Image
-                src={recipe.image}
-                alt={recipe.name}
-                width={600}
-                height={800}
-                className="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
-                data-ai-hint={recipe.hint}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-4/5 text-center">
-                <span className="bg-accent text-accent-foreground px-4 py-2 text-sm font-semibold tracking-wider uppercase shadow-lg">
-                  {recipe.name}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {mainCategories.map((category) => (
+             <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-4">
+                <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 w-full">
+                    <Image
+                        src={category.image}
+                        alt={category.name}
+                        width={600}
+                        height={700}
+                        className="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
+                        data-ai-hint={category.hint}
+                    />
+                </div>
+                <span className="bg-accent text-accent-foreground px-6 py-2 text-sm font-semibold tracking-wider uppercase shadow-lg">
+                    {category.name}
                 </span>
-              </div>
             </Link>
           ))}
         </div>
