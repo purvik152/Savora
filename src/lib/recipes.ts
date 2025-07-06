@@ -860,6 +860,76 @@ export const recipes: Recipe[] = [
       carbohydrates: '60g',
       fat: '38g',
     }
+  },
+  {
+    id: 23,
+    slug: 'classic-caesar-salad',
+    title: 'Classic Caesar Salad with Grilled Chicken',
+    category: 'Lunch',
+    cuisine: 'American',
+    image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?q=80&w=600&h=400&fit=crop',
+    imageHint: 'caesar salad',
+    description: 'The timeless classic, elevated with tender grilled chicken. Crisp romaine, creamy Caesar dressing, crunchy croutons, and sharp Parmesan cheese.',
+    prepTime: '15 mins',
+    cookTime: '10 mins',
+    servings: '2 people',
+    ingredients: [
+        '1 large chicken breast',
+        '1 head romaine lettuce, chopped',
+        '1 cup croutons',
+        '1/2 cup grated Parmesan cheese',
+        'For the dressing:',
+        '1/2 cup mayonnaise',
+        '2 tbsp lemon juice',
+        '1 tsp Dijon mustard',
+        '1 clove garlic, minced',
+        'Salt and pepper to taste'
+    ],
+    instructions: [
+        'Season chicken breast with salt and pepper. Grill or pan-sear until cooked through. Let rest, then slice.',
+        'In a small bowl, whisk together all dressing ingredients.',
+        'In a large salad bowl, combine the chopped romaine, sliced chicken, croutons, and Parmesan cheese.',
+        'Drizzle with Caesar dressing and toss gently to coat.',
+        'Serve immediately.'
+    ],
+    nutrition: { calories: '550 kcal', protein: '40g', carbohydrates: '15g', fat: '35g' }
+  },
+  {
+    id: 24,
+    slug: 'italian-pasta-salad',
+    title: 'Zesty Italian Pasta Salad',
+    category: 'Lunch',
+    cuisine: 'Italian',
+    image: 'https://images.unsplash.com/photo-1621233959142-c5e3787d5bde?q=80&w=600&h=400&fit=crop',
+    imageHint: 'pasta salad',
+    description: 'A colorful and tangy pasta salad loaded with fresh veggies, salami, and mozzarella, all tossed in a zesty Italian dressing.',
+    prepTime: '20 mins',
+    cookTime: '10 mins',
+    servings: '6-8 people',
+    ingredients: [
+        '1 lb rotini pasta, cooked and cooled',
+        '1 cup cherry tomatoes, halved',
+        '1 cup cucumber, diced',
+        '1/2 red onion, thinly sliced',
+        '1/2 cup black olives, sliced',
+        '4 oz salami, diced',
+        '4 oz fresh mozzarella pearls',
+        'For the dressing:',
+        '1/2 cup olive oil',
+        '1/4 cup red wine vinegar',
+        '1 tbsp Dijon mustard',
+        '1 tsp dried oregano',
+        'Salt and pepper to taste'
+    ],
+    instructions: [
+        'Cook pasta according to package directions. Drain, rinse with cold water, and set aside.',
+        'In a large bowl, combine the cooled pasta, tomatoes, cucumber, red onion, olives, salami, and mozzarella.',
+        'In a small bowl or jar, whisk or shake together all the dressing ingredients.',
+        'Pour the dressing over the pasta salad and toss everything to combine.',
+        'Cover and refrigerate for at least 30 minutes to allow the flavors to meld.',
+        'Serve chilled or at room temperature.'
+    ],
+    nutrition: { calories: '480 kcal', protein: '15g', carbohydrates: '55g', fat: '22g' }
   }
 ];
 

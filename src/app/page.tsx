@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from 'react';
+import { recipes, Recipe } from '@/lib/recipes';
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 const featuredRecipes = [
   {
@@ -17,7 +19,7 @@ const featuredRecipes = [
   },
   {
     name: 'Lemon Herb Roast Chicken',
-    image: 'https://images.unsplash.com/photo-1611270629569-8b357cb88da9?q=80&w=1200&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1598103442387-03379db382c3?q=80&w=1200&h=500&fit=crop',
     hint: 'roast chicken',
     description: 'Impressive enough for guests, easy enough for a weeknight.',
     href: '/recipes/lemon-herb-roast-chicken',
@@ -38,35 +40,6 @@ const featuredRecipes = [
   }
 ];
 
-const mainCategories = [
-    {
-        name: 'Salads',
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&h=700&fit=crop',
-        hint: 'salad bowl',
-        href: '/recipes?q=salad',
-    },
-    {
-        name: 'Most Popular',
-        image: 'https://images.unsplash.com/photo-1563379926898-05f4575a457f?q=80&w=600&h=700&fit=crop',
-        hint: 'popular pasta',
-        href: '/recipes',
-    },
-    {
-        name: 'Dinner',
-        image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=600&h=700&fit=crop',
-        hint: 'creamy pasta',
-        href: '/recipes?q=dinner',
-    },
-    {
-        name: 'Quick and Easy',
-        image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=600&h=700&fit=crop',
-        hint: 'salmon rice bowl',
-        href: '/recipes?q=quick',
-    }
-];
-
-
-// Data for sub-categories
 const subCategories = [
   { name: 'Quick and Easy', image: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=400&h=400&fit=crop', hint: 'rice bowl', href: '/recipes?q=quick' },
   { name: 'Dinner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400&h=400&fit=crop', hint: 'salmon dinner', href: '/recipes?q=dinner' },
@@ -79,10 +52,34 @@ const subCategories = [
   { name: 'Salads', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&h=400&fit=crop', hint: 'salad bowl', href: '/recipes?q=salad' },
 ];
 
+const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
+    <Link href={`/recipes/${recipe.slug}`} className="block h-full">
+        <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
+        <div className="relative w-full h-48">
+            <Image
+            src={recipe.image}
+            alt={recipe.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            data-ai-hint={recipe.imageHint}
+            />
+        </div>
+        <CardContent className="flex flex-grow flex-col p-6">
+            <CardTitle className="text-xl font-semibold mb-2 line-clamp-2">{recipe.title}</CardTitle>
+            <p className="text-muted-foreground line-clamp-3 flex-grow">{recipe.description}</p>
+        </CardContent>
+        </Card>
+    </Link>
+);
+
+
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: false })
+    Autoplay({ delay: 5000, stopOnInteraction: false })
   );
+
+  const saladRecipes = recipes.filter(r => r.title.toLowerCase().includes('salad'));
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
@@ -119,25 +116,12 @@ export default function Home() {
         </Carousel>
       </section>
 
-      {/* Main Categories Section */}
+      {/* Salads Section */}
       <section className="mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Fresh & Flavorful Salads</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {mainCategories.map((category) => (
-             <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-4">
-                <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 w-full">
-                    <Image
-                        src={category.image}
-                        alt={category.name}
-                        width={600}
-                        height={700}
-                        className="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
-                        data-ai-hint={category.hint}
-                    />
-                </div>
-                <span className="bg-accent text-accent-foreground px-6 py-2 text-sm font-semibold tracking-wider uppercase shadow-lg">
-                    {category.name}
-                </span>
-            </Link>
+          {saladRecipes.map((recipe) => (
+             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       </section>
