@@ -1,3 +1,4 @@
+
 'use client';
 
 import { recipeAssistant, RecipeAssistantInput } from '@/ai/flows/recipe-assistant-flow';
@@ -49,17 +50,22 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     setIsSpeaking(false);
     setIsPaused(false);
   }, []);
-
+  
   const startListening = useCallback(() => {
-    if (recognitionRef.current && !isListening) {
+    if (recognitionRef.current) {
       try {
-        stopAudio(); // Ensure nothing is playing before we listen.
+        // Always stop any lingering speech before listening.
+        stopAudio();
+        // The start() method will throw an error if recognition is already active.
+        // The catch block will handle this gracefully.
         recognitionRef.current.start();
       } catch (e) {
+        // This error is expected if the mic is already on (e.g., user clicks button twice).
+        // It's safe to ignore in this context.
         console.log("Recognition could not be started, likely already active.", e);
       }
     }
-  }, [isListening, stopAudio]);
+  }, [stopAudio]);
 
   // --- Audio Controls using Web Speech API ---
   const playAudio = useCallback((text: string, options: { isFinal?: boolean; autoListen?: boolean } = {}) => {
@@ -199,6 +205,8 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     
     recognition.onend = () => {
       setIsListening(false);
+      // We only want to process the query if there's a final transcript.
+      // Otherwise, the mic just turned off.
       if (finalTranscriptRef.current) {
         handleUserQuery(finalTranscriptRef.current);
       }
@@ -327,7 +335,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
         ) : (
             <div className="flex flex-col items-center gap-4">
                 <div className="flex items-center justify-center gap-4">
-                    <Button onClick={handleMicClick} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 scale-110")} disabled={isProcessing}>
+                    <Button onClick={handleMicClick} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 scale-110")} disabled={isProcessing || isSpeaking}>
                         {isProcessing ? <Loader2 className="h-8 w-8 animate-spin" /> : (isListening ? <Square className="h-8 w-8" /> :<Mic className="h-8 w-8" />)}
                     </Button>
                 </div>
