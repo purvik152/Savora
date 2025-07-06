@@ -1,21 +1,27 @@
-
 'use client';
 
 import { notFound, useParams } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, CheckCircle, Mic } from "lucide-react";
+import { Clock, Users, Flame, CheckCircle, Mic, ShoppingCart } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function RecipePage() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const recipe = getRecipeBySlug(slug);
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   if (!recipe) {
     notFound();
@@ -84,9 +90,11 @@ export default function RecipePage() {
                   </ol>
                 </div>
 
-                <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
-                  <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
-                </div>
+                {hasMounted && (
+                  <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
+                    <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -104,6 +112,29 @@ export default function RecipePage() {
                           </li>
                         ))}
                       </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="mt-6 bg-secondary/30">
+                    <CardHeader>
+                        <h3 className="text-xl font-bold flex items-center gap-2">
+                            <ShoppingCart className="h-5 w-5 text-primary"/> Grocery List
+                        </h3>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {recipe.ingredients.map((ingredient, index) => (
+                            <div key={index} className="flex items-center space-x-2">
+                                <Checkbox id={`ingredient-${index}`} />
+                                <label
+                                    htmlFor={`ingredient-${index}`}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    {ingredient}
+                                </label>
+                            </div>
+                            ))}
+                        </div>
                     </CardContent>
                   </Card>
                                     
