@@ -1,15 +1,17 @@
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
+import { Recipe, recipes } from '@/lib/recipes';
 
 const featuredRecipes = [
   {
@@ -88,6 +90,38 @@ export default function Home() {
   );
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Recipe[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = useCallback((query: string) => {
+    if (query.trim().length > 1) {
+        setIsSearching(true);
+        const queryLower = query.toLowerCase();
+        const filteredResults = recipes.filter(
+            (recipe) =>
+            recipe.title.toLowerCase().includes(queryLower) ||
+            recipe.description.toLowerCase().includes(queryLower) ||
+            recipe.cuisine.toLowerCase().includes(queryLower) ||
+            recipe.category.toLowerCase().includes(queryLower)
+        );
+        
+        setTimeout(() => {
+            setSearchResults(filteredResults);
+            setIsSearching(false);
+        }, 300);
+    } else {
+        setSearchResults([]);
+    }
+  }, []);
+
+  useEffect(() => {
+      const timerId = setTimeout(() => {
+          handleSearch(searchQuery);
+      }, 300);
+
+      return () => clearTimeout(timerId);
+  }, [searchQuery, handleSearch]);
+
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -207,29 +241,69 @@ export default function Home() {
 
     {/* Search Section */}
     <section className="my-24">
-        <div className="bg-secondary/20 rounded-lg p-8 md:p-12">
-            <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6">
-                <form
-                    onSubmit={handleSearchSubmit}
-                    className="relative w-full flex-grow md:flex-grow-0 md:w-80"
-                >
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Search our recipes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full h-12 pl-12 pr-4 rounded-md text-base"
-                    />
-                </form>
-                <span className="text-muted-foreground italic text-lg">or</span>
-                <Link href="/recipes" passHref>
-                    <Button size="lg" className="h-12 px-6 font-bold uppercase tracking-wider">
-                    + View All Recipes
-                    </Button>
-                </Link>
-            </div>
+      <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
+        <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
+          <div className="relative w-full">
+            <form onSubmit={handleSearchSubmit}>
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10" />
+              <Input
+                type="search"
+                placeholder="I want to make..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 pl-12 pr-4 rounded-md text-base"
+                autoComplete="off"
+              />
+            </form>
+            {searchQuery.trim().length > 1 && (
+              <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-20 max-h-80 overflow-y-auto">
+                {isSearching ? (
+                  <div className="p-4 flex items-center justify-center text-muted-foreground">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Finding recipes...
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <ul className="divide-y divide-border">
+                    {searchResults.slice(0, 7).map((recipe) => (
+                      <li key={recipe.id}>
+                        <Link
+                          href={`/recipes/${recipe.slug}`}
+                          className="flex items-center gap-4 p-3 hover:bg-secondary/50 transition-colors"
+                        >
+                          <Image
+                            src={recipe.image}
+                            alt={recipe.title}
+                            width={48}
+                            height={48}
+                            className="rounded-md object-cover w-12 h-12"
+                            data-ai-hint={recipe.imageHint}
+                          />
+                          <span className="font-medium">{recipe.title}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="p-4 text-center text-muted-foreground">
+                    No recipes found for &quot;{searchQuery}&quot;.
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-center gap-4">
+            <span className="text-muted-foreground italic">or</span>
+            <Link href="/recipes" passHref>
+              <Button
+                size="lg"
+                className="h-12 px-6 font-bold uppercase tracking-wider"
+              >
+                + View All Recipes
+              </Button>
+            </Link>
+          </div>
         </div>
+      </div>
     </section>
       
     </div>
