@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -22,7 +23,7 @@ const RecipeAssistantInputSchema = z.object({
 export type RecipeAssistantInput = z.infer<typeof RecipeAssistantInputSchema>;
 
 const RecipeAssistantOutputSchema = z.object({
-  responseText: z.string().describe("The assistant's spoken response to the user."),
+  responseText: z.string().describe("The assistant's spoken response to the user. This should be the full text of the recipe instruction when requested."),
   nextStep: z.number().describe("The updated step index after the interaction. This should be the index of the step the user should be on now, or -1 to end the session."),
 });
 export type RecipeAssistantOutput = z.infer<typeof RecipeAssistantOutputSchema>;
@@ -43,25 +44,43 @@ The user is currently on step with index {{currentStep}}. The instruction for th
 
 The user just said: "{{userQuery}}"
 
-Based on the user's query, provide a helpful, conversational response and determine the next logical step index.
-- For a query like "start" or "start cooking": Respond with the very first instruction and set 'nextStep' to 0.
+Based on the user's query, determine the next logical step and generate the appropriate response.
+**IMPORTANT**: When providing a recipe instruction, your 'responseText' MUST be the full, exact text of that instruction. Do not summarize or add conversational filler like "The next step is...". Just state the instruction.
+
+- For a query like "start" or "start cooking":
+  - 'responseText' MUST be the text of the first instruction (index 0).
+  - 'nextStep' MUST be 0.
 - For commands like "next step" or "skip":
-  - If it is not the last step, respond with the next instruction and update 'nextStep' to the next index.
-  - If it is the last step, respond by saying they have reached the end of the recipe and set 'nextStep' to -1 to end the session.
-- For "repeat": Say the current instruction again. 'nextStep' remains the same.
-- For "go back" or "previous step": Respond with the previous instruction and update 'nextStep' to the previous index. If at the first step, just repeat the first step's instructions and keep 'nextStep' at 0.
-- For "start over": Respond with the first instruction and set 'nextStep' to 0.
-- For "end" or "stop cooking": Give a friendly closing message (e.g., "Happy cooking!") and set 'nextStep' to -1 to end the session.
-- For "pause": Respond with a short confirmation like "Paused." and keep 'nextStep' the same. The front-end client will handle pausing the audio.
-- For "resume" or "continue": Respond with "Resuming." and keep 'nextStep' the same. The front-end client will handle resuming the audio.
-- For questions about the current step (e.g., "how much flour?"): Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
+  - If it is not the last step: 'responseText' MUST be the text of the next instruction. 'nextStep' MUST be the index of that next instruction.
+  - If it is the last step: 'responseText' MUST be a friendly closing message like "You've reached the end of the recipe. Happy cooking!". 'nextStep' MUST be -1.
+- For "repeat":
+  - 'responseText' MUST be the text of the current instruction again.
+  - 'nextStep' MUST remain the same as the current step.
+- For "go back" or "previous step":
+  - If at the first step (index 0): 'responseText' MUST be the text of the first instruction. 'nextStep' MUST be 0.
+  - Otherwise: 'responseText' MUST be the text of the previous instruction. 'nextStep' MUST be the index of that previous instruction.
+- For "start over":
+  - 'responseText' MUST be the text of the first instruction.
+  - 'nextStep' MUST be 0.
+- For "end" or "stop cooking":
+  - 'responseText' MUST be a friendly closing message (e.g., "Happy cooking!").
+  - 'nextStep' MUST be -1.
+- For "pause":
+  - 'responseText' MUST be a short confirmation like "Paused."
+  - 'nextStep' MUST remain the same. The app will handle pausing.
+- For "resume" or "continue":
+  - 'responseText' MUST be "Resuming."
+  - 'nextStep' MUST remain the same. The app will handle resuming.
+- For questions about the current step (e.g., "how much flour?"):
+  - Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
 {{#each instructions}}
 - Step {{@index}}: {{{this}}}
 {{/each}}
-- If the query is unclear: Ask the user to repeat or clarify, and keep 'nextStep' as the current step.
+- If the query is unclear:
+  - Ask the user to repeat or clarify.
+  - 'nextStep' MUST remain the same.
 
-Your 'responseText' should be what you would say out loud.
-Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array, or -1 to end the session. Do not return an index equal to the length of the instructions array.`,
+Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array, or -1 to end the session. Do not return an index equal to or greater than the number of instructions.`,
 });
 
 const recipeAssistantFlow = ai.defineFlow(
