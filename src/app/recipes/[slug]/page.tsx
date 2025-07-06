@@ -78,12 +78,13 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
 
   const nutritionData = useMemo(() => {
     if (!recipe) return [];
+    // The name properties must be lowercase to match the keys in chartConfig
     return [
-      { name: 'Protein', value: parseInt(recipe.nutrition.protein, 10) || 0 },
-      { name: 'Carbohydrates', value: parseInt(recipe.nutrition.carbohydrates, 10) || 0 },
-      { name: 'Fat', value: parseInt(recipe.nutrition.fat, 10) || 0 },
-      { name: 'Fiber', value: parseInt(recipe.nutrition.fiber, 10) || 0 },
-      { name: 'Sugar', value: parseInt(recipe.nutrition.sugar, 10) || 0 },
+      { name: 'protein', value: parseInt(recipe.nutrition.protein, 10) || 0 },
+      { name: 'carbohydrates', value: parseInt(recipe.nutrition.carbohydrates, 10) || 0 },
+      { name: 'fat', value: parseInt(recipe.nutrition.fat, 10) || 0 },
+      { name: 'fiber', value: parseInt(recipe.nutrition.fiber, 10) || 0 },
+      { name: 'sugar', value: parseInt(recipe.nutrition.sugar, 10) || 0 },
     ];
   }, [recipe]);
 
@@ -189,6 +190,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
               className="object-cover"
               sizes="100vw"
               data-ai-hint={recipe.imageHint}
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
@@ -339,6 +341,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                                         tickMargin={10}
                                         width={100}
                                         tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                                        tickFormatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)}
                                     />
                                     <XAxis type="number" hide />
                                     <ChartTooltip
@@ -347,7 +350,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                                     />
                                     <Bar dataKey="value" layout="vertical" radius={5}>
                                         {nutritionData.map((entry) => (
-                                            <Cell key={entry.name} fill={chartConfig[entry.name.toLowerCase() as keyof typeof chartConfig]?.color} />
+                                            <Cell key={entry.name} fill={chartConfig[entry.name as keyof typeof chartConfig]?.color} />
                                         ))}
                                     </Bar>
                                 </BarChart>
