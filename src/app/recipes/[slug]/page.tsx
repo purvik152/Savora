@@ -4,7 +4,7 @@ import { notFound, useParams } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, CheckCircle, Mic, ShoppingCart } from "lucide-react";
+import { Clock, Users, Flame, CheckCircle, Mic, ShoppingCart, ExternalLink } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState } from 'react';
@@ -29,6 +29,12 @@ export default function RecipePage() {
 
   const handleScrollToVoiceAssistant = () => {
     voiceAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleOrderOnInstamart = () => {
+    const ingredientsQuery = recipe.ingredients.join(', ');
+    const instamartUrl = `https://www.swiggy.com/instamart/search?query=${encodeURIComponent(ingredientsQuery)}`;
+    window.open(instamartUrl, '_blank');
   };
 
   return (
@@ -135,6 +141,10 @@ export default function RecipePage() {
                             </div>
                             ))}
                         </div>
+                        <Button onClick={handleOrderOnInstamart} className="w-full mt-6">
+                            Order with Instamart
+                            <ExternalLink className="h-4 w-4 ml-2" />
+                        </Button>
                     </CardContent>
                   </Card>
                                     
