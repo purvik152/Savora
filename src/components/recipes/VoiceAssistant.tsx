@@ -44,8 +44,27 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     }
   }, []);
 
+  const stopAudio = useCallback(() => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+    setIsPaused(false);
+  }, []);
+
+  const startListening = useCallback(() => {
+    if (recognitionRef.current && !isListening) {
+      try {
+        stopAudio(); // Ensure nothing is playing before we listen.
+        recognitionRef.current.start();
+      } catch (e) {
+        console.log("Recognition could not be started, likely already active.", e);
+      }
+    }
+  }, [isListening, stopAudio]);
+
   // --- Audio Controls using Web Speech API ---
-  const playAudio = useCallback((text: string) => {
+  const playAudio = useCallback((text: string, options: { isFinal?: boolean; autoListen?: boolean } = {}) => {
+    const { isFinal = false, autoListen = true } = options;
+
     if (!('speechSynthesis' in window)) {
         console.error("Speech Synthesis not supported.");
         setAssistantResponse("Sorry, your browser doesn't support voice output.");
@@ -63,6 +82,10 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     utterance.onend = () => {
         setIsSpeaking(false);
         setIsPaused(false);
+        // Automatically start listening for the next command if the session is active
+        if (sessionActive && !isFinal && autoListen) {
+            startListening();
+        }
     };
     utterance.onerror = (event) => {
         console.error("SpeechSynthesis Error", event);
@@ -76,13 +99,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [toast]);
-
-  const stopAudio = useCallback(() => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-    setIsPaused(false);
-  }, []);
+  }, [toast, sessionActive, startListening]);
 
   const pauseAudio = useCallback(() => {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
@@ -122,10 +139,11 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       };
 
       const assistantResult = await recipeAssistant(assistantInput);
+      const isFinal = assistantResult.nextStep === -1;
       
       setAssistantResponse(assistantResult.responseText);
       
-      if (assistantResult.nextStep === -1) {
+      if (isFinal) {
         setSessionActive(false);
         setCurrentStep(0);
       } else {
@@ -133,13 +151,17 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
       }
       
       const lowerResponse = assistantResult.responseText.toLowerCase();
+      // Don't play audio for 'Paused.' as it's just a state confirmation.
       if (lowerResponse === 'paused.') {
         setIsProcessing(false);
         setIsPaused(true);
         return;
       }
 
-      playAudio(assistantResult.responseText);
+      // For 'wait' commands, speak the response but don't auto-listen afterwards.
+      const shouldAutoListen = !lowerResponse.includes("i'll wait");
+
+      playAudio(assistantResult.responseText, { isFinal, autoListen: shouldAutoListen });
 
     } catch (error) {
       console.error("Error processing voice command:", error);
@@ -239,17 +261,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     if (isListening) {
       recognitionRef.current?.stop();
     } else {
-      stopAudio(); 
-      try {
-        recognitionRef.current?.start();
-      } catch (e) {
-        console.error("Could not start recognition", e);
-        toast({
-            variant: "destructive",
-            title: "Microphone Error",
-            description: "Could not start listening. Please check your browser permissions."
-        })
-      }
+      startListening();
     }
   };
 

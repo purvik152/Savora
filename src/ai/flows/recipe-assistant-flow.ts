@@ -71,6 +71,9 @@ Based on the user's query, determine the next logical step and generate the appr
 - For "resume" or "continue":
   - 'responseText' MUST be the text of the current instruction again.
   - 'nextStep' MUST remain the same as the current step.
+- For commands like "wait", "hold on", or if the user asks to wait (e.g., "wait 5 seconds"):
+  - 'responseText' MUST be a confirmation like "Okay, I'll wait. Let me know when you're ready."
+  - 'nextStep' MUST remain the same as the current step.
 - For questions about the current step (e.g., "how much flour?"):
   - Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
 {{#each instructions}}
