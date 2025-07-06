@@ -146,12 +146,13 @@ export default function Home() {
           <CarouselContent>
             {featuredRecipes.map((recipe, index) => (
               <CarouselItem key={index}>
-                <div className="relative h-[450px] w-full overflow-hidden rounded-lg">
+                <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
                   <Link href={recipe.href} className="block h-full w-full group">
                     <Image
                       src={recipe.image}
                       alt={recipe.name}
                       fill
+                      sizes="100vw"
                       className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                       data-ai-hint={recipe.hint}
                       priority={index === 0}
