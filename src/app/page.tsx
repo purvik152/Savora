@@ -153,7 +153,6 @@ export default function Home() {
                       sizes="100vw"
                       className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                       data-ai-hint={recipe.hint}
-                      priority={index === 0}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
                     <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
