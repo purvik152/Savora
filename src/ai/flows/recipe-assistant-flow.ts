@@ -52,6 +52,8 @@ Based on the user's query, provide a helpful, conversational response and determ
 - For "go back" or "previous step": Respond with the previous instruction and update 'nextStep' to the previous index. If at the first step, just repeat the first step's instructions and keep 'nextStep' at 0.
 - For "start over": Respond with the first instruction and set 'nextStep' to 0.
 - For "end" or "stop cooking": Give a friendly closing message (e.g., "Happy cooking!") and set 'nextStep' to -1 to end the session.
+- For "pause": Respond with a short confirmation like "Paused." and keep 'nextStep' the same. The front-end client will handle pausing the audio.
+- For "resume" or "continue": Respond with "Resuming." and keep 'nextStep' the same. The front-end client will handle resuming the audio.
 - For questions about the current step (e.g., "how much flour?"): Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
 {{#each instructions}}
 - Step {{@index}}: {{{this}}}

@@ -69,9 +69,28 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   const handleUserQuery = useCallback(async (query: string) => {
     if (!query.trim()) return;
 
+    const lowerQuery = query.toLowerCase().trim();
+
+    // Client-side handling for immediate commands during an active session
+    if (sessionActive) {
+        if (lowerQuery.includes('pause')) {
+            pauseAudio();
+            // No need to call AI, just pause the current audio playback.
+            // The status text will update via the `isPaused` state.
+            return;
+        }
+        if (lowerQuery.includes('resume') || lowerQuery.includes('continue')) {
+            resumeAudio();
+            // No need to call AI, just resume the current audio playback.
+            // The status text will update via the `isSpeaking` state.
+            return;
+        }
+    }
+
+
     // Start session on initial command
     if (!sessionActive) {
-      if (query.toLowerCase().includes('start')) {
+      if (lowerQuery.includes('start')) {
         setSessionActive(true);
       } else {
         // Don't process other commands if session hasn't started
@@ -123,7 +142,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
     } finally {
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio, sessionActive]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio, sessionActive, pauseAudio, resumeAudio]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
