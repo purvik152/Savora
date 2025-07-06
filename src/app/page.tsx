@@ -4,8 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
 
 const featuredRecipes = [
   {
@@ -82,6 +86,15 @@ export default function Home() {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/recipes?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const subCategoriesRow1 = subCategories.slice(0, 4);
   const subCategoriesRow2 = subCategories.slice(4, 9);
@@ -189,6 +202,33 @@ export default function Home() {
                 </div>
             </Link>
             ))}
+        </div>
+    </section>
+
+    {/* Search Section */}
+    <section className="my-24">
+        <div className="bg-secondary/20 rounded-lg p-8 md:p-12">
+            <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6">
+                <form
+                    onSubmit={handleSearchSubmit}
+                    className="relative w-full flex-grow md:flex-grow-0 md:w-80"
+                >
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                        type="search"
+                        placeholder="Search our recipes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full h-12 pl-12 pr-4 rounded-md text-base"
+                    />
+                </form>
+                <span className="text-muted-foreground italic text-lg">or</span>
+                <Link href="/recipes" passHref>
+                    <Button size="lg" className="h-12 px-6 font-bold uppercase tracking-wider">
+                    + View All Recipes
+                    </Button>
+                </Link>
+            </div>
         </div>
     </section>
       
