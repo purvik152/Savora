@@ -5,18 +5,25 @@ import { notFound, useParams } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, CheckCircle } from "lucide-react";
+import { Clock, Users, Flame, CheckCircle, Mic } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
+import { useRef } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function RecipePage() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const recipe = getRecipeBySlug(slug);
+  const voiceAssistantRef = useRef<HTMLDivElement>(null);
 
   if (!recipe) {
     notFound();
   }
+
+  const handleScrollToVoiceAssistant = () => {
+    voiceAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="bg-background">
@@ -40,7 +47,7 @@ export default function RecipePage() {
           <CardContent className="p-6 md:p-8">
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-2">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8 text-center">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
                   <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg">
                     <Clock className="h-8 w-8 text-primary mb-2" />
                     <span className="font-bold">Prep Time</span>
@@ -55,6 +62,11 @@ export default function RecipePage() {
                     <Users className="h-8 w-8 text-primary mb-2" />
                     <span className="font-bold">Servings</span>
                     <span className="text-muted-foreground">{recipe.servings}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg cursor-pointer hover:bg-secondary" onClick={handleScrollToVoiceAssistant}>
+                    <Mic className="h-8 w-8 text-primary mb-2" />
+                    <span className="font-bold">Voice Guide</span>
+                    <span className="text-sm text-primary">Start Cooking</span>
                   </div>
                 </div>
 
@@ -91,7 +103,9 @@ export default function RecipePage() {
                     </CardContent>
                   </Card>
                   
-                  <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
+                  <div ref={voiceAssistantRef}>
+                    <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
+                  </div>
                   
                   <Card className="mt-6 bg-secondary/30">
                     <CardHeader>
