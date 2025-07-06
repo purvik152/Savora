@@ -34,21 +34,16 @@ const prompt = ai.definePrompt({
   name: 'recipeAssistantPrompt',
   input: {schema: RecipeAssistantInputSchema},
   output: {schema: RecipeAssistantOutputSchema},
-  template: {
-    helpers: {
-      add: (a: number, b: number) => a + b,
-    },
-  },
   prompt: `You are Savora, a friendly and helpful voice assistant for cooking. You are guiding a user through the recipe for "{{recipeTitle}}".
 
 The user's preferred language is {{language}}. YOU MUST respond clearly and concisely in this language.
 
-Here are all the steps for the recipe:
+Here are all the steps for the recipe, provided as a list. The steps are 0-indexed.
 {{#each instructions}}
-Step {{add @index 1}}: {{{this}}}
+- {{{this}}}
 {{/each}}
 
-The user is currently on Step {{add currentStep 1}}: "{{lookup instructions currentStep}}"
+The user is currently on step with index {{currentStep}}. The instruction for this step is: "{{lookup instructions currentStep}}"
 
 The user just said: "{{userQuery}}"
 
