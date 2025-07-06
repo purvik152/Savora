@@ -44,9 +44,12 @@ The user is currently on step with index {{currentStep}}. The instruction for th
 The user just said: "{{userQuery}}"
 
 Based on the user's query, provide a helpful, conversational response and determine the next logical step index.
-- For commands like "next step" or "skip": Respond with the next instruction and update 'nextStep' to the next index. If it is the last step, inform the user they have reached the end.
+- For a query like "start" or "start cooking": Respond with the very first instruction and set 'nextStep' to 0.
+- For commands like "next step" or "skip":
+  - If it is not the last step, respond with the next instruction and update 'nextStep' to the next index.
+  - If it is the last step, respond by saying they have reached the end of the recipe and set 'nextStep' to -1 to end the session.
 - For "repeat": Say the current instruction again. 'nextStep' remains the same.
-- For "go back" or "previous step": Respond with the previous instruction and update 'nextStep' to the previous index.
+- For "go back" or "previous step": Respond with the previous instruction and update 'nextStep' to the previous index. If at the first step, just repeat the first step's instructions and keep 'nextStep' at 0.
 - For "start over": Respond with the first instruction and set 'nextStep' to 0.
 - For "end" or "stop cooking": Give a friendly closing message (e.g., "Happy cooking!") and set 'nextStep' to -1 to end the session.
 - For questions about the current step (e.g., "how much flour?"): Answer the question based on the recipe context and keep 'nextStep' the same. The full recipe instructions are available for context if needed:
@@ -56,7 +59,7 @@ Based on the user's query, provide a helpful, conversational response and determ
 - If the query is unclear: Ask the user to repeat or clarify, and keep 'nextStep' as the current step.
 
 Your 'responseText' should be what you would say out loud.
-Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array, or -1 to end the session. Ensure the nextStep is always within the valid range of indices (from 0 to the last index).`,
+Your 'nextStep' must be a valid, 0-based index within the bounds of the instructions array, or -1 to end the session. Do not return an index equal to the length of the instructions array.`,
 });
 
 const recipeAssistantFlow = ai.defineFlow(
