@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Converts recipe text to speech.
+ * @fileOverview Converts recipe text to speech with caching.
  *
  * - recipeToSpeech - A function that handles converting text to audio.
  * - RecipeToSpeechInput - The input type for the recipeToSpeech function.
@@ -21,9 +21,21 @@ const RecipeToSpeechOutputSchema = z.object({
 });
 export type RecipeToSpeechOutput = z.infer<typeof RecipeToSpeechOutputSchema>;
 
+// Simple in-memory cache to reduce TTS API calls and avoid hitting rate limits.
+const ttsCache = new Map<string, RecipeToSpeechOutput>();
 
 export async function recipeToSpeech(input: RecipeToSpeechInput): Promise<RecipeToSpeechOutput> {
-  return textToSpeechFlow(input);
+  // Check the cache first to avoid unnecessary API calls.
+  if (ttsCache.has(input)) {
+    return ttsCache.get(input)!;
+  }
+  
+  const result = await textToSpeechFlow(input);
+
+  // Store the generated audio in the cache for future requests.
+  ttsCache.set(input, result);
+  
+  return result;
 }
 
 
