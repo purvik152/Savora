@@ -85,19 +85,14 @@ export function Header() {
             </nav>
 
             <div className="flex items-center space-x-2">
-              <div className="hidden md:block">
-                <Button
-                  variant="outline"
-                  className="h-10 w-60 lg:w-72 justify-start text-muted-foreground"
-                  onClick={() => setIsSearchOpen(true)}
-                >
-                  <Search className="mr-2 h-4 w-4" />
-                  Search recipes...
-                  <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-                    <span className="text-xs">⌘</span>K
-                  </kbd>
-                </Button>
-              </div>
+               <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(true)}
+              >
+                <Search className="h-5 w-5" />
+                <span className="sr-only">Search recipes</span>
+              </Button>
               <ThemeToggle />
               {hasMounted && !isLoggedIn && (
                   <Button asChild>
@@ -124,21 +119,6 @@ export function Header() {
                            <X className="h-6 w-6"/>
                          </Button>
                       </div>
-
-                      <div className="mt-6">
-                        <Button
-                          variant="outline"
-                          className="h-10 w-full justify-start text-muted-foreground"
-                          onClick={() => {
-                            setIsSearchOpen(true);
-                            closeMobileMenu();
-                          }}
-                        >
-                          <Search className="mr-2 h-4 w-4" />
-                          Search recipes...
-                        </Button>
-                      </div>
-
                       <nav className="flex flex-col space-y-4 mt-4">
                         {navLinks.map((link) => (
                           <Link
