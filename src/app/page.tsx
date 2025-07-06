@@ -38,6 +38,18 @@ const featuredRecipes = [
   }
 ];
 
+const subCategories = [
+  { name: 'Quick and Easy', href: '/recipes?q=quick', image: 'https://images.unsplash.com/photo-1515516969-8021502af722?q=80&w=200&h=200&fit=crop', hint: 'chicken broccoli' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: 'https://images.unsplash.com/photo-1608897013039-887f21d8c804?q=80&w=200&h=200&fit=crop', hint: 'penne pasta' },
+  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: 'https://images.unsplash.com/photo-1599974579601-211636b7a2c8?q=80&w=200&h=200&fit=crop', hint: 'cauliflower tacos' },
+  { name: 'Healthy', href: '/recipes?q=healthy', image: 'https://images.unsplash.com/photo-1540420773420-23666b36a694?q=80&w=200&h=200&fit=crop', hint: 'grain bowl' },
+  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: 'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=200&h=200&fit=crop', hint: 'tacos' },
+  { name: 'Vegan', href: '/recipes?q=vegan', image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=200&h=200&fit=crop', hint: 'vegan pasta' },
+  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790774?q=80&w=200&h=200&fit=crop', hint: 'meal prep' },
+  { name: 'Soups', href: '/recipes?q=soup', image: 'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?q=80&w=200&h=200&fit=crop', hint: 'tortilla soup' },
+  { name: 'Salads', href: '/recipes?q=salad', image: 'https://images.unsplash.com/photo-1505253716362-afb540683500?q=80&w=200&h=200&fit=crop', hint: 'strawberry salad' },
+];
+
 const mainCategories = [
   {
     name: 'Salads',
@@ -106,6 +118,29 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
+      </section>
+
+      {/* Sub-Categories Section */}
+      <section className="mb-16">
+        <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+          {subCategories.map((category) => (
+            <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
+              <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover"
+                  sizes="112px"
+                  data-ai-hint={category.hint}
+                />
+              </div>
+              <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                {category.name}
+              </span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* Main Categories Section */}
