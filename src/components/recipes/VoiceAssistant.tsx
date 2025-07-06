@@ -151,7 +151,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   const isLoading = isProcessing || isListening;
 
   return (
-    <Card className="mt-6 bg-secondary/30">
+    <Card className="bg-secondary/30">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bot /> Voice Assistant

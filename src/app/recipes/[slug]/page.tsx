@@ -83,6 +83,10 @@ export default function RecipePage() {
                     ))}
                   </ol>
                 </div>
+
+                <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
+                  <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
+                </div>
               </div>
 
               <div>
@@ -102,11 +106,7 @@ export default function RecipePage() {
                       </ul>
                     </CardContent>
                   </Card>
-                  
-                  <div ref={voiceAssistantRef}>
-                    <VoiceAssistant recipeTitle={recipe.title} instructions={recipe.instructions} />
-                  </div>
-                  
+                                    
                   <Card className="mt-6 bg-secondary/30">
                     <CardHeader>
                         <h3 className="text-xl font-bold">Nutrition Facts</h3>
