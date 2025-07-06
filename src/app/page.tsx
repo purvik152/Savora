@@ -85,7 +85,7 @@ const mainCategories = [
 
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true })
+    Autoplay({ delay: 4000, stopOnInteraction: false })
   );
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -140,8 +140,6 @@ export default function Home() {
         <Carousel
           plugins={[plugin.current]}
           className="w-full"
-          onMouseEnter={plugin.current.stop}
-          onMouseLeave={plugin.current.reset}
         >
           <CarouselContent>
             {featuredRecipes.map((recipe, index) => (
