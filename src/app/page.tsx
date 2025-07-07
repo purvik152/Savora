@@ -55,6 +55,9 @@ const subCategories = [
   { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad' },
 ];
 
+const subCategoriesFirstRow = subCategories.slice(0, 4);
+const subCategoriesSecondRow = subCategories.slice(4);
+
 const mainCategories = [
   {
     name: 'Quick and Easy',
@@ -176,34 +179,65 @@ export default function Home() {
       {/* Sub-Categories Section */}
       <section className="mb-16">
         {hasMounted ? (
+          <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategories.map((category) => (
+              {subCategoriesFirstRow.map((category) => (
                 <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
-                    <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-cover"
-                        sizes="112px"
-                        data-ai-hint={category.hint}
-                      />
-                    </div>
-                    <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
-                      {category.name}
-                    </span>
+                  <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                      sizes="112px"
+                      data-ai-hint={category.hint}
+                    />
+                  </div>
+                  <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
+                    {category.name}
+                  </span>
                 </Link>
               ))}
             </div>
-        ) : (
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-                {subCategories.map((category) => (
-                    <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
-                        <Skeleton className="h-28 w-28 rounded-full" />
-                        <Skeleton className="h-4 w-20 rounded-md" />
-                    </div>
-                ))}
+              {subCategoriesSecondRow.map((category) => (
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
+                  <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                      sizes="112px"
+                      data-ai-hint={category.hint}
+                    />
+                  </div>
+                  <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
+                    {category.name}
+                  </span>
+                </Link>
+              ))}
             </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-y-12">
+            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+              {subCategoriesFirstRow.map((category) => (
+                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
+                  <Skeleton className="h-28 w-28 rounded-full" />
+                  <Skeleton className="h-4 w-20 rounded-md" />
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+              {subCategoriesSecondRow.map((category) => (
+                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
+                  <Skeleton className="h-28 w-28 rounded-full" />
+                  <Skeleton className="h-4 w-20 rounded-md" />
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </section>
 
