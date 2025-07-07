@@ -209,33 +209,48 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                     </div>
                 )}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
-                  <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg">
-                    <Clock className="h-8 w-8 text-primary mb-2" />
-                    <span className="font-bold">Prep Time</span>
-                    <span className="text-muted-foreground">{recipe.prepTime}</span>
+                  <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
+                    <Clock className="absolute -top-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <Clock className="h-8 w-8 text-primary mb-2" />
+                      <span className="font-bold">Prep Time</span>
+                      <span className="text-muted-foreground">{recipe.prepTime}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg">
-                    <Flame className="h-8 w-8 text-primary mb-2" />
-                    <span className="font-bold">Cook Time</span>
-                    <span className="text-muted-foreground">{recipe.cookTime}</span>
+
+                  <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
+                    <Flame className="absolute -top-2 -right-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-125" />
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <Flame className="h-8 w-8 text-primary mb-2" />
+                      <span className="font-bold">Cook Time</span>
+                      <span className="text-muted-foreground">{recipe.cookTime}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg">
-                    <Users className="h-8 w-8 text-primary mb-2" />
-                    <span className="font-bold">Servings</span>
-                     <div className="flex items-center gap-2 mt-1">
+
+                  <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
+                    <Users className="absolute -bottom-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <Users className="h-8 w-8 text-primary mb-2" />
+                      <span className="font-bold">Servings</span>
+                      <div className="flex items-center gap-2 mt-1">
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings - 1)} disabled={servings <= 1 || isAdjusting}>
-                            <Minus className="h-4 w-4" />
+                          <Minus className="h-4 w-4" />
                         </Button>
                         <span className="text-foreground font-bold text-lg w-8 text-center">{servings}</span>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings + 1)} disabled={isAdjusting}>
-                            <Plus className="h-4 w-4" />
+                          <Plus className="h-4 w-4" />
                         </Button>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg cursor-pointer hover:bg-secondary" onClick={handleScrollToVoiceAssistant}>
-                    <Mic className="h-8 w-8 text-primary mb-2" />
-                    <span className="font-bold">Voice Guide</span>
-                    <span className="text-sm text-primary">Start Cooking</span>
+
+                  <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary cursor-pointer" onClick={handleScrollToVoiceAssistant}>
+                    <Mic className="absolute -bottom-2 -right-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-125" />
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <Mic className="h-8 w-8 text-primary mb-2" />
+                      <span className="font-bold">Voice Guide</span>
+                      <span className="text-sm text-primary">Start Cooking</span>
+                    </div>
                   </div>
                 </div>
 
