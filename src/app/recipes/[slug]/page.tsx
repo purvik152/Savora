@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages } from "lucide-react";
-import { getRecipeBySlug } from '@/lib/recipes';
+import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
@@ -36,23 +36,61 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
-export default function RecipePage() {
-  const params = useParams<{ slug: string }>();
-  const slug = params.slug;
-  const recipe = getRecipeBySlug(slug);
+function RecipePageSkeleton() {
+  return (
+    <div className="bg-background">
+      <div className="container mx-auto px-4 py-8 md:py-16">
+        <Card className="overflow-hidden shadow-2xl">
+          <CardHeader className="p-0 relative h-64 md:h-96">
+            <Skeleton className="h-full w-full" />
+          </CardHeader>
+          <CardContent className="p-6 md:p-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-24 w-full rounded-lg" />
+                ))}
+              </div>
+              <div className="mb-8">
+                <Skeleton className="h-8 w-48 mb-6" />
+                <div className="space-y-6">
+                  <Skeleton className="h-6 w-full rounded-md" />
+                  <Skeleton className="h-6 w-11/12 rounded-md" />
+                  <Skeleton className="h-6 w-full rounded-md" />
+                  <Skeleton className="h-6 w-10/12 rounded-md" />
+                </div>
+              </div>
+               <div className="mt-12">
+                   <div className="space-y-4">
+                     <Skeleton className="h-16 w-full rounded-lg" />
+                     <Skeleton className="h-16 w-full rounded-lg" />
+                     <Skeleton className="h-16 w-full rounded-lg" />
+                   </div>
+               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+
+function RecipeView({ recipe }: { recipe: Recipe }) {
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const [hasMounted, setHasMounted] = useState(false);
   
-  const initialServings = recipe ? parseInt(recipe.servings.match(/\d+/)?.[0] || '1', 10) : 1;
+  const initialServings = parseInt(recipe.servings.match(/\d+/)?.[0] || '1', 10);
   const [servings, setServings] = useState(initialServings);
-  const [displayedIngredients, setDisplayedIngredients] = useState(recipe?.ingredients || []);
-  const [displayedInstructions, setDisplayedInstructions] = useState(recipe?.instructions || []);
-  const [displayedPrepTime, setDisplayedPrepTime] = useState(recipe?.prepTime || '');
-  const [displayedCookTime, setDisplayedCookTime] = useState(recipe?.cookTime || '');
+  const [displayedIngredients, setDisplayedIngredients] = useState(recipe.ingredients);
+  const [displayedInstructions, setDisplayedInstructions] = useState(recipe.instructions);
+  const [displayedPrepTime, setDisplayedPrepTime] = useState(recipe.prepTime);
+  const [displayedCookTime, setDisplayedCookTime] = useState(recipe.cookTime);
   const [isAdjusting, setIsAdjusting] = useState(false);
   const [language, setLanguage] = useState('english');
   const [isTranslating, setIsTranslating] = useState(false);
@@ -64,15 +102,9 @@ export default function RecipePage() {
 
   useEffect(() => {
     setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
     setCheckedIngredients(new Set());
   }, [displayedIngredients]);
-
-  if (!recipe) {
-    notFound();
-  }
+  
 
   const chartConfig = useMemo(() => ({
     protein: {
@@ -98,7 +130,6 @@ export default function RecipePage() {
   } satisfies ChartConfig), []);
 
   const nutritionData = useMemo(() => {
-    if (!recipe) return [];
     // The name properties must be lowercase to match the keys in chartConfig
     return [
       { name: 'protein', value: parseInt(recipe.nutrition.protein, 10) || 0 },
@@ -281,7 +312,7 @@ export default function RecipePage() {
     }
     return control;
   }
-
+  
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-8 md:py-16">
@@ -523,4 +554,28 @@ export default function RecipePage() {
       </div>
     </div>
   );
+}
+
+
+export default function RecipePage() {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug;
+  const recipe = slug ? getRecipeBySlug(slug) : undefined;
+
+  if (!hasMounted) {
+    return <RecipePageSkeleton />;
+  }
+
+  if (!recipe) {
+    notFound();
+    return null;
+  }
+
+  return <RecipeView recipe={recipe} />;
 }
