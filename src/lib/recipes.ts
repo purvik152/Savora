@@ -1179,6 +1179,102 @@ export const recipes: Recipe[] = [
       sugar: '9g',
       sodium: '750mg'
     }
+  },
+  {
+    id: 29,
+    slug: 'instant-pot-pot-roast',
+    title: 'Instant Pot Pot Roast',
+    category: 'Dinner',
+    cuisine: 'American',
+    image: '/images/recipes/instant-pot-pot-roast.jpg',
+    imageHint: 'pot roast',
+    description: 'Fall-apart tender pot roast with potatoes and carrots, cooked to perfection in a fraction of the time using the Instant Pot.',
+    prepTime: '15 mins',
+    cookTime: '1 hr 30 mins',
+    servings: '6 people',
+    ingredients: [
+        '3 lb beef chuck roast',
+        '2 tbsp olive oil',
+        '1 large onion, chopped',
+        '4 cloves garlic, minced',
+        '1 cup beef broth',
+        '1/4 cup Worcestershire sauce',
+        '1 tbsp tomato paste',
+        '1 tsp dried thyme',
+        '1.5 lbs baby potatoes, halved',
+        '4 large carrots, cut into 1-inch chunks',
+        '2 tbsp cornstarch',
+        '2 tbsp cold water'
+    ],
+    instructions: [
+        'Season the chuck roast generously with salt and pepper.',
+        'Set the Instant Pot to "Sauté" on high. Add olive oil. Once hot, sear the roast for 3-4 minutes per side until well browned. Remove roast and set aside.',
+        'Add onion to the pot and cook for 3-4 minutes until softened. Add garlic and cook for 1 more minute.',
+        'Pour in beef broth to deglaze the pot, scraping up any browned bits from the bottom.',
+        'Stir in Worcestershire sauce, tomato paste, and thyme. Turn off the "Sauté" function.',
+        'Return the roast to the pot. Add the potatoes and carrots around the roast.',
+        'Secure the lid, set the valve to "Sealing". Cook on high pressure for 60 minutes.',
+        'Once done, let the pressure release naturally for 15 minutes, then quick release the remaining pressure.',
+        'Remove the roast and vegetables to a platter. Set the Instant Pot back to "Sauté".',
+        'In a small bowl, whisk together cornstarch and cold water to make a slurry. Whisk it into the liquid in the pot and simmer until the gravy has thickened.',
+        'Slice the roast and serve with the vegetables and gravy.'
+    ],
+    nutrition: {
+        calories: '650 kcal',
+        protein: '50g',
+        carbohydrates: '30g',
+        fat: '35g',
+        fiber: '5g',
+        sugar: '8g',
+        sodium: '800mg'
+    }
+  },
+  {
+    id: 30,
+    slug: 'instant-pot-chana-masala',
+    title: 'Instant Pot Chana Masala',
+    category: 'Dinner',
+    cuisine: 'Indian',
+    image: '/images/recipes/instant-pot-chana-masala.jpg',
+    imageHint: 'chana masala',
+    description: 'A flavorful and hearty chickpea curry made incredibly fast and easy in the Instant Pot. A perfect vegetarian weeknight meal.',
+    prepTime: '10 mins',
+    cookTime: '20 mins',
+    servings: '4 people',
+    ingredients: [
+      '1 tbsp vegetable oil',
+      '1 large onion, chopped',
+      '1 tbsp minced ginger',
+      '3 cloves garlic, minced',
+      '1 (14.5-ounce) can diced tomatoes, undrained',
+      '2 (15-ounce) cans chickpeas, rinsed and drained',
+      '1 tbsp chana masala powder (or 1 tsp cumin, 1 tsp coriander, 1/2 tsp turmeric)',
+      '1/2 tsp garam masala',
+      '1/4 tsp cayenne pepper (optional)',
+      '1 cup water or vegetable broth',
+      'Salt to taste',
+      'Juice of 1/2 lemon',
+      'Fresh cilantro for garnish'
+    ],
+    instructions: [
+      'Set the Instant Pot to "Sauté" mode. Add oil, then add the onion and cook until softened, about 3-4 minutes.',
+      'Add ginger and garlic and sauté for another minute until fragrant.',
+      'Stir in the diced tomatoes, chana masala powder, garam masala, and cayenne pepper. Cook for 1 minute.',
+      'Press "Cancel". Add the chickpeas and water/broth. Season with salt. Stir well.',
+      'Secure the lid and set the valve to "Sealing". Select "Pressure Cook" or "Manual" and cook on high pressure for 5 minutes.',
+      'Once the cooking is complete, let the pressure release naturally for 10 minutes, then perform a quick release.',
+      'Open the lid, stir in the lemon juice, and garnish with fresh cilantro.',
+      'Serve hot with rice or naan bread.'
+    ],
+    nutrition: {
+        calories: '350 kcal',
+        protein: '14g',
+        carbohydrates: '60g',
+        fat: '7g',
+        fiber: '15g',
+        sugar: '10g',
+        sodium: '800mg'
+    }
   }
 ];
 
