@@ -49,7 +49,7 @@ You must also find and adjust any measurements mentioned within the instructions
 
 You must also adjust the prep and cook times.
 - **Prep Time:** This usually scales linearly. If you double the servings, it's reasonable to assume prep time will increase significantly, maybe close to double. Use your best judgment.
-- **Cook Time:** This often does NOT scale linearly. Baking a larger portion might take 25-50% longer, not double. Frying more items might need to be done in batches, increasing time. A larger pot of soup might take longer to come to a boil. Analyze the instructions and provide a realistic new cook time.
+- **Cook Time:** This often does NOT scale linearly. Baking a larger portion might take 25-50% longer, not double. Frying more items might need to be done in batches, increasing time. A larger pot of soup might take longer to come to a boil. Analyze the instructions and provide a realistic new cook time. If the original cook time is '0 mins', the adjusted time should also be '0 mins'.
 
 IMPORTANT:
 - Only modify quantities. Do not change ingredient names, units of measurement (unless a larger unit is more appropriate, e.g., 4 tablespoons -> 1/4 cup), or the core cooking steps.
@@ -57,7 +57,7 @@ IMPORTANT:
 - Ensure the output is provided in the exact JSON format specified, including the new prep and cook times.
 - If a quantity is a range (e.g., "2-3 cloves of garlic"), scale both numbers in the range.
 - Round fractions to common culinary measurements (e.g., 1/4, 1/3, 1/2, 2/3, 3/4). Avoid awkward fractions like 7/8.
-- Format the final times as strings, e.g., "15 mins" or "1 hr 30 mins".
+- Format the final times as strings, e.g., "15 mins" or "1 hr 30 mins". Your response for times MUST include a unit.
 
 Original Ingredients:
 {{#each originalIngredients}}
