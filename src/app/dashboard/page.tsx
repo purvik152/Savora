@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useEffect } from "react";
@@ -7,10 +6,11 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Utensils, Star, Loader2, Heart } from "lucide-react";
+import { Edit, Utensils, Star, Loader2, Heart, LogOut } from "lucide-react";
 import Image from "next/image";
 import { getPastRecipes, getFavoriteRecipes } from "@/lib/user-data";
 import type { Recipe } from "@/lib/recipes";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
   username: string;
@@ -28,6 +28,7 @@ function LoadingDashboard() {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -75,6 +76,21 @@ export default function DashboardPage() {
   const handleEditClick = () => {
     fileInputRef.current?.click();
   };
+
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem('savora-user');
+    localStorage.removeItem('savora-avatar');
+
+    // Show a success toast
+    toast({
+      title: 'Logged Out',
+      description: 'You have been successfully logged out.',
+    });
+
+    // Redirect to the login page
+    router.push('/login');
+  };
   
   if (!user) {
     return <LoadingDashboard />;
@@ -112,6 +128,10 @@ export default function DashboardPage() {
               <p className="text-sm">Favorites</p>
             </div>
           </div>
+          <Button variant="outline" className="mt-6" onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
         </div>
       </div>
 
