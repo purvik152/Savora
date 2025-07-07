@@ -50,6 +50,8 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
   const [servings, setServings] = useState(initialServings);
   const [displayedIngredients, setDisplayedIngredients] = useState(recipe?.ingredients || []);
   const [displayedInstructions, setDisplayedInstructions] = useState(recipe?.instructions || []);
+  const [displayedPrepTime, setDisplayedPrepTime] = useState(recipe?.prepTime || '');
+  const [displayedCookTime, setDisplayedCookTime] = useState(recipe?.cookTime || '');
   const [isAdjusting, setIsAdjusting] = useState(false);
   const [language, setLanguage] = useState('english');
   const [isTranslating, setIsTranslating] = useState(false);
@@ -113,6 +115,8 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     setLanguage(newLanguage);
     // Reset servings to original when changing language to avoid complexity
     setServings(initialServings);
+    setDisplayedPrepTime(recipe.prepTime);
+    setDisplayedCookTime(recipe.cookTime);
     
     try {
         if (newLanguage === 'english') {
@@ -148,13 +152,15 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
 }, [isProcessing, recipe, initialServings, toast]);
 
   const handleServingsChange = useCallback(async (newServings: number) => {
-    if (newServings < 1 || isProcessing) return;
+    if (newServings < 1 || isProcessing || !recipe) return;
 
     setServings(newServings);
 
     if (newServings === initialServings) {
       setDisplayedIngredients(recipe.ingredients);
       setDisplayedInstructions(recipe.instructions);
+      setDisplayedPrepTime(recipe.prepTime);
+      setDisplayedCookTime(recipe.cookTime);
       return;
     }
 
@@ -166,10 +172,14 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         originalInstructions: recipe.instructions,
         originalServings: initialServings,
         newServings: newServings,
+        originalPrepTime: recipe.prepTime,
+        originalCookTime: recipe.cookTime,
       });
-      if (result.adjustedIngredients && result.adjustedInstructions) {
+      if (result.adjustedIngredients && result.adjustedInstructions && result.adjustedPrepTime && result.adjustedCookTime) {
         setDisplayedIngredients(result.adjustedIngredients);
         setDisplayedInstructions(result.adjustedInstructions);
+        setDisplayedPrepTime(result.adjustedPrepTime);
+        setDisplayedCookTime(result.adjustedCookTime);
       } else {
         throw new Error("AI did not return an adjusted recipe.");
       }
@@ -184,7 +194,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     } finally {
       setIsAdjusting(false);
     }
-  }, [isProcessing, initialServings, recipe.ingredients, recipe.instructions, servings, toast]);
+  }, [isProcessing, initialServings, recipe, servings, toast]);
 
 
   const handleScrollToVoiceAssistant = () => {
@@ -322,7 +332,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                     <div className="relative z-10 flex flex-col items-center justify-center">
                       <Clock className="h-8 w-8 text-primary mb-2" />
                       <span className="font-bold">Prep Time</span>
-                      <span className="text-muted-foreground">{recipe.prepTime}</span>
+                      <span className="text-muted-foreground">{displayedPrepTime}</span>
                     </div>
                   </div>
 
@@ -331,7 +341,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                     <div className="relative z-10 flex flex-col items-center justify-center">
                       <Flame className="h-8 w-8 text-primary mb-2" />
                       <span className="font-bold">Cook Time</span>
-                      <span className="text-muted-foreground">{recipe.cookTime}</span>
+                      <span className="text-muted-foreground">{displayedCookTime}</span>
                     </div>
                   </div>
 
