@@ -91,6 +91,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Recipe[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
@@ -111,6 +112,10 @@ export default function Home() {
     } else {
         setSearchResults([]);
     }
+  }, []);
+
+  useEffect(() => {
+    setHasMounted(true);
   }, []);
 
   useEffect(() => {
@@ -137,16 +142,16 @@ export default function Home() {
       
       {/* Hero Carousel Section */}
       <section className="mb-16">
-        <Carousel
-          plugins={[plugin.current]}
-          className="w-full"
-        >
-          <CarouselContent>
-            {featuredRecipes.map((recipe, index) => (
-              <CarouselItem key={index}>
-                <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
-                  <Link href={recipe.href} legacyBehavior passHref>
-                    <a className="block h-full w-full group">
+        {hasMounted ? (
+          <Carousel
+            plugins={[plugin.current]}
+            className="w-full"
+          >
+            <CarouselContent>
+              {featuredRecipes.map((recipe, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
+                    <Link href={recipe.href} className="block h-full w-full group">
                       <Image
                         src={recipe.image}
                         alt={recipe.name}
@@ -160,13 +165,17 @@ export default function Home() {
                         <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
                         <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
                       </div>
-                    </a>
-                  </Link>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+                    </Link>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        ) : (
+          <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
+            <div className="w-full h-full bg-muted animate-pulse" />
+          </div>
+        )}
       </section>
 
       {/* Sub-Categories Section */}
@@ -174,8 +183,7 @@ export default function Home() {
         <div className="flex flex-col items-center gap-y-12">
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow1.map((category) => (
-              <Link key={category.name} href={category.href} legacyBehavior passHref>
-                <a className="group flex flex-col items-center gap-3 text-center w-28">
+              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
                   <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -189,14 +197,12 @@ export default function Home() {
                   <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
                     {category.name}
                   </span>
-                </a>
               </Link>
             ))}
           </div>
           <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
             {subCategoriesRow2.map((category) => (
-              <Link key={category.name} href={category.href} legacyBehavior passHref>
-                <a className="group flex flex-col items-center gap-3 text-center w-28">
+              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
                   <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -210,7 +216,6 @@ export default function Home() {
                   <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
                     {category.name}
                   </span>
-                </a>
               </Link>
             ))}
           </div>
@@ -221,23 +226,21 @@ export default function Home() {
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {mainCategories.map((category) => (
-            <Link key={category.name} href={category.href} legacyBehavior passHref>
-                <a className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  data-ai-hint={category.hint}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-colors" />
-                  <div className="absolute bottom-0 w-full p-4 text-center">
-                      <div className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-                          {category.name}
-                      </div>
-                  </div>
-                </a>
+            <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <Image
+                src={category.image}
+                alt={category.name}
+                fill
+                className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                data-ai-hint={category.hint}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-colors" />
+                <div className="absolute bottom-0 w-full p-4 text-center">
+                    <div className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                        {category.name}
+                    </div>
+                </div>
             </Link>
             ))}
         </div>
