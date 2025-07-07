@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,31 +33,32 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     </Link>
 );
 
-export default function RecipesPage({
-  searchParams,
-}: {
-  searchParams?: { q?: string };
-}) {
+export default function RecipesPage() {
   const { diet } = useDiet();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q');
 
   const activeRecipes = useMemo(() => {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
+    // In non-veg mode, show only non-veg recipes
     return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
   
-  const query = searchParams?.q?.toLowerCase();
-
-  const filteredRecipes = query
-    ? activeRecipes.filter(
+  const filteredRecipes = useMemo(() => {
+    if (!query) {
+      return [];
+    }
+    const lowerCaseQuery = query.toLowerCase();
+    return activeRecipes.filter(
         (recipe) =>
-          recipe.title.toLowerCase().includes(query) ||
-          recipe.description.toLowerCase().includes(query) ||
-          recipe.cuisine.toLowerCase().includes(query) ||
-          recipe.category.toLowerCase().includes(query)
-      )
-    : [];
+          recipe.title.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.description.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.cuisine.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.category.toLowerCase().includes(lowerCaseQuery)
+      );
+  }, [query, activeRecipes]);
 
   const cuisineToFlagClass: { [key: string]: string } = {
     American: 'flag-american',
@@ -79,8 +81,8 @@ export default function RecipesPage({
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Search Results</h1>
             <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
               {filteredRecipes.length > 0
-                ? `Found ${filteredRecipes.length} recipe(s) for "${searchParams?.q}"`
-                : `No recipes found for "${searchParams?.q}". Try a different search.`}
+                ? `Found ${filteredRecipes.length} recipe(s) for "${query}"`
+                : `No recipes found for "${query}". Try a different search.`}
             </p>
         </div>
         {filteredRecipes.length > 0 && (
