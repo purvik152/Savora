@@ -111,36 +111,36 @@ export default {
           'to': { transform: 'scale(1)' },
         },
         'float-1': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-20px) rotate(10deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-20px) translateX(10px) rotate(10deg)' },
         },
         'float-2': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(25px) rotate(-8deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(25px) translateX(-15px) rotate(-8deg)' },
         },
         'float-3': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-15px) rotate(-12deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-15px) translateX(5px) rotate(-12deg)' },
         },
         'float-4': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(18px) rotate(9deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(18px) translateX(20px) rotate(9deg)' },
         },
         'float-5': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-25px) rotate(-5deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-25px) translateX(-10px) rotate(-5deg)' },
         },
         'float-6': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(15px) rotate(5deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(15px) translateX(10px) rotate(5deg)' },
         },
         'float-7': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-10px) rotate(15deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-10px) translateX(-15px) rotate(15deg)' },
         },
         'float-8': {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(22px) rotate(-10deg)' },
+          '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(22px) translateX(25px) rotate(-10deg)' },
         },
       },
       animation: {

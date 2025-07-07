@@ -2,7 +2,7 @@ import { Leaf, UtensilsCrossed, Wheat, ChefHat, Soup, Cookie, Citrus, Carrot, Pi
 import { cn } from "@/lib/utils";
 
 const Doodle = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn("fixed text-doodle/20 -z-10 hidden lg:block pointer-events-none", className)}>
+  <div className={cn("fixed text-doodle/30 -z-10 hidden lg:block pointer-events-none", className)}>
     {children}
   </div>
 );
