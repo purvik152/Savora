@@ -39,34 +39,37 @@ export default function DashboardPage() {
   useEffect(() => {
     // This code runs only on the client
     const storedUser = localStorage.getItem('savora-user');
-    const storedAvatar = localStorage.getItem('savora-avatar');
 
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+
+      // Fetch user-specific avatar
+      const storedAvatar = localStorage.getItem(`savora-avatar_${parsedUser.email}`);
+      if (storedAvatar) {
+        setAvatarSrc(storedAvatar);
+      }
+      
+      // These functions are now user-aware internally
+      setPastRecipes(getPastRecipes());
+      setFavoriteRecipes(getFavoriteRecipes());
     } else {
       // If no user, redirect to login
       router.push('/login');
       return;
     }
-
-    if (storedAvatar) {
-      setAvatarSrc(storedAvatar);
-    }
-    
-    // Get real data from localStorage
-    setPastRecipes(getPastRecipes());
-    setFavoriteRecipes(getFavoriteRecipes());
   }, [router]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && user) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result;
         if (typeof result === 'string') {
           setAvatarSrc(result);
-          localStorage.setItem('savora-avatar', result); // Save avatar to localStorage
+          // Save avatar with user-specific key
+          localStorage.setItem(`savora-avatar_${user.email}`, result);
         }
       };
       reader.readAsDataURL(file);
@@ -79,8 +82,11 @@ export default function DashboardPage() {
 
   const handleLogout = () => {
     // Clear user data from localStorage
+    if (user) {
+        // Remove user-specific avatar
+        localStorage.removeItem(`savora-avatar_${user.email}`);
+    }
     localStorage.removeItem('savora-user');
-    localStorage.removeItem('savora-avatar');
 
     // Show a success toast
     toast({
