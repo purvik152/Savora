@@ -63,7 +63,7 @@ export function Header() {
     <>
       <header className={cn("sticky top-0 z-50 w-full transition-all duration-300", isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent")}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+          <div className={cn("flex items-center justify-between transition-all duration-300", isScrolled ? "h-16" : "h-20")}>
             <Link href="/" className="flex items-center gap-2">
               <SavoraLogo className="h-7 w-7 text-primary" />
               <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
