@@ -37,7 +37,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes;
+    return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   const popularRecipes = useMemo(() => activeRecipes.slice(0, 4), [activeRecipes]);
@@ -177,7 +177,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           {!loading && results.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-4 px-2">
-                {query.trim().length > 1 ? 'Search Results' : 'Popular Recipes'}
+                {query.trim().length > 1 ? 'Search Results' : `Popular ${diet === 'veg' ? 'Veg' : 'Non-Veg'} Recipes`}
               </h3>
               <ul className="space-y-2">
                 {results.map((recipe) => (

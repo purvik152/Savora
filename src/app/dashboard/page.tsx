@@ -68,14 +68,14 @@ export default function DashboardPage() {
     if (diet === 'veg') {
         return pastRecipes.filter(r => r.diet === 'veg');
     }
-    return pastRecipes;
+    return pastRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, pastRecipes]);
 
   const filteredFavoriteRecipes = useMemo(() => {
     if (diet === 'veg') {
         return favoriteRecipes.filter(r => r.diet === 'veg');
     }
-    return favoriteRecipes;
+    return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -182,7 +182,7 @@ export default function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground text-center py-4">You haven't cooked any recipes yet. Go explore!</p>
+                  <p className="text-muted-foreground text-center py-4">You haven't cooked any {diet === 'veg' ? 'vegetarian' : 'non-vegetarian'} recipes yet. Go explore!</p>
                 )}
               </div>
             </CardContent>
@@ -211,7 +211,7 @@ export default function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground text-center py-4">You haven't favorited any recipes yet.</p>
+                  <p className="text-muted-foreground text-center py-4">You haven't favorited any {diet === 'veg' ? 'vegetarian' : 'non-vegetarian'} recipes yet.</p>
                 )}
               </div>
             </CardContent>
@@ -219,5 +219,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

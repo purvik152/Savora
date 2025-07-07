@@ -43,7 +43,7 @@ export default function RecipesPage({
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes;
+    return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
   
   const query = searchParams?.q?.toLowerCase();
