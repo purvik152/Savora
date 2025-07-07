@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
-import { MapPin } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
@@ -44,6 +43,20 @@ export default function RecipesPage({
           recipe.category.toLowerCase().includes(query)
       )
     : [];
+
+  const cuisineFlags: { [key: string]: string } = {
+    American: '🇺🇸',
+    Italian: '🇮🇹',
+    French: '🇫🇷',
+    Mexican: '🇲🇽',
+    Indian: '🇮🇳',
+    Greek: '🇬🇷',
+    Thai: '🇹🇭',
+    Spanish: '🇪🇸',
+    Asian: '🍜',
+    Mediterranean: '🥗',
+    'Middle Eastern': '🧆',
+  };
 
   if (query) {
     return (
@@ -91,7 +104,7 @@ export default function RecipesPage({
           return (
             <div key={cuisine} className="mb-12">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <MapPin className="text-primary h-6 w-6" /> {cuisine}
+                <span className="text-2xl">{cuisineFlags[cuisine] || '🍳'}</span> {cuisine}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {cuisineRecipes.map((recipe) => (
