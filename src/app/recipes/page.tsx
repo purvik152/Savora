@@ -5,6 +5,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full">
@@ -44,18 +45,18 @@ export default function RecipesPage({
       )
     : [];
 
-  const cuisineFlags: { [key: string]: string } = {
-    American: '🇺🇸',
-    Italian: '🇮🇹',
-    French: '🇫🇷',
-    Mexican: '🇲🇽',
-    Indian: '🇮🇳',
-    Greek: '🇬🇷',
-    Thai: '🇹🇭',
-    Spanish: '🇪🇸',
-    Asian: '🍜',
-    Mediterranean: '🥗',
-    'Middle Eastern': '🧆',
+  const cuisineToFlagClass: { [key: string]: string } = {
+    American: 'flag-american',
+    Italian: 'flag-italian',
+    French: 'flag-french',
+    Mexican: 'flag-mexican',
+    Indian: 'flag-indian',
+    Greek: 'flag-greek',
+    Thai: 'flag-thai',
+    Spanish: 'flag-spanish',
+    Asian: 'flag-asian',
+    Mediterranean: 'flag-mediterranean',
+    'Middle Eastern': 'flag-middle-eastern',
   };
 
   if (query) {
@@ -101,10 +102,14 @@ export default function RecipesPage({
             .slice(0, 3);
           if (cuisineRecipes.length === 0) return null;
 
+          const flagClass = cuisineToFlagClass[cuisine] || 'flag-asian';
+
           return (
             <div key={cuisine} className="mb-12">
-              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <span className="text-2xl">{cuisineFlags[cuisine] || '🍳'}</span> {cuisine}
+              <h3 className="cuisine-title mb-6">
+                <span className={cn('cuisine-title-gradient', flagClass)}>
+                  {cuisine}
+                </span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {cuisineRecipes.map((recipe) => (
