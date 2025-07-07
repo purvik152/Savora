@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { UtensilsCrossed } from 'lucide-react'
+import { ChefHat } from 'lucide-react'
 
 // Route segment config
 export const runtime = 'edge'
@@ -27,7 +27,7 @@ export default function Icon() {
           borderRadius: '4px',
         }}
       >
-        <UtensilsCrossed size={24} />
+        <ChefHat size={24} />
       </div>
     ),
     {

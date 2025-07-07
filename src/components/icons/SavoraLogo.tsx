@@ -1,3 +1,3 @@
-import { UtensilsCrossed } from "lucide-react";
+import { ChefHat } from "lucide-react";
 
-export const SavoraLogo = UtensilsCrossed;
+export const SavoraLogo = ChefHat;
