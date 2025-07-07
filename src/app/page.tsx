@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -11,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Loader2 } from 'lucide-react';
 import { Recipe, recipes } from '@/lib/recipes';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const featuredRecipes = [
   {
@@ -134,9 +134,6 @@ export default function Home() {
     }
   };
 
-  const subCategoriesRow1 = subCategories.slice(0, 4);
-  const subCategoriesRow2 = subCategories.slice(4, 9);
-
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       
@@ -152,7 +149,6 @@ export default function Home() {
                 <CarouselItem key={index}>
                   <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
                     <Link href={recipe.href} className="block h-full w-full group">
-                      <>
                         <Image
                           src={recipe.image}
                           alt={recipe.name}
@@ -166,7 +162,6 @@ export default function Home() {
                           <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
                           <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
                         </div>
-                      </>
                     </Link>
                   </div>
                 </CarouselItem>
@@ -174,19 +169,16 @@ export default function Home() {
             </CarouselContent>
           </Carousel>
         ) : (
-          <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
-            <div className="w-full h-full bg-muted animate-pulse" />
-          </div>
+          <Skeleton className="h-[450px] w-full rounded-lg" />
         )}
       </section>
 
       {/* Sub-Categories Section */}
       <section className="mb-16">
-        <div className="flex flex-col items-center gap-y-12">
-          <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
-            {subCategoriesRow1.map((category) => (
-              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
-                  <>
+        {hasMounted ? (
+            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+              {subCategories.map((category) => (
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
                     <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                       <Image
                         src={category.image}
@@ -200,58 +192,51 @@ export default function Home() {
                     <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
                       {category.name}
                     </span>
-                  </>
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-start justify-center gap-x-8 md:gap-x-12 lg:gap-x-16">
-            {subCategoriesRow2.map((category) => (
-              <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
-                  <>
-                    <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-cover"
-                        sizes="112px"
-                        data-ai-hint={category.hint}
-                      />
+                </Link>
+              ))}
+            </div>
+        ) : (
+            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+                {subCategories.map((category) => (
+                    <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
+                        <Skeleton className="h-28 w-28 rounded-full" />
+                        <Skeleton className="h-4 w-20 rounded-md" />
                     </div>
-                    <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
-                      {category.name}
-                    </span>
-                  </>
-              </Link>
-            ))}
-          </div>
-        </div>
+                ))}
+            </div>
+        )}
       </section>
 
       {/* Main Categories Section */}
       <section>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {mainCategories.map((category) => (
-            <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                <>
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    data-ai-hint={category.hint}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-colors" />
-                  <div className="absolute bottom-0 w-full p-4 text-center">
-                      <div className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-                          {category.name}
-                      </div>
-                  </div>
-                </>
-            </Link>
-            ))}
-        </div>
+        {hasMounted ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {mainCategories.map((category) => (
+                <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      data-ai-hint={category.hint}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-colors" />
+                    <div className="absolute bottom-0 w-full p-4 text-center">
+                        <div className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                            {category.name}
+                        </div>
+                    </div>
+                </Link>
+                ))}
+            </div>
+        ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {mainCategories.map((category) => (
+                    <Skeleton key={category.name} className="h-[450px] w-full rounded-lg" />
+                ))}
+            </div>
+        )}
     </section>
 
     {/* Search Section */}
@@ -308,7 +293,7 @@ export default function Home() {
           </div>
           <div className="flex items-center justify-center gap-4">
             <span className="text-muted-foreground italic">or</span>
-            <Link href="/recipes" passHref>
+            <Link href="/recipes">
               <Button
                 size="lg"
                 className="h-12 px-6 font-bold uppercase tracking-wider"
