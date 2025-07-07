@@ -10,14 +10,14 @@ import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-    { id: 1, name: "Spaghetti Carbonara", image: "https://spoonacular.com/recipeImages/660261-636x393.jpg", rating: 4 },
-    { id: 2, name: "Chicken Tikka Masala", image: "https://spoonacular.com/recipeImages/638329-636x393.jpg", rating: 5 },
-    { id: 3, name: "Classic Beef Tacos", image: "https://spoonacular.com/recipeImages/634458-636x393.jpg", rating: 4 },
+    { id: 1, name: "Spaghetti Carbonara", image: "https://placehold.co/80x60.png", hint: "spaghetti carbonara", rating: 4 },
+    { id: 2, name: "Chicken Tikka Masala", image: "https://placehold.co/80x60.png", hint: "chicken masala", rating: 5 },
+    { id: 3, name: "Classic Beef Tacos", image: "https://placehold.co/80x60.png", hint: "beef tacos", rating: 4 },
   ];
   
   const favoriteRecipes = [
-    { id: 1, name: "Avocado Toast", image: "https://spoonacular.com/recipeImages/633221-636x393.jpg", cuisine: "American" },
-    { id: 2, name: "Vegan Pad Thai", image: "https://spoonacular.com/recipeImages/664547-636x393.jpg", cuisine: "Thai" },
+    { id: 1, name: "Avocado Toast", image: "https://placehold.co/64x64.png", hint: "avocado toast", cuisine: "American" },
+    { id: 2, name: "Vegan Pad Thai", image: "https://placehold.co/64x64.png", hint: "pad thai", cuisine: "Thai" },
   ];
 
 interface User {
@@ -126,7 +126,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {pastRecipes.map(recipe => (
                   <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                    <Image src={recipe.image} alt={recipe.name} width={80} height={60} className="rounded-md object-cover" />
+                    <Image src={recipe.image} alt={recipe.name} width={80} height={60} className="rounded-md object-cover" data-ai-hint={recipe.hint} />
                     <div className="flex-grow">
                       <h3 className="font-semibold">{recipe.name}</h3>
                       <div className="flex items-center gap-1">
@@ -152,7 +152,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {favoriteRecipes.map(recipe => (
                   <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                     <Image src={recipe.image} alt={recipe.name} width={64} height={64} className="rounded-full object-cover" />
+                     <Image src={recipe.image} alt={recipe.name} width={64} height={64} className="rounded-full object-cover" data-ai-hint={recipe.hint} />
                      <div>
                        <h3 className="font-semibold">{recipe.name}</h3>
                        <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
