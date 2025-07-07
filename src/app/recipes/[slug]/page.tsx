@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
@@ -22,6 +22,20 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 
 
 export default function RecipePage({ params }: { params: { slug: string } }) {
@@ -37,9 +51,13 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
   const [displayedIngredients, setDisplayedIngredients] = useState(recipe?.ingredients || []);
   const [displayedInstructions, setDisplayedInstructions] = useState(recipe?.instructions || []);
   const [isAdjusting, setIsAdjusting] = useState(false);
+  const [language, setLanguage] = useState('english');
+  const [isTranslating, setIsTranslating] = useState(false);
   
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [isOrdering, setIsOrdering] = useState(false);
+
+  const isProcessing = isAdjusting || isTranslating;
 
   useEffect(() => {
     setHasMounted(true);
@@ -88,8 +106,49 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     ];
   }, [recipe]);
 
+  const handleLanguageChange = useCallback(async (newLanguage: string) => {
+    if (isProcessing || !recipe) return;
+    
+    setIsTranslating(true);
+    setLanguage(newLanguage);
+    // Reset servings to original when changing language to avoid complexity
+    setServings(initialServings);
+    
+    try {
+        if (newLanguage === 'english') {
+            setDisplayedIngredients(recipe.ingredients);
+            setDisplayedInstructions(recipe.instructions);
+        } else {
+            const result = await translateRecipe({
+                ingredients: recipe.ingredients,
+                instructions: recipe.instructions,
+                targetLanguage: newLanguage,
+            });
+            
+            if (result.translatedIngredients && result.translatedInstructions) {
+                setDisplayedIngredients(result.translatedIngredients);
+                setDisplayedInstructions(result.translatedInstructions);
+            } else {
+                throw new Error("AI did not return a translated recipe.");
+            }
+        }
+    } catch (error) {
+        console.error("Failed to translate recipe:", error);
+        toast({
+            variant: "destructive",
+            title: "Translation Failed",
+            description: "Could not translate the recipe. Please try again.",
+        });
+        setLanguage('english'); // Revert to English on failure
+        setDisplayedIngredients(recipe.ingredients); // Revert content
+        setDisplayedInstructions(recipe.instructions);
+    } finally {
+        setIsTranslating(false);
+    }
+}, [isProcessing, recipe, initialServings, toast]);
+
   const handleServingsChange = useCallback(async (newServings: number) => {
-    if (newServings < 1 || isAdjusting) return;
+    if (newServings < 1 || isProcessing) return;
 
     setServings(newServings);
 
@@ -125,7 +184,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     } finally {
       setIsAdjusting(false);
     }
-  }, [initialServings, isAdjusting, recipe.ingredients, recipe.instructions, servings, toast]);
+  }, [isProcessing, initialServings, recipe.ingredients, recipe.instructions, servings, toast]);
 
 
   const handleScrollToVoiceAssistant = () => {
@@ -157,7 +216,10 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
     try {
       const ingredientsToOrder = Array.from(checkedIngredients).map(index => displayedIngredients[index]);
       
-      const result = await parseIngredientsForSearch({ ingredients: ingredientsToOrder });
+      const result = await parseIngredientsForSearch({ 
+          ingredients: ingredientsToOrder,
+          language: language,
+      });
       
       if (!result.searchTerms || result.searchTerms.length === 0) {
         throw new Error("AI could not parse ingredients for search.");
@@ -177,6 +239,37 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
       setIsOrdering(false);
     }
   };
+
+  const ServingsControl = () => {
+    const isDisabled = language !== 'english' || isProcessing;
+    const control = (
+        <div className="flex items-center gap-2 mt-1">
+            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings - 1)} disabled={isDisabled || servings <= 1}>
+                <Minus className="h-4 w-4" />
+            </Button>
+            <span className="text-foreground font-bold text-lg w-8 text-center">{servings}</span>
+            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings + 1)} disabled={isDisabled}>
+                <Plus className="h-4 w-4" />
+            </Button>
+        </div>
+    );
+
+    if (language !== 'english') {
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <span>{control}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Servings can only be adjusted in English.</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        );
+    }
+    return control;
+  }
 
   return (
     <div className="bg-background">
@@ -202,26 +295,28 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
           <CardContent className="p-6 md:p-8">
             <div className="max-w-4xl mx-auto relative">
                 {/* Background Doodles for the Card */}
-                <div className="absolute top-20 -left-16 text-doodle/30 -z-10 animate-float-1">
+                <div className="absolute top-20 -left-16 text-doodle -z-10 animate-float-1 block">
                     <ChefHat className="h-48 w-48" />
                 </div>
-                <div className="absolute top-1/3 -right-16 text-doodle/30 -z-10 animate-float-2">
+                <div className="absolute top-1/3 -right-16 text-doodle -z-10 animate-float-2 block">
                     <Carrot className="h-40 w-40" />
                 </div>
-                <div className="absolute bottom-1/4 -left-12 text-doodle/30 -z-10 animate-float-3">
+                <div className="absolute bottom-1/4 -left-12 text-doodle -z-10 animate-float-3 block">
                     <Apple className="h-32 w-32" />
                 </div>
-                <div className="absolute bottom-0 -right-12 text-doodle/30 -z-10 animate-float-4">
+                <div className="absolute bottom-0 -right-12 text-doodle -z-10 animate-float-4 block">
                     <Leaf className="h-36 w-36" />
                 </div>
               <div className="relative">
-                {isAdjusting && (
+                {isProcessing && (
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10 rounded-lg">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        <span className="ml-2 font-semibold">Adjusting recipe...</span>
+                        <span className="ml-2 font-semibold">
+                            {isAdjusting ? 'Adjusting recipe...' : 'Translating...'}
+                        </span>
                     </div>
                 )}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-center">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 text-center">
                   <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
                     <Clock className="absolute -top-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
                     <div className="relative z-10 flex flex-col items-center justify-center">
@@ -245,15 +340,27 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
                     <div className="relative z-10 flex flex-col items-center justify-center">
                       <Users className="h-8 w-8 text-primary mb-2" />
                       <span className="font-bold">Servings</span>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings - 1)} disabled={servings <= 1 || isAdjusting}>
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="text-foreground font-bold text-lg w-8 text-center">{servings}</span>
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings + 1)} disabled={isAdjusting}>
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <ServingsControl />
+                    </div>
+                  </div>
+
+                  <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
+                    <Languages className="absolute -bottom-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                        <Languages className="h-8 w-8 text-primary mb-2" />
+                        <span className="font-bold">Language</span>
+                        <Select onValueChange={handleLanguageChange} defaultValue="english" disabled={isProcessing}>
+                            <SelectTrigger className="w-[120px] mt-1">
+                                <SelectValue placeholder="Language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="english">English</SelectItem>
+                                <SelectItem value="spanish">Español</SelectItem>
+                                <SelectItem value="french">Français</SelectItem>
+                                <SelectItem value="german">Deutsch</SelectItem>
+                                <SelectItem value="hindi">हिन्दी</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                   </div>
 
