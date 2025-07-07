@@ -4,13 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Loader2 } from 'lucide-react';
 import { Recipe, recipes } from '@/lib/recipes';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 const featuredRecipes = [
   {
@@ -96,6 +97,17 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
+  // Refs for animation targets
+  const subCategoriesRef = useRef<HTMLElement>(null);
+  const mainCategoriesRef = useRef<HTMLElement>(null);
+  const searchSectionRef = useRef<HTMLElement>(null);
+  
+  // State to track visibility
+  const [subCategoriesVisible, setSubCategoriesVisible] = useState(false);
+  const [mainCategoriesVisible, setMainCategoriesVisible] = useState(false);
+  const [searchSectionVisible, setSearchSectionVisible] = useState(false);
+
+
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
         setIsSearching(true);
@@ -119,6 +131,39 @@ export default function Home() {
 
   useEffect(() => {
     setHasMounted(true);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === subCategoriesRef.current) {
+              setSubCategoriesVisible(true);
+            } else if (entry.target === mainCategoriesRef.current) {
+              setMainCategoriesVisible(true);
+            } else if (entry.target === searchSectionRef.current) {
+              setSearchSectionVisible(true);
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const refs = [subCategoriesRef, mainCategoriesRef, searchSectionRef];
+    refs.forEach(ref => {
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => {
+      refs.forEach(ref => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      });
+    };
   }, []);
 
   useEffect(() => {
@@ -177,7 +222,13 @@ export default function Home() {
       </section>
 
       {/* Sub-Categories Section */}
-      <section className="mb-16">
+      <section
+        ref={subCategoriesRef}
+        className={cn(
+          "mb-16 opacity-0",
+          subCategoriesVisible && "animate-fade-in-up"
+        )}
+      >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
@@ -242,7 +293,13 @@ export default function Home() {
       </section>
 
       {/* Main Categories Section */}
-      <section>
+      <section
+        ref={mainCategoriesRef}
+        className={cn(
+          "opacity-0",
+          mainCategoriesVisible && "animate-fade-in-up"
+        )}
+      >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {mainCategories.map((category) => (
@@ -274,7 +331,13 @@ export default function Home() {
     </section>
 
     {/* Search Section */}
-    <section className="my-24">
+    <section
+      ref={searchSectionRef}
+      className={cn(
+        "my-24 opacity-0",
+        searchSectionVisible && "animate-fade-in-up"
+      )}
+    >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
           <div className="relative w-full">
