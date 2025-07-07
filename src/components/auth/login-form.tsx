@@ -11,9 +11,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { findUserByEmail } from '@/lib/user-data';
 
 const formSchema = z.object({
-  username: z.string().min(3, { message: 'Username must be at least 3 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
@@ -26,7 +26,6 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
       email: '',
       password: '',
     },
@@ -34,26 +33,23 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+    // Simulate async operation for better UX
+    await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
+      const user = findUserByEmail(values.email);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      // In a real app, you would compare a hashed password.
+      // For this prototype, we'll do a simple string comparison.
+      if (user && user.password === values.password) {
         toast({
           title: 'Login Successful',
           description: 'Redirecting to your dashboard...',
         });
         
-        // Save user data to localStorage
+        // Save user data to localStorage, excluding the password
         if (typeof window !== 'undefined') {
-            localStorage.setItem('savora-user', JSON.stringify(data.user));
+            const { password, ...userToStore } = user;
+            localStorage.setItem('savora-user', JSON.stringify(userToStore));
         }
 
         router.push(`/dashboard`);
@@ -61,14 +57,14 @@ export function LoginForm() {
         toast({
           variant: 'destructive',
           title: 'Login Failed',
-          description: data.message || 'An unexpected error occurred.',
+          description: 'Invalid email or password.',
         });
       }
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Login Error',
-        description: 'Could not connect to the server. Please try again later.',
+        description: 'An unexpected error occurred. Please try again.',
       });
     } finally {
       setLoading(false);
@@ -78,19 +74,6 @@ export function LoginForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="your_username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"

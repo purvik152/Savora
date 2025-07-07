@@ -3,8 +3,16 @@
 
 import type { Recipe } from './recipes';
 
+// --- User Credentials ---
+export interface UserCredentials {
+  username: string;
+  email: string;
+  password?: string; // Password is used for signup/login check, but not stored in the active user session
+}
+
 const PAST_RECIPES_KEY = 'savora-past-recipes';
 const FAVORITE_RECIPES_KEY = 'savora-favorite-recipes';
+const USERS_KEY = 'savora-users'; // For mock user db
 
 // Helper to safely get data from localStorage
 function getFromStorage<T>(key: string): T[] {
@@ -31,6 +39,24 @@ function setInStorage<T>(key: string, value: T[]): void {
     console.error(`Error writing to localStorage key “${key}”:`, error);
   }
 }
+
+// --- User Management (Mock Database) ---
+
+export function getUsers(): UserCredentials[] {
+    return getFromStorage<UserCredentials>(USERS_KEY);
+}
+
+export function findUserByEmail(email: string): UserCredentials | undefined {
+    const users = getUsers();
+    return users.find((user) => user.email.toLowerCase() === email.toLowerCase());
+}
+
+export function addUser(newUser: UserCredentials): void {
+    const users = getUsers();
+    const updatedUsers = [...users, newUser];
+    setInStorage(USERS_KEY, updatedUsers);
+}
+
 
 // --- Past Recipes ---
 
