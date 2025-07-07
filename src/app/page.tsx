@@ -8,10 +8,11 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Mic } from 'lucide-react';
 import { Recipe, recipes } from '@/lib/recipes';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const featuredRecipes = [
   {
@@ -92,6 +93,7 @@ export default function Home() {
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
   const router = useRouter();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Recipe[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -106,6 +108,11 @@ export default function Home() {
   const [subCategoriesVisible, setSubCategoriesVisible] = useState(false);
   const [mainCategoriesVisible, setMainCategoriesVisible] = useState(false);
   const [searchSectionVisible, setSearchSectionVisible] = useState(false);
+
+  // State for voice search
+  const [isListening, setIsListening] = useState(false);
+  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
+  const recognitionRef = useRef<any>(null);
 
 
   const handleSearch = useCallback((query: string) => {
@@ -165,6 +172,54 @@ export default function Home() {
       });
     };
   }, []);
+  
+  useEffect(() => {
+    if (!hasMounted) return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setIsBrowserSupported(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchQuery(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        toast({
+            variant: "destructive",
+            title: "Voice Search Error",
+            description: "Sorry, I couldn't hear you. Please try again.",
+        });
+      }
+    };
+    
+    recognitionRef.current = recognition;
+
+    return () => {
+      recognitionRef.current?.abort();
+    }
+  }, [hasMounted, toast]);
+
+  const handleVoiceSearch = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
 
   useEffect(() => {
       const timerId = setTimeout(() => {
@@ -348,9 +403,23 @@ export default function Home() {
                 placeholder="I want to make..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-12 pr-4 rounded-md text-base"
+                className="w-full h-12 pl-12 pr-12 rounded-md text-base"
                 autoComplete="off"
               />
+              {isBrowserSupported && hasMounted && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10",
+                    isListening && "text-destructive animate-pulse"
+                  )}
+                  onClick={handleVoiceSearch}
+                >
+                  <Mic className="h-5 w-5" />
+                </Button>
+              )}
             </form>
             {searchQuery.trim().length > 1 && (
               <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-20 max-h-80 overflow-y-auto">

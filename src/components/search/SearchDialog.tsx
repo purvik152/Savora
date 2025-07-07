@@ -1,14 +1,18 @@
 
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Recipe, recipes } from '@/lib/recipes';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Mic } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface SearchDialogProps {
   open: boolean;
@@ -20,6 +24,12 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const [results, setResults] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
+
+  // State for voice search
+  const [isListening, setIsListening] = useState(false);
+  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
+  const recognitionRef = useRef<any>(null);
 
   const popularRecipes = useMemo(() => recipes.slice(0, 4), []);
 
@@ -44,8 +54,54 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     }
   }, [popularRecipes]);
 
+  // Setup speech recognition
   useEffect(() => {
-    // Debounce search
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setIsBrowserSupported(false);
+      toast({
+        variant: 'destructive',
+        title: 'Browser Not Supported',
+        description: 'Voice search is not supported in this browser. Please try Google Chrome.',
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        toast({
+          variant: 'destructive',
+          title: 'Voice Search Error',
+          description: "Sorry, I couldn't hear you. Please try again.",
+        });
+      }
+    };
+    
+    recognitionRef.current = recognition;
+
+    return () => {
+      recognitionRef.current?.abort();
+    }
+  }, [toast]);
+
+
+  // Debounce search
+  useEffect(() => {
     const timer = setTimeout(() => {
       handleSearch(query);
     }, 300);
@@ -61,6 +117,14 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     }
   }, [open, popularRecipes]);
 
+  const handleVoiceSearch = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
+
   const handleResultClick = () => {
     onOpenChange(false);
   };
@@ -73,12 +137,26 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <Input
             type="search"
             placeholder="Search for recipes, ingredients, or cuisines..."
-            className="h-12 w-full border-0 shadow-none focus-visible:ring-0 text-base"
+            className="h-12 w-full border-0 shadow-none focus-visible:ring-0 text-base flex-grow"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
             autoFocus
           />
+          {isBrowserSupported && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleVoiceSearch}
+              className={cn(
+                "h-10 w-10",
+                isListening && 'text-destructive animate-pulse'
+                )}
+            >
+              <Mic className="h-5 w-5" />
+              <span className="sr-only">Search with voice</span>
+            </Button>
+          )}
         </div>
         <div className="overflow-y-auto p-4">
           {loading && (
