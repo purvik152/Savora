@@ -1,7 +1,7 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -38,7 +38,8 @@ import {
 import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 
 
-export default function RecipePage({ params }: { params: { slug: string } }) {
+export default function RecipePage() {
+  const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const recipe = getRecipeBySlug(slug);
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
@@ -304,17 +305,16 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
           </CardHeader>
           <CardContent className="p-6 md:p-8">
             <div className="max-w-4xl mx-auto relative">
-                {/* Background Doodles for the Card */}
-                <div className="absolute top-20 -left-16 text-doodle -z-10 animate-float-1 block">
+                <div className="absolute top-20 -left-16 text-doodle -z-10 animate-float-1 lg:block hidden">
                     <ChefHat className="h-48 w-48" />
                 </div>
-                <div className="absolute top-1/3 -right-16 text-doodle -z-10 animate-float-2 block">
+                <div className="absolute top-1/3 -right-16 text-doodle -z-10 animate-float-2 lg:block hidden">
                     <Carrot className="h-40 w-40" />
                 </div>
-                <div className="absolute bottom-1/4 -left-12 text-doodle -z-10 animate-float-3 block">
+                <div className="absolute bottom-1/4 -left-12 text-doodle -z-10 animate-float-3 lg:block hidden">
                     <Apple className="h-32 w-32" />
                 </div>
-                <div className="absolute bottom-0 -right-12 text-doodle -z-10 animate-float-4 block">
+                <div className="absolute bottom-0 -right-12 text-doodle -z-10 animate-float-4 lg:block hidden">
                     <Leaf className="h-36 w-36" />
                 </div>
               <div className="relative">
