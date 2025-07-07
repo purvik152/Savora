@@ -6,17 +6,17 @@
 @layer base {
   :root {
     --background: 0 70% 96%;
-    --foreground: 0 60% 25%; /* Changed to dark red */
+    --foreground: 0 70% 30%; /* Changed to dark red */
     --card: 0 70% 98%;
-    --card-foreground: 0 60% 25%; /* Changed to dark red */
+    --card-foreground: 0 70% 30%; /* Changed to dark red */
     --popover: 0 70% 98%;
-    --popover-foreground: 0 60% 25%; /* Changed to dark red */
+    --popover-foreground: 0 70% 30%; /* Changed to dark red */
     --primary: 0 84% 60%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 84% 92%;
     --secondary-foreground: 0 84% 20%;
     --muted: 0 60% 92%;
-    --muted-foreground: 0 40% 45%; /* Changed to muted red */
+    --muted-foreground: 0 50% 55%; /* Changed to muted red */
     --accent: 0 80% 70%;
     --accent-foreground: 0 80% 10%;
     --destructive: 0 84.2% 60.2%;
@@ -34,17 +34,17 @@
 
   .theme-veg {
     --background: 45 60% 95%;
-    --foreground: 140 60% 25%; /* Changed to dark green */
+    --foreground: 140 70% 25%; /* Changed to dark green */
     --card: 45 60% 98%;
-    --card-foreground: 140 60% 25%; /* Changed to dark green */
+    --card-foreground: 140 70% 25%; /* Changed to dark green */
     --popover: 45 60% 98%;
-    --popover-foreground: 140 60% 25%; /* Changed to dark green */
+    --popover-foreground: 140 70% 25%; /* Changed to dark green */
     --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
     --secondary: 142 76% 90%;
     --secondary-foreground: 142 76% 20%;
     --muted: 142 50% 92%;
-    --muted-foreground: 140 30% 45%; /* Changed to muted green */
+    --muted-foreground: 140 40% 40%; /* Changed to muted green */
     --accent: 48 96% 59%;
     --accent-foreground: 48 96% 15%;
     --destructive: 0 84.2% 60.2%;
