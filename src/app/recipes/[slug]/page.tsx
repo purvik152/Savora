@@ -6,12 +6,12 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart } from "lucide-react";
 import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from '@/hooks/use-toast';
 import { adjustRecipe } from '@/ai/flows/adjust-recipe-flow';
 import { parseIngredientsForSearch } from '@/ai/flows/parse-ingredients-flow';
@@ -37,6 +37,8 @@ import {
 } from "@/components/ui/tooltip";
 import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { isFavoriteRecipe, addFavoriteRecipe, removeFavoriteRecipe, addPastRecipe } from '@/lib/user-data';
 
 
 function RecipePageSkeleton() {
@@ -94,6 +96,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   const [isAdjusting, setIsAdjusting] = useState(false);
   const [language, setLanguage] = useState('english');
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [isOrdering, setIsOrdering] = useState(false);
@@ -103,7 +106,8 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   useEffect(() => {
     setHasMounted(true);
     setCheckedIngredients(new Set());
-  }, [displayedIngredients]);
+    setIsFavorite(isFavoriteRecipe(recipe.id));
+  }, [recipe.id, displayedIngredients]);
   
 
   const chartConfig = useMemo(() => ({
@@ -282,6 +286,22 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     }
   };
 
+  const handleFavoriteToggle = () => {
+    if (isFavorite) {
+        removeFavoriteRecipe(recipe.id);
+        setIsFavorite(false);
+        toast({ title: "Removed from favorites" });
+    } else {
+        addFavoriteRecipe(recipe);
+        setIsFavorite(true);
+        toast({ title: "Added to favorites" });
+    }
+  };
+
+  const handleStartCooking = () => {
+    addPastRecipe(recipe);
+  };
+
   const ServingsControl = () => {
     const isDisabled = language !== 'english' || isProcessing;
     const control = (
@@ -332,6 +352,12 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
               <Badge variant="secondary" className="mb-2">{recipe.category}</Badge>
               <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{recipe.title}</h1>
               <p className="mt-2 text-lg text-white/90 max-w-2xl drop-shadow-md">{recipe.description}</p>
+            </div>
+             <div className="absolute top-4 right-4 z-10">
+                <Button variant="ghost" size="icon" onClick={handleFavoriteToggle} className="rounded-full bg-background/50 hover:bg-background h-12 w-12">
+                    <Heart className={cn("h-6 w-6 text-destructive", isFavorite && "fill-destructive")} />
+                    <span className="sr-only">Favorite</span>
+                </Button>
             </div>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
@@ -544,7 +570,11 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
 
                 {hasMounted && (
                   <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
-                    <VoiceAssistant recipeTitle={recipe.title} instructions={displayedInstructions} />
+                    <VoiceAssistant
+                      recipeTitle={recipe.title}
+                      instructions={displayedInstructions}
+                      onStartCooking={handleStartCooking}
+                    />
                   </div>
                 )}
               </div>

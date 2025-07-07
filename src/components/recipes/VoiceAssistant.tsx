@@ -12,9 +12,10 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 interface VoiceAssistantProps {
   recipeTitle: string;
   instructions: string[];
+  onStartCooking?: () => void;
 }
 
-export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProps) {
+export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: VoiceAssistantProps) {
   const { toast } = useToast();
   
   const [hasMounted, setHasMounted] = useState(false);
@@ -256,6 +257,7 @@ export function VoiceAssistant({ recipeTitle, instructions }: VoiceAssistantProp
   
   // --- User Actions ---
   const startSession = () => {
+    onStartCooking?.();
     setSessionActive(true);
     handleUserQuery("start cooking");
   };

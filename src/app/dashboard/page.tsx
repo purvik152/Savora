@@ -3,22 +3,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
+import { Edit, Utensils, Star, Loader2, Heart } from "lucide-react";
 import Image from "next/image";
-
-const pastRecipes = [
-    { id: 1, name: "Spaghetti Carbonara", image: "/images/recipes/creamy-tomato-pasta.jpg", hint: "spaghetti carbonara", rating: 4 },
-    { id: 2, name: "Chicken Tikka Masala", image: "/images/recipes/chicken-tikka-masala.jpg", hint: "chicken masala", rating: 5 },
-    { id: 3, name: "Classic Beef Tacos", image: "/images/recipes/classic-beef-tacos.jpg", hint: "beef tacos", rating: 4 },
-  ];
-  
-  const favoriteRecipes = [
-    { id: 1, name: "Avocado Toast", image: "/images/recipes/avocado-toast-with-egg.jpg", hint: "avocado toast", cuisine: "American" },
-    { id: 2, name: "Vegan Pad Thai", image: "/images/recipes/vibrant-quinoa-salad.jpg", hint: "pad thai", cuisine: "Thai" },
-  ];
+import { getPastRecipes, getFavoriteRecipes } from "@/lib/user-data";
+import type { Recipe } from "@/lib/recipes";
 
 interface User {
   username: string;
@@ -39,6 +31,9 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
     // This code runs only on the client
@@ -50,11 +45,16 @@ export default function DashboardPage() {
     } else {
       // If no user, redirect to login
       router.push('/login');
+      return;
     }
 
     if (storedAvatar) {
       setAvatarSrc(storedAvatar);
     }
+    
+    // Get real data from localStorage
+    setPastRecipes(getPastRecipes());
+    setFavoriteRecipes(getFavoriteRecipes());
   }, [router]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,11 +104,11 @@ export default function DashboardPage() {
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">12</p>
+              <p className="text-2xl font-bold text-foreground">{pastRecipes.length}</p>
               <p className="text-sm">Recipes Tried</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">5</p>
+              <p className="text-2xl font-bold text-foreground">{favoriteRecipes.length}</p>
               <p className="text-sm">Favorites</p>
             </div>
           </div>
@@ -124,20 +124,22 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {pastRecipes.map(recipe => (
-                  <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                    <Image src={recipe.image} alt={recipe.name} width={80} height={60} className="rounded-md object-cover" data-ai-hint={recipe.hint} />
-                    <div className="flex-grow">
-                      <h3 className="font-semibold">{recipe.name}</h3>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                           <Star key={i} className={`h-4 w-4 ${i < recipe.rating ? 'text-accent fill-accent' : 'text-muted-foreground/50'}`} />
-                        ))}
+                {pastRecipes.length > 0 ? (
+                  pastRecipes.map(recipe => (
+                    <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
+                      <Image src={recipe.image} alt={recipe.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={recipe.imageHint} />
+                      <div className="flex-grow">
+                        <h3 className="font-semibold">{recipe.title}</h3>
+                        <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
                       </div>
+                      <Button asChild variant="outline" size="sm">
+                        <Link href={`/recipes/${recipe.slug}`}>Cook Again</Link>
+                      </Button>
                     </div>
-                    <Button variant="outline" size="sm">Cook Again</Button>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-center py-4">You haven't cooked any recipes yet. Go explore!</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -150,15 +152,23 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {favoriteRecipes.map(recipe => (
-                  <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                     <Image src={recipe.image} alt={recipe.name} width={64} height={64} className="rounded-full object-cover" data-ai-hint={recipe.hint} />
-                     <div>
-                       <h3 className="font-semibold">{recipe.name}</h3>
-                       <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
-                     </div>
-                  </div>
-                ))}
+                {favoriteRecipes.length > 0 ? (
+                  favoriteRecipes.map(recipe => (
+                    <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
+                      <Link href={`/recipes/${recipe.slug}`} className="block flex-shrink-0">
+                        <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-full object-cover" data-ai-hint={recipe.imageHint} />
+                      </Link>
+                       <div className="flex-grow">
+                         <Link href={`/recipes/${recipe.slug}`}>
+                           <h3 className="font-semibold hover:underline">{recipe.title}</h3>
+                         </Link>
+                         <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
+                       </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-center py-4">You haven't favorited any recipes yet.</p>
+                )}
               </div>
             </CardContent>
           </Card>
