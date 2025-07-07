@@ -10,14 +10,14 @@ import { Edit, Heart, Utensils, Star, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const pastRecipes = [
-    { id: 1, name: "Spaghetti Carbonara", image: "https://placehold.co/80x60.png", hint: "spaghetti carbonara", rating: 4 },
-    { id: 2, name: "Chicken Tikka Masala", image: "https://placehold.co/80x60.png", hint: "chicken masala", rating: 5 },
-    { id: 3, name: "Classic Beef Tacos", image: "https://placehold.co/80x60.png", hint: "beef tacos", rating: 4 },
+    { id: 1, name: "Spaghetti Carbonara", image: "/images/recipes/creamy-tomato-pasta.jpg", hint: "spaghetti carbonara", rating: 4 },
+    { id: 2, name: "Chicken Tikka Masala", image: "/images/recipes/chicken-tikka-masala.jpg", hint: "chicken masala", rating: 5 },
+    { id: 3, name: "Classic Beef Tacos", image: "/images/recipes/classic-beef-tacos.jpg", hint: "beef tacos", rating: 4 },
   ];
   
   const favoriteRecipes = [
-    { id: 1, name: "Avocado Toast", image: "https://placehold.co/64x64.png", hint: "avocado toast", cuisine: "American" },
-    { id: 2, name: "Vegan Pad Thai", image: "https://placehold.co/64x64.png", hint: "pad thai", cuisine: "Thai" },
+    { id: 1, name: "Avocado Toast", image: "/images/recipes/avocado-toast-with-egg.jpg", hint: "avocado toast", cuisine: "American" },
+    { id: 2, name: "Vegan Pad Thai", image: "/images/recipes/vibrant-quinoa-salad.jpg", hint: "pad thai", cuisine: "Thai" },
   ];
 
 interface User {
