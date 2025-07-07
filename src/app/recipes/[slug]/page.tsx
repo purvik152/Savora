@@ -202,16 +202,16 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
           <CardContent className="p-6 md:p-8">
             <div className="max-w-4xl mx-auto relative">
                 {/* Background Doodles for the Card */}
-                <div className="absolute top-20 -left-24 text-primary/10 -z-10 transform -rotate-12 hidden md:block">
+                <div className="absolute top-20 -left-16 text-doodle/30 -z-10 animate-float-1">
                     <ChefHat className="h-48 w-48" />
                 </div>
-                <div className="absolute top-1/3 -right-24 text-primary/10 -z-10 transform rotate-12 hidden md:block">
+                <div className="absolute top-1/3 -right-16 text-doodle/30 -z-10 animate-float-2">
                     <Carrot className="h-40 w-40" />
                 </div>
-                <div className="absolute bottom-1/4 -left-20 text-primary/10 -z-10 transform rotate-6 hidden md:block">
+                <div className="absolute bottom-1/4 -left-12 text-doodle/30 -z-10 animate-float-3">
                     <Apple className="h-32 w-32" />
                 </div>
-                <div className="absolute bottom-0 -right-20 text-primary/10 -z-10 transform -rotate-6 hidden md:block">
+                <div className="absolute bottom-0 -right-12 text-doodle/30 -z-10 animate-float-4">
                     <Leaf className="h-36 w-36" />
                 </div>
               <div className="relative">
