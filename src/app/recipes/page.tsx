@@ -1,11 +1,15 @@
 
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from 'react';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useDiet } from "@/contexts/DietContext";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full">
@@ -33,10 +37,19 @@ export default function RecipesPage({
 }: {
   searchParams?: { q?: string };
 }) {
+  const { diet } = useDiet();
+
+  const activeRecipes = useMemo(() => {
+    if (diet === 'veg') {
+      return recipes.filter(r => r.diet === 'veg');
+    }
+    return recipes;
+  }, [diet]);
+  
   const query = searchParams?.q?.toLowerCase();
 
   const filteredRecipes = query
-    ? recipes.filter(
+    ? activeRecipes.filter(
         (recipe) =>
           recipe.title.toLowerCase().includes(query) ||
           recipe.description.toLowerCase().includes(query) ||
@@ -82,10 +95,10 @@ export default function RecipesPage({
   }
 
   // Original page content for when there's no search query
-  const cuisines = [...new Set(recipes.map((r) => r.cuisine))];
-  const breakfastRecipes = recipes.filter(r => r.category === 'Breakfast');
-  const lunchRecipes = recipes.filter(r => r.category === 'Lunch');
-  const dinnerRecipes = recipes.filter(r => r.category === 'Dinner');
+  const cuisines = [...new Set(activeRecipes.map((r) => r.cuisine))];
+  const breakfastRecipes = activeRecipes.filter(r => r.category === 'Breakfast');
+  const lunchRecipes = activeRecipes.filter(r => r.category === 'Lunch');
+  const dinnerRecipes = activeRecipes.filter(r => r.category === 'Dinner');
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
@@ -97,7 +110,7 @@ export default function RecipesPage({
       <section id="cuisines" className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">Explore by Cuisine</h2>
         {cuisines.map((cuisine) => {
-          const cuisineRecipes = recipes
+          const cuisineRecipes = activeRecipes
             .filter((r) => r.cuisine === cuisine)
             .slice(0, 3);
           if (cuisineRecipes.length === 0) return null;
@@ -127,13 +140,13 @@ export default function RecipesPage({
          <h2 className="text-3xl font-bold mb-8 text-center">Or Browse by Meal Type</h2>
         <Tabs defaultValue="breakfast" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="breakfast">
+            <TabsTrigger value="breakfast" disabled={breakfastRecipes.length === 0}>
                Breakfast
             </TabsTrigger>
-            <TabsTrigger value="lunch">
+            <TabsTrigger value="lunch" disabled={lunchRecipes.length === 0}>
                Lunch
             </TabsTrigger>
-            <TabsTrigger value="dinner">
+            <TabsTrigger value="dinner" disabled={dinnerRecipes.length === 0}>
                Dinner
             </TabsTrigger>
           </TabsList>

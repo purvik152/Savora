@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
@@ -6,6 +7,7 @@ import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
+import { DietProvider } from '@/contexts/DietContext';
 
 export const metadata: Metadata = {
   title: 'Savora',
@@ -29,7 +31,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'min-h-screen bg-background font-body antialiased flex flex-col'
+          'min-h-screen bg-background text-foreground font-body antialiased flex flex-col'
         )}
       >
         <ThemeProvider
@@ -38,11 +40,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <DietProvider>
             <FloatingDoodles />
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
             <Toaster />
+          </DietProvider>
         </ThemeProvider>
       </body>
     </html>

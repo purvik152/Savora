@@ -1,10 +1,11 @@
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,14 +14,16 @@ import { Recipe, recipes } from '@/lib/recipes';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useDiet } from '@/contexts/DietContext';
 
-const featuredRecipes = [
+const allFeaturedRecipes = [
   {
     name: 'Ultimate Creamy Tomato Pasta',
     image: '/images/recipes/creamy-tomato-pasta.jpg',
     hint: 'creamy pasta',
     description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
     href: '/recipes/creamy-tomato-pasta',
+    diet: 'veg'
   },
   {
     name: 'Lemon Herb Roast Chicken',
@@ -28,6 +31,7 @@ const featuredRecipes = [
     hint: 'roast chicken',
     description: 'Impressive enough for guests, easy enough for a weeknight.',
     href: '/recipes/lemon-herb-roast-chicken',
+    diet: 'non-veg'
   },
   {
     name: 'Classic Beef Lasagna',
@@ -35,6 +39,7 @@ const featuredRecipes = [
     hint: 'lasagna dinner',
     description: 'Layers of rich meat sauce, creamy béchamel, and tender pasta.',
     href: '/recipes/classic-beef-lasagna',
+    diet: 'non-veg'
   },
    {
     name: 'Thai Green Curry',
@@ -42,48 +47,50 @@ const featuredRecipes = [
     hint: 'thai curry',
     description: 'Fragrant and spicy Thai green curry with tender chicken and vegetables.',
     href: '/recipes/thai-green-curry-chicken',
+    diet: 'non-veg'
   }
 ];
 
-const subCategories = [
-  { name: 'Quick and Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal' },
-  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/easy-beef-stir-fry.jpg', hint: 'stir fry dinner' },
-  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: '/images/recipes/black-bean-burgers.jpg', hint: 'vegetarian dish' },
-  { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food' },
-  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'pot roast' },
-  { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'vegan pasta' },
-  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/hearty-breakfast-burrito.jpg', hint: 'meal prep' },
-  { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'tortilla soup' },
-  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad' },
+const allSubCategories = [
+  { name: 'Quick and Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal', diet: 'veg' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/easy-beef-stir-fry.jpg', hint: 'stir fry dinner', diet: 'non-veg' },
+  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: '/images/recipes/black-bean-burgers.jpg', hint: 'vegetarian dish', diet: 'veg' },
+  { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food', diet: 'veg' },
+  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'pot roast', diet: 'veg' },
+  { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'vegan pasta', diet: 'veg' },
+  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/hearty-breakfast-burrito.jpg', hint: 'meal prep', diet: 'veg' },
+  { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'tortilla soup', diet: 'veg' },
+  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
 ];
 
-const subCategoriesFirstRow = subCategories.slice(0, 4);
-const subCategoriesSecondRow = subCategories.slice(4);
-
-const mainCategories = [
+const allMainCategories = [
   {
     name: 'Quick and Easy',
     href: '/recipes?q=quick',
     image: '/images/recipes/chicken-caesar-wrap.jpg',
     hint: 'chicken rice bowl',
+    diet: 'non-veg'
   },
   {
     name: 'Dinner',
     href: '/recipes?q=dinner',
     image: '/images/recipes/classic-beef-lasagna.jpg',
     hint: 'creamy pasta',
+    diet: 'non-veg'
   },
   {
     name: 'Most Popular',
     href: '/recipes?q=pasta',
     image: '/images/recipes/creamy-tomato-pasta.jpg',
     hint: 'noodle stirfry',
+    diet: 'veg'
   },
   {
     name: 'Salads',
     href: '/recipes?q=salad',
     image: '/images/recipes/greek-salad-with-grilled-chicken.jpg',
     hint: 'salad bowl',
+    diet: 'non-veg'
   },
 ];
 
@@ -94,6 +101,8 @@ export default function Home() {
   );
   const router = useRouter();
   const { toast } = useToast();
+  const { diet } = useDiet();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Recipe[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -114,12 +123,42 @@ export default function Home() {
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
 
+  const filteredRecipes = useMemo(() => {
+    if (diet === 'veg') {
+      return recipes.filter(r => r.diet === 'veg');
+    }
+    return recipes;
+  }, [diet]);
+
+  const featuredRecipes = useMemo(() => {
+    if (diet === 'veg') {
+      return allFeaturedRecipes.filter(r => r.diet === 'veg');
+    }
+    return allFeaturedRecipes;
+  }, [diet]);
+
+  const subCategories = useMemo(() => {
+    if (diet === 'veg') {
+      return allSubCategories.filter(r => r.diet === 'veg');
+    }
+    return allSubCategories;
+  }, [diet]);
+
+  const mainCategories = useMemo(() => {
+    if (diet === 'veg') {
+      return allMainCategories.filter(r => r.diet === 'veg');
+    }
+    return allMainCategories;
+  }, [diet]);
+
+  const subCategoriesFirstRow = subCategories.slice(0, 4);
+  const subCategoriesSecondRow = subCategories.slice(4);
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
         setIsSearching(true);
         const queryLower = query.toLowerCase();
-        const filteredResults = recipes.filter(
+        const filteredResults = filteredRecipes.filter(
             (recipe) =>
             recipe.title.toLowerCase().includes(queryLower) ||
             recipe.description.toLowerCase().includes(queryLower) ||
@@ -134,7 +173,7 @@ export default function Home() {
     } else {
         setSearchResults([]);
     }
-  }, []);
+  }, [filteredRecipes]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -242,7 +281,7 @@ export default function Home() {
       
       {/* Hero Carousel Section */}
       <section className="mb-16">
-        {hasMounted ? (
+        {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
             className="w-full"
@@ -277,6 +316,7 @@ export default function Home() {
       </section>
 
       {/* Sub-Categories Section */}
+      {subCategories.length > 0 && (
       <section
         ref={subCategoriesRef}
         className={cn(
@@ -346,8 +386,10 @@ export default function Home() {
           </div>
         )}
       </section>
+      )}
 
       {/* Main Categories Section */}
+      {mainCategories.length > 0 && (
       <section
         ref={mainCategoriesRef}
         className={cn(
@@ -384,6 +426,7 @@ export default function Home() {
             </div>
         )}
     </section>
+    )}
 
     {/* Search Section */}
     <section

@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useDiet } from '@/contexts/DietContext';
 
 
 interface SearchDialogProps {
@@ -25,19 +26,27 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { diet } = useDiet();
 
   // State for voice search
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
 
-  const popularRecipes = useMemo(() => recipes.slice(0, 4), []);
+  const activeRecipes = useMemo(() => {
+    if (diet === 'veg') {
+      return recipes.filter(r => r.diet === 'veg');
+    }
+    return recipes;
+  }, [diet]);
+
+  const popularRecipes = useMemo(() => activeRecipes.slice(0, 4), [activeRecipes]);
 
   const handleSearch = useCallback((searchQuery: string) => {
     if (searchQuery.trim().length > 1) {
       setLoading(true);
       const queryLower = searchQuery.toLowerCase();
-      const filteredResults = recipes.filter(
+      const filteredResults = activeRecipes.filter(
         (recipe) =>
           recipe.title.toLowerCase().includes(queryLower) ||
           recipe.description.toLowerCase().includes(queryLower) ||
@@ -52,7 +61,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     } else {
       setResults(popularRecipes);
     }
-  }, [popularRecipes]);
+  }, [popularRecipes, activeRecipes]);
 
   // Setup speech recognition
   useEffect(() => {
@@ -109,7 +118,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     return () => clearTimeout(timer);
   }, [query, handleSearch]);
 
-  // Reset results when dialog opens
+  // Reset results when dialog opens or diet changes
   useEffect(() => {
     if (open) {
       setQuery('');

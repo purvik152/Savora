@@ -1,15 +1,19 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, Leaf, Drumstick } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
+import { useDiet } from '@/contexts/DietContext';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,6 +21,25 @@ const navLinks = [
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
 ];
+
+function DietToggle() {
+    const { diet, toggleDiet } = useDiet();
+    const isVeg = diet === 'veg';
+
+    return (
+        <div className="flex items-center space-x-2">
+            <Drumstick className={cn("h-5 w-5 transition-colors", !isVeg ? 'text-primary' : 'text-muted-foreground')} />
+            <Switch
+                id="diet-mode"
+                checked={isVeg}
+                onCheckedChange={toggleDiet}
+                aria-label="Toggle dietary preference"
+            />
+            <Leaf className={cn("h-5 w-5 transition-colors", isVeg ? 'text-primary' : 'text-muted-foreground')} />
+        </div>
+    );
+}
+
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -85,6 +108,9 @@ export function Header() {
             </nav>
 
             <div className="flex items-center space-x-2">
+               <div className="hidden md:flex">
+                 <DietToggle />
+               </div>
                <Button
                 variant="ghost"
                 size="icon"
@@ -133,6 +159,9 @@ export function Header() {
                             {link.label}
                           </Link>
                         ))}
+                        <div className="pt-4 border-t">
+                            <DietToggle />
+                        </div>
                         {hasMounted && !isLoggedIn && (
                            <Button asChild onClick={closeMobileMenu}>
                               <Link href="/login">Login</Link>

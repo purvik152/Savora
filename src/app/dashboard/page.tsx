@@ -1,16 +1,18 @@
+
 'use client';
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Utensils, Star, Loader2, Heart, LogOut } from "lucide-react";
+import { Edit, Utensils, Loader2, Heart, LogOut } from "lucide-react";
 import Image from "next/image";
 import { getPastRecipes, getFavoriteRecipes } from "@/lib/user-data";
 import type { Recipe } from "@/lib/recipes";
 import { useToast } from "@/hooks/use-toast";
+import { useDiet } from "@/contexts/DietContext";
 
 interface User {
   username: string;
@@ -29,6 +31,8 @@ function LoadingDashboard() {
 export default function DashboardPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { diet } = useDiet();
+
   const [user, setUser] = useState<User | null>(null);
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +63,20 @@ export default function DashboardPage() {
       return;
     }
   }, [router]);
+
+  const filteredPastRecipes = useMemo(() => {
+    if (diet === 'veg') {
+        return pastRecipes.filter(r => r.diet === 'veg');
+    }
+    return pastRecipes;
+  }, [diet, pastRecipes]);
+
+  const filteredFavoriteRecipes = useMemo(() => {
+    if (diet === 'veg') {
+        return favoriteRecipes.filter(r => r.diet === 'veg');
+    }
+    return favoriteRecipes;
+  }, [diet, favoriteRecipes]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -126,11 +144,11 @@ export default function DashboardPage() {
           <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{pastRecipes.length}</p>
+              <p className="text-2xl font-bold text-foreground">{filteredPastRecipes.length}</p>
               <p className="text-sm">Recipes Tried</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{favoriteRecipes.length}</p>
+              <p className="text-2xl font-bold text-foreground">{filteredFavoriteRecipes.length}</p>
               <p className="text-sm">Favorites</p>
             </div>
           </div>
@@ -150,8 +168,8 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {pastRecipes.length > 0 ? (
-                  pastRecipes.map(recipe => (
+                {filteredPastRecipes.length > 0 ? (
+                  filteredPastRecipes.map(recipe => (
                     <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
                       <Image src={recipe.image} alt={recipe.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={recipe.imageHint} />
                       <div className="flex-grow">
@@ -178,8 +196,8 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {favoriteRecipes.length > 0 ? (
-                  favoriteRecipes.map(recipe => (
+                {filteredFavoriteRecipes.length > 0 ? (
+                  filteredFavoriteRecipes.map(recipe => (
                     <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
                       <Link href={`/recipes/${recipe.slug}`} className="block flex-shrink-0">
                         <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-full object-cover" data-ai-hint={recipe.imageHint} />
