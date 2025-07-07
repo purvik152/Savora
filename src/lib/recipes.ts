@@ -1135,6 +1135,51 @@ export const recipes: Recipe[] = [
       sodium: '850mg',
     },
   },
+  {
+    id: 28,
+    slug: 'instant-pot-lentil-soup',
+    title: 'Instant Pot Lentil Soup',
+    category: 'Dinner',
+    cuisine: 'American',
+    image: '/images/recipes/instant-pot-lentil-soup.jpg',
+    imageHint: 'lentil soup instant pot',
+    description: 'A quick, hearty, and flavorful lentil soup made incredibly easy in the Instant Pot. A perfect one-pot meal.',
+    prepTime: '10 mins',
+    cookTime: '20 mins',
+    servings: '6 people',
+    ingredients: [
+      '1 tbsp olive oil',
+      '1 large onion, chopped',
+      '2 carrots, chopped',
+      '2 celery stalks, chopped',
+      '4 cloves garlic, minced',
+      '1 1/2 cups brown or green lentils, rinsed',
+      '6 cups vegetable broth',
+      '1 (14.5-ounce) can diced tomatoes, undrained',
+      '1 tsp dried thyme',
+      '1/2 tsp smoked paprika',
+      'Salt and pepper to taste',
+      '1 tbsp lemon juice'
+    ],
+    instructions: [
+      'Set the Instant Pot to the "Sauté" function. Add olive oil, onion, carrots, and celery. Cook for 5 minutes until softened.',
+      'Add garlic and cook for another minute until fragrant.',
+      'Press "Cancel". Add rinsed lentils, vegetable broth, diced tomatoes, thyme, and smoked paprika. Stir to combine.',
+      'Secure the lid and set the steam release valve to "Sealing". Select "Manual" or "Pressure Cook" and set the timer for 15 minutes at high pressure.',
+      'When the time is up, let the pressure release naturally for 10 minutes, then perform a quick release for any remaining pressure.',
+      'Carefully open the lid. Stir in the lemon juice and season with salt and pepper to taste.',
+      'Serve hot, garnished with fresh parsley if desired.'
+    ],
+    nutrition: {
+      calories: '280 kcal',
+      protein: '15g',
+      carbohydrates: '45g',
+      fat: '4g',
+      fiber: '18g',
+      sugar: '9g',
+      sodium: '750mg'
+    }
+  }
 ];
 
 export const getRecipeBySlug = (slug: string) => {
