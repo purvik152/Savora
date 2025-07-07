@@ -1171,13 +1171,13 @@ export const recipes: Recipe[] = [
       'Serve hot, garnished with fresh parsley if desired.'
     ],
     nutrition: {
-      calories: '280 kcal',
-      protein: '15g',
-      carbohydrates: '45g',
-      fat: '4g',
-      fiber: '18g',
-      sugar: '9g',
-      sodium: '750mg'
+        calories: '280 kcal',
+        protein: '15g',
+        carbohydrates: '45g',
+        fat: '4g',
+        fiber: '18g',
+        sugar: '9g',
+        sodium: '750mg'
     }
   },
   {
@@ -1274,6 +1274,175 @@ export const recipes: Recipe[] = [
         fiber: '15g',
         sugar: '10g',
         sodium: '800mg'
+    }
+  },
+  {
+    id: 31,
+    slug: 'vegan-chickpea-salad-sandwich',
+    title: 'Vegan Chickpea Salad Sandwich',
+    category: 'Lunch',
+    cuisine: 'American',
+    image: '/images/recipes/vegan-chickpea-salad-sandwich.jpg',
+    imageHint: 'chickpea sandwich',
+    description: 'A delicious and easy vegan alternative to tuna salad, perfect for a quick lunch or meal prep. This recipe is fully vegan.',
+    prepTime: '15 mins',
+    cookTime: '0 mins',
+    servings: '2 sandwiches',
+    ingredients: [
+      '1 (15-ounce) can chickpeas, rinsed and drained',
+      '1/4 cup vegan mayonnaise',
+      '1 celery stalk, finely chopped',
+      '2 tbsp red onion, finely chopped',
+      '1 tbsp Dijon mustard',
+      '1 tbsp fresh dill, chopped',
+      'Salt and pepper to taste',
+      '4 slices of your favorite bread',
+      'Lettuce and tomato slices for serving'
+    ],
+    instructions: [
+      'In a medium bowl, mash the chickpeas with a fork or potato masher until flaky.',
+      'Add the vegan mayonnaise, celery, red onion, Dijon mustard, and dill to the bowl.',
+      'Mix everything together until well combined. Season with salt and pepper to taste.',
+      'Toast your bread slices if desired.',
+      'Divide the chickpea salad mixture evenly between two slices of bread.',
+      'Top with lettuce and tomato, then add the remaining two slices of bread to complete the sandwiches.',
+      'Serve immediately.'
+    ],
+    nutrition: {
+      calories: '450 kcal',
+      protein: '15g',
+      carbohydrates: '65g',
+      fat: '15g',
+      fiber: '12g',
+      sugar: '8g',
+      sodium: '800mg',
+    }
+  },
+  {
+    id: 32,
+    slug: 'creamy-vegan-tomato-soup',
+    title: 'Creamy Vegan Tomato Soup',
+    category: 'Dinner',
+    cuisine: 'Italian',
+    image: '/images/recipes/creamy-vegan-tomato-soup.jpg',
+    imageHint: 'tomato soup',
+    description: 'A rich and creamy vegan tomato soup, perfect for a comforting meal. Great for meal prep, this is a fully vegan dish.',
+    prepTime: '10 mins',
+    cookTime: '25 mins',
+    servings: '4 people',
+    ingredients: [
+      '1 tbsp olive oil',
+      '1 large yellow onion, chopped',
+      '3 cloves garlic, minced',
+      '1 (28-ounce) can crushed tomatoes',
+      '1 cup vegetable broth',
+      '1/2 cup full-fat coconut milk (from a can)',
+      '1 tsp dried basil',
+      '1 tsp sugar (optional, to balance acidity)',
+      'Salt and pepper to taste',
+      'Fresh basil for garnish'
+    ],
+    instructions: [
+      'Heat olive oil in a large pot or Dutch oven over medium heat. Add the onion and cook until softened, about 5-7 minutes.',
+      'Add the minced garlic and cook for another minute until fragrant.',
+      'Pour in the crushed tomatoes and vegetable broth. Add the dried basil and sugar (if using).',
+      'Bring the soup to a simmer, then reduce the heat, cover, and let it cook for 15 minutes.',
+      'Use an immersion blender to blend the soup until smooth. Alternatively, carefully transfer it to a regular blender and blend in batches.',
+      'Return the soup to the pot. Stir in the coconut milk and heat through gently. Do not let it boil.',
+      'Season with salt and pepper to taste. Serve hot, garnished with fresh basil.'
+    ],
+    nutrition: {
+      calories: '250 kcal',
+      protein: '5g',
+      carbohydrates: '25g',
+      fat: '15g',
+      fiber: '6g',
+      sugar: '15g',
+      sodium: '650mg',
+    }
+  },
+  {
+    id: 33,
+    slug: 'meal-prep-burrito-bowls',
+    title: 'Chicken Burrito Bowls for Meal Prep',
+    category: 'Lunch',
+    cuisine: 'Mexican',
+    image: '/images/recipes/meal-prep-burrito-bowls.jpg',
+    imageHint: 'burrito bowl',
+    description: 'A healthy and delicious meal prep solution. Customizable burrito bowls with seasoned chicken, cilantro-lime rice, beans, and fresh toppings.',
+    prepTime: '20 mins',
+    cookTime: '25 mins',
+    servings: '4 bowls',
+    ingredients: [
+      '1 lb boneless, skinless chicken breast, cut into bite-sized pieces',
+      '1 tbsp olive oil',
+      '1 packet taco seasoning',
+      '1 cup uncooked long-grain white rice',
+      '2 cups water',
+      '1/4 cup chopped fresh cilantro',
+      'Juice of 1 lime',
+      '1 (15-ounce) can black beans, rinsed and drained',
+      '1 cup corn (frozen or canned)',
+      'For serving: salsa, shredded lettuce, avocado, or shredded cheese'
+    ],
+    instructions: [
+      'In a bowl, toss the chicken pieces with olive oil and taco seasoning.',
+      'Heat a large skillet over medium-high heat. Add the chicken and cook until browned and cooked through, about 5-7 minutes. Set aside.',
+      'Cook rice with water according to package directions. Once cooked, fluff with a fork and stir in the cilantro and lime juice.',
+      'To assemble the meal prep bowls, divide the cilantro-lime rice evenly among four containers.',
+      'Top the rice with the cooked chicken, black beans, and corn.',
+      'Store in the refrigerator for up to 4 days. When ready to eat, reheat and add fresh toppings like salsa, lettuce, and avocado.'
+    ],
+    nutrition: {
+      calories: '550 kcal',
+      protein: '40g',
+      carbohydrates: '65g',
+      fat: '12g',
+      fiber: '10g',
+      sugar: '5g',
+      sodium: '950mg',
+    }
+  },
+  {
+    id: 34,
+    slug: 'sheet-pan-chicken-meal-prep',
+    title: 'Sheet Pan Chicken and Veggies for Meal Prep',
+    category: 'Dinner',
+    cuisine: 'Mediterranean',
+    image: '/images/recipes/sheet-pan-chicken-veggies.jpg',
+    imageHint: 'sheet pan chicken',
+    description: 'An incredibly easy one-pan dinner that is perfect for a healthy weeknight eating or meal prep for the week. Minimal cleanup required.',
+    prepTime: '15 mins',
+    cookTime: '30 mins',
+    servings: '4 servings',
+    ingredients: [
+      '1.5 lbs boneless, skinless chicken breasts, cut into 1-inch chunks',
+      '1 lb broccoli florets',
+      '1 red bell pepper, chopped',
+      '1 red onion, cut into wedges',
+      '2 tbsp olive oil',
+      '1 tbsp lemon juice',
+      '1 tsp dried oregano',
+      '1 tsp dried basil',
+      'Salt and pepper to taste'
+    ],
+    instructions: [
+      'Preheat oven to 400°F (200°C).',
+      'On a large baking sheet, combine the chicken chunks, broccoli, bell pepper, and red onion.',
+      'In a small bowl, whisk together the olive oil, lemon juice, oregano, basil, salt, and pepper.',
+      'Pour the olive oil mixture over the chicken and vegetables on the baking sheet and toss until everything is evenly coated.',
+      'Spread the mixture in a single layer on the baking sheet.',
+      'Bake for 25-30 minutes, or until the chicken is cooked through and the vegetables are tender and slightly browned.',
+      'Divide into four containers for meal prep. Serve on its own or with a side of quinoa or rice.'
+    ],
+    nutrition: {
+      calories: '420 kcal',
+      protein: '45g',
+      carbohydrates: '15g',
+      fat: '20g',
+      fiber: '6g',
+      sugar: '8g',
+      sodium: '400mg',
     }
   }
 ];
