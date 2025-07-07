@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf } from "lucide-react";
 import { getRecipeBySlug } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
@@ -200,7 +200,20 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
             </div>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto relative">
+                {/* Background Doodles for the Card */}
+                <div className="absolute top-20 -left-24 text-primary/10 -z-10 transform -rotate-12 hidden md:block">
+                    <ChefHat className="h-48 w-48" />
+                </div>
+                <div className="absolute top-1/3 -right-24 text-primary/10 -z-10 transform rotate-12 hidden md:block">
+                    <Carrot className="h-40 w-40" />
+                </div>
+                <div className="absolute bottom-1/4 -left-20 text-primary/10 -z-10 transform rotate-6 hidden md:block">
+                    <Apple className="h-32 w-32" />
+                </div>
+                <div className="absolute bottom-0 -right-20 text-primary/10 -z-10 transform -rotate-6 hidden md:block">
+                    <Leaf className="h-36 w-36" />
+                </div>
               <div className="relative">
                 {isAdjusting && (
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10 rounded-lg">
