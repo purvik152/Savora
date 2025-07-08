@@ -10,8 +10,8 @@ import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
 
 export const metadata: Metadata = {
-  title: 'AI Recipe Assistant',
-  description: 'Real-time voice chat based recipe website',
+  title: 'Savora: Your AI Recipe Assistant',
+  description: 'Discover, create, and master recipes with Savora, your intelligent AI-powered culinary companion.',
 };
 
 export default function RootLayout({
