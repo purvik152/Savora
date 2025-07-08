@@ -42,8 +42,8 @@ export default function RecipesPage() {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show only non-veg recipes
-    return recipes.filter(r => r.diet === 'non-veg');
+    // In non-veg mode, show all recipes
+    return recipes;
   }, [diet]);
   
   const filteredRecipes = useMemo(() => {
