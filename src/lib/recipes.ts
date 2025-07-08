@@ -1753,7 +1753,7 @@ export const recipes: Recipe[] = [
     category: 'Lunch',
     cuisine: 'Mexican',
     diet: 'veg',
-    image: '/images/recipes/mushroom-and-spinich-quesadillas.jpg',
+    image: '/images/recipes/mushroom-and-spinach-quesadillas.jpg',
     imageHint: 'quesadillas lunch',
     description: 'Cheesy and savory quesadillas filled with sautéed mushrooms, garlic, and spinach. A perfect quick lunch or light dinner.',
     prepTime: '10 mins',
