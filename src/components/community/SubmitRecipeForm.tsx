@@ -1,0 +1,198 @@
+"use client";
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Upload, Mic, Circle } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { cn } from '@/lib/utils';
+
+
+const formSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters long."),
+  description: z.string().min(20, "Please provide a more detailed description."),
+  image: z.any().refine(files => files?.length === 1, "An image is required."),
+  ingredients: z.string().min(10, "Please list the ingredients."),
+  instructions: z.string().min(20, "Please provide the instructions."),
+  diet: z.enum(['veg', 'non-veg'], { required_error: "You need to select a diet type."}),
+});
+
+export function SubmitRecipeForm() {
+  const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      ingredients: "",
+      instructions: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    console.log(values);
+
+    // Simulate an API call
+    setTimeout(() => {
+        toast({
+            title: "Recipe Submitted!",
+            description: "Thank you for sharing your recipe with the community.",
+        });
+        form.reset();
+        setLoading(false);
+    }, 1500);
+  }
+
+  const handleRecordNarration = () => {
+    setIsRecording(is => !is);
+    toast({
+        title: isRecording ? "Recording Stopped" : "Recording Started",
+        description: isRecording ? "Voice narration saved (simulation)." : "This is a prototype. No audio is actually being recorded.",
+    });
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Your Recipe Details</CardTitle>
+          <CardDescription>Fill out the fields below. All fields are required.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recipe Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Ultimate Chocolate Chip Cookies" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Briefly describe your recipe..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Recipe Image</FormLabel>
+                        <FormControl>
+                            <Input type="file" accept="image/*" onChange={e => field.onChange(e.target.files)} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="diet"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Dietary Type</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="veg" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Vegetarian</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="non-veg" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Non-Vegetarian</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ingredients"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ingredients</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="List each ingredient on a new line." className="min-h-[150px]" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="instructions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instructions</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="List each step on a new line." className="min-h-[200px]" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormItem>
+                <FormLabel>Voice Narration (Optional)</FormLabel>
+                <Card className="p-4 bg-secondary/50 flex flex-col items-center gap-4">
+                    <FormDescription>
+                        Record yourself reading the instructions for a voice-guided experience.
+                    </FormDescription>
+                    <Button type="button" size="lg" variant={isRecording ? "destructive" : "outline"} onClick={handleRecordNarration}>
+                        {isRecording ? <Circle className="mr-2 h-5 w-5 fill-white" /> : <Mic className="mr-2 h-5 w-5" />}
+                        {isRecording ? 'Stop Recording' : 'Start Recording'}
+                    </Button>
+                </Card>
+              </FormItem>
+
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>
+                ) : (
+                  <><Upload className="mr-2 h-4 w-4" /> Submit Recipe</>
+                )}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

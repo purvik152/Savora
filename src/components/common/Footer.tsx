@@ -26,11 +26,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-foreground">About</h3>
+            <h3 className="font-semibold text-foreground">Community</h3>
             <ul className="mt-4 space-y-2">
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Our Story</Link></li>
+              <li><Link href="/community" className="text-sm text-muted-foreground hover:text-primary">Community Kitchen</Link></li>
+              <li><Link href="/submit-recipe" className="text-sm text-muted-foreground hover:text-primary">Submit a Recipe</Link></li>
               <li><Link href="/news" className="text-sm text-muted-foreground hover:text-primary">News & Blog</Link></li>
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Contact Us</Link></li>
             </ul>
           </div>
           <div>

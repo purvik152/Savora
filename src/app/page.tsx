@@ -9,12 +9,15 @@ import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Loader2, Mic } from 'lucide-react';
+import { Search, Loader2, Mic, Users } from 'lucide-react';
 import { Recipe, recipes } from '@/lib/recipes';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useDiet } from '@/contexts/DietContext';
+import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
+import { getCommunityRecipes, CommunityRecipe } from '@/lib/community-recipes';
+
 
 const allFeaturedRecipes = [
   {
@@ -126,16 +129,21 @@ export default function Home() {
   const subCategoriesRef = useRef<HTMLElement>(null);
   const mainCategoriesRef = useRef<HTMLElement>(null);
   const searchSectionRef = useRef<HTMLElement>(null);
+  const communitySectionRef = useRef<HTMLElement>(null);
   
   // State to track visibility
   const [subCategoriesVisible, setSubCategoriesVisible] = useState(false);
   const [mainCategoriesVisible, setMainCategoriesVisible] = useState(false);
   const [searchSectionVisible, setSearchSectionVisible] = useState(false);
+  const [communitySectionVisible, setCommunitySectionVisible] = useState(false);
 
   // State for voice search
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
+
+  // State for community recipes
+  const [communityRecipes, setCommunityRecipes] = useState<CommunityRecipe[]>([]);
 
   const filteredRecipes = useMemo(() => {
     if (diet === 'veg') {
@@ -171,6 +179,21 @@ export default function Home() {
   const subCategoriesFirstRow = subCategories.slice(0, 6);
   const subCategoriesSecondRow = subCategories.slice(6);
 
+  const topCommunityRecipes = useMemo(() => {
+    const filtered = diet === 'veg' 
+        ? communityRecipes.filter(r => r.diet === 'veg') 
+        : communityRecipes.filter(r => r.diet === 'non-veg');
+    
+    return filtered.sort((a,b) => b.upvotes - a.upvotes).slice(0, 3);
+  }, [diet, communityRecipes]);
+
+  const handleCommunityUpvote = (recipeId: number) => {
+    const updatedRecipes = communityRecipes.map(r => 
+      r.id === recipeId ? { ...r, upvotes: r.upvotes + 1 } : r
+    );
+    setCommunityRecipes(updatedRecipes);
+  };
+
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
         setIsSearching(true);
@@ -194,6 +217,7 @@ export default function Home() {
 
   useEffect(() => {
     setHasMounted(true);
+    setCommunityRecipes(getCommunityRecipes());
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -205,6 +229,8 @@ export default function Home() {
               setMainCategoriesVisible(true);
             } else if (entry.target === searchSectionRef.current) {
               setSearchSectionVisible(true);
+            } else if (entry.target === communitySectionRef.current) {
+              setCommunitySectionVisible(true);
             }
             observer.unobserve(entry.target);
           }
@@ -213,7 +239,7 @@ export default function Home() {
       { threshold: 0.1 }
     );
 
-    const refs = [subCategoriesRef, mainCategoriesRef, searchSectionRef];
+    const refs = [subCategoriesRef, mainCategoriesRef, searchSectionRef, communitySectionRef];
     refs.forEach(ref => {
       if (ref.current) {
         observer.observe(ref.current);
@@ -530,6 +556,29 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </section>
+
+    {/* Community Section */}
+    <section ref={communitySectionRef} className={cn("my-24 opacity-0", communitySectionVisible && "animate-fade-in-up")}>
+        <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
+            <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {topCommunityRecipes.length > 0 ? topCommunityRecipes.map(recipe => (
+                <CommunityRecipeCard key={recipe.id} recipe={recipe} onUpvote={handleCommunityUpvote} />
+            )) : (
+                <p className="text-muted-foreground text-center col-span-full">No community recipes in this view yet.</p>
+            )}
+        </div>
+        <div className="text-center mt-12">
+            <Link href="/community">
+                <Button size="lg">
+                    <Users className="mr-2" />
+                    Explore All Community Recipes
+                </Button>
+            </Link>
+        </div>
     </section>
       
     </div>
