@@ -10,7 +10,7 @@ import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
 
 export const metadata: Metadata = {
-  title: 'Savora',
+  title: 'AI Recipe Assistant',
   description: 'Real-time voice chat based recipe website',
 };
 
