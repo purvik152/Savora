@@ -33,26 +33,31 @@
   }
 
   .theme-veg {
-    --background: 45 60% 95%;
-    --foreground: 140 70% 30%; /* More prominent green */
-    --card: 45 60% 98%;
-    --card-foreground: 140 70% 30%; /* More prominent green */
-    --popover: 45 60% 98%;
-    --popover-foreground: 140 70% 30%; /* More prominent green */
-    --primary: 142 76% 42%;
+    --background: 120 30% 96%; /* Very light green */
+    --foreground: 130 60% 25%; /* Dark, desaturated green */
+    --card: 120 30% 98%; /* Slightly lighter green */
+    --card-foreground: 130 60% 25%;
+    --popover: 120 30% 98%;
+    --popover-foreground: 130 60% 25%;
+    --primary: 142 76% 42%; /* The main vibrant green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 142 60% 92%;
-    --secondary-foreground: 142 76% 20%;
-    --muted: 142 50% 92%;
-    --muted-foreground: 140 40% 45%; /* Adjusted muted green */
-    --accent: 48 96% 62%;
-    --accent-foreground: 48 96% 15%;
+    --secondary: 140 60% 92%; /* Light green for secondary elements */
+    --secondary-foreground: 142 76% 20%; /* Darker green */
+    --muted: 140 40% 94%; /* Even more muted green */
+    --muted-foreground: 140 30% 45%; /* Muted green text */
+    --accent: 145 65% 55%; /* A slightly different, vibrant green for accents */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 142 30% 85%;
-    --input: 142 30% 88%;
-    --ring: 142 76% 42%;
-    --doodle: 145 50% 55%; /* Adjusted doodle color */
+    --border: 130 30% 88%; /* Light green border */
+    --input: 130 30% 91%; /* Light green input bg */
+    --ring: 142 76% 42%; /* Main green for rings */
+    --doodle: 145 50% 55%;
+    --chart-1: 142 76% 42%;
+    --chart-2: 150 58% 39%;
+    --chart-3: 160 37% 24%;
+    --chart-4: 130 74% 66%;
+    --chart-5: 120 87% 67%;
   }
 
   .dark {
@@ -85,23 +90,28 @@
 
   .dark.theme-veg {
     --background: 140 15% 8%;
-    --foreground: 140 60% 70%; /* More saturated light green */
+    --foreground: 140 60% 70%;
     --card: 140 15% 10%;
-    --card-foreground: 140 60% 70%; /* More saturated light green */
+    --card-foreground: 140 60% 70%;
     --popover: 140 15% 8%;
-    --popover-foreground: 140 60% 70%; /* More saturated light green */
+    --popover-foreground: 140 60% 70%;
     --primary: 142 65% 50%;
     --primary-foreground: 142 60% 95%;
     --secondary: 142 40% 15%;
     --secondary-foreground: 142 40% 95%;
     --muted: 142 40% 15%;
-    --muted-foreground: 140 20% 75%; /* Adjusted muted light green */
-    --accent: 48 80% 50%;
-    --accent-foreground: 48 80% 95%;
+    --muted-foreground: 140 20% 75%;
+    --accent: 145 65% 55%;
+    --accent-foreground: 0 0% 100%;
     --border: 142 40% 15%;
     --input: 142 40% 15%;
     --ring: 142 65% 50%;
-    --doodle: 150 25% 40%; /* Adjusted doodle color */
+    --doodle: 150 25% 40%;
+    --chart-1: 142 65% 50%;
+    --chart-2: 150 58% 45%;
+    --chart-3: 160 37% 30%;
+    --chart-4: 130 74% 60%;
+    --chart-5: 120 87% 55%;
   }
 }
 
