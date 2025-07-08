@@ -51,7 +51,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Plan Your Week with Savora',
-    image: '/images/recipes/meal-prep-burrito-bowls.jpg',
+    image: '/images/recipes/meal-planner.jpg',
     hint: 'meal planner calendar',
     description: 'Easily organize your weekly meals, track nutrition, and stay on top of your health goals.',
     href: '/meal-planner',
