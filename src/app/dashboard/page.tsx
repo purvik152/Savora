@@ -171,7 +171,7 @@ export default function DashboardPage() {
                 {filteredPastRecipes.length > 0 ? (
                   filteredPastRecipes.map(recipe => (
                     <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                      <Image src={recipe.image} alt={recipe.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={recipe.imageHint} />
+                      <Image src={recipe.image} alt={recipe.title} width={80} height={60} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
                       <div className="flex-grow">
                         <h3 className="font-semibold">{recipe.title}</h3>
                         <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>

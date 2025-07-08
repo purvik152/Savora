@@ -487,7 +487,7 @@ export default function Home() {
                               alt={recipe.title}
                               width={48}
                               height={48}
-                              className="rounded-md object-cover w-12 h-12"
+                              className="rounded-lg object-cover w-12 h-12"
                               data-ai-hint={recipe.imageHint}
                             />
                             <span className="font-medium">{recipe.title}</span>

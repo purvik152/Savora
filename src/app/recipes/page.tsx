@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from 'react';
+import { useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { recipes, Recipe } from "@/lib/recipes";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useDiet } from "@/contexts/DietContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full">
@@ -20,7 +21,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
             src={recipe.image}
             alt={recipe.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out rounded-t-lg"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             data-ai-hint={recipe.imageHint}
             />
@@ -33,7 +34,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
     </Link>
 );
 
-export default function RecipesPage() {
+function RecipesContent() {
   const { diet } = useDiet();
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
@@ -174,4 +175,32 @@ export default function RecipesPage() {
       </section>
     </div>
   );
+}
+
+
+function RecipesPageLoadingSkeleton() {
+  return (
+    <div className="container mx-auto px-4 py-8 md:py-16">
+       <div className="text-center mb-12">
+        <Skeleton className="h-12 w-3/4 mx-auto" />
+        <Skeleton className="h-6 w-1/2 mx-auto mt-4" />
+      </div>
+      <div className="mb-12">
+        <Skeleton className="h-10 w-1/4 mb-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Skeleton className="h-80" />
+          <Skeleton className="h-80" />
+          <Skeleton className="h-80" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function RecipesPage() {
+  return (
+    <Suspense fallback={<RecipesPageLoadingSkeleton />}>
+      <RecipesContent />
+    </Suspense>
+  )
 }
