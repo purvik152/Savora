@@ -66,6 +66,51 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     upvotes: 256,
     isTopContributor: true,
   },
+  {
+    id: 104,
+    slug: 'weekend-warrior-waffles',
+    title: "Weekend Warrior Waffles",
+    diet: 'veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'waffles breakfast',
+    description: "The crispiest, fluffiest waffles you'll ever make. Perfect for a lazy Sunday morning.",
+    submitter: {
+      name: 'BreakfastKing',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 180,
+    isTopContributor: false,
+  },
+  {
+    id: 105,
+    slug: 'one-pan-lemon-herb-salmon',
+    title: "One-Pan Lemon Herb Salmon",
+    diet: 'non-veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'salmon dinner',
+    description: "A healthy and incredibly easy one-pan dinner. Salmon and veggies roasted to perfection.",
+    submitter: {
+      name: 'EasyEats',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 115,
+    isTopContributor: false,
+  },
+  {
+    id: 106,
+    slug: 'spicy-black-bean-soup',
+    title: 'Spicy Black Bean Soup',
+    diet: 'veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'black bean soup',
+    description: 'A thick, hearty, and spicy black bean soup that will warm you up from the inside out. Vegan friendly!',
+    submitter: {
+      name: 'SouperStar',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 210,
+    isTopContributor: true,
+  },
 ];
 
 function getFromStorage<T>(key: string, defaultValue: T): T {
