@@ -127,28 +127,28 @@ export default function Home() {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes.filter(r => r.diet === 'non-veg');
+    return recipes;
   }, [diet]);
 
   const featuredRecipes = useMemo(() => {
     if (diet === 'veg') {
       return allFeaturedRecipes.filter(r => r.diet === 'veg');
     }
-    return allFeaturedRecipes.filter(r => r.diet === 'non-veg');
+    return allFeaturedRecipes;
   }, [diet]);
 
   const subCategories = useMemo(() => {
     if (diet === 'veg') {
       return allSubCategories.filter(r => r.diet === 'veg');
     }
-    return allSubCategories.filter(r => r.diet === 'non-veg');
+    return allSubCategories;
   }, [diet]);
 
   const mainCategories = useMemo(() => {
     if (diet === 'veg') {
       return allMainCategories.filter(r => r.diet === 'veg');
     }
-    return allMainCategories.filter(r => r.diet === 'non-veg');
+    return allMainCategories;
   }, [diet]);
 
   const subCategoriesFirstRow = subCategories.slice(0, 4);
