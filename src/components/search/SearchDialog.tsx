@@ -141,7 +141,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 gap-0 w-full max-w-2xl h-auto max-h-[75vh] top-1/2 -translate-y-1/2 sm:top-16 sm:-translate-y-0 rounded-lg overflow-hidden">
-        <div className="flex items-center border-b px-4">
+        <div className="flex items-center border-b pl-4 pr-12">
           <Search className="h-5 w-5 text-muted-foreground" />
           <Input
             type="search"
