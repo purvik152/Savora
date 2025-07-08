@@ -145,7 +145,8 @@ export default function Home() {
     if (diet === 'veg') {
       return allFeaturedRecipes.filter(r => r.diet === 'veg' || r.diet === 'all');
     }
-    return allFeaturedRecipes.filter(r => r.diet === 'non-veg' || r.diet === 'all');
+    // In non-veg mode, show all recipes
+    return allFeaturedRecipes;
   }, [diet]);
 
   const subCategories = useMemo(() => {
@@ -345,7 +346,7 @@ export default function Home() {
                       src={category.image}
                       alt={category.name}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-lg"
                       sizes="112px"
                       data-ai-hint={category.hint}
                     />
@@ -364,7 +365,7 @@ export default function Home() {
                       src={category.image}
                       alt={category.name}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-lg"
                       sizes="112px"
                       data-ai-hint={category.hint}
                     />

@@ -37,7 +37,8 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes.filter(r => r.diet === 'non-veg');
+    // In non-veg mode, show all recipes
+    return recipes;
   }, [diet]);
 
   const popularRecipes = useMemo(() => activeRecipes.slice(0, 4), [activeRecipes]);
@@ -146,7 +147,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <Input
             type="search"
             placeholder="Search for recipes, ingredients, or cuisines..."
-            className="h-12 w-full border-0 shadow-none focus-visible:ring-0 text-base flex-grow"
+            className="h-12 w-full border-0 shadow-none focus-visible:ring-0 text-base flex-grow pr-12"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
@@ -158,7 +159,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               size="icon"
               onClick={handleVoiceSearch}
               className={cn(
-                "h-10 w-10",
+                "h-10 w-10 absolute right-12",
                 isListening && 'text-destructive animate-pulse'
                 )}
             >
@@ -177,7 +178,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           {!loading && results.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-4 px-2">
-                {query.trim().length > 1 ? 'Search Results' : `Popular ${diet === 'veg' ? 'Veg' : 'Non-Veg'} Recipes`}
+                {query.trim().length > 1 ? 'Search Results' : `Popular ${diet === 'veg' ? 'Veg ' : ''}Recipes`}
               </h3>
               <ul className="space-y-2">
                 {results.map((recipe) => (
