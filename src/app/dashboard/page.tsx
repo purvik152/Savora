@@ -202,7 +202,7 @@ export default function DashboardPage() {
                   filteredFavoriteRecipes.map(recipe => (
                     <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
                       <Link href={`/recipes/${recipe.slug}`} className="block flex-shrink-0">
-                        <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-full object-cover" data-ai-hint={recipe.imageHint} />
+                        <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
                       </Link>
                        <div className="flex-grow">
                          <Link href={`/recipes/${recipe.slug}`}>

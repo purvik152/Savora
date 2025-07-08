@@ -52,7 +52,7 @@ const allFeaturedRecipes = [
   {
     name: 'Plan Your Week with Savora',
     image: '/images/recipes/meal-planner.jpg',
-    hint: 'meal planner calendar',
+    hint: 'meal prep bowls',
     description: 'Easily organize your weekly meals, track nutrition, and stay on top of your health goals.',
     href: '/meal-planner',
     diet: 'all',
@@ -153,6 +153,7 @@ export default function Home() {
     if (diet === 'veg') {
       return allSubCategories.filter(r => r.diet === 'veg');
     }
+    // In non-veg mode, show all recipes
     return allSubCategories;
   }, [diet]);
 
@@ -458,7 +459,7 @@ export default function Home() {
                 placeholder="I want to make..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-12 pr-12 rounded-lg text-base"
+                className="w-full h-12 pl-12 pr-24 rounded-lg text-base"
                 autoComplete="off"
               />
               {isBrowserSupported && hasMounted && (

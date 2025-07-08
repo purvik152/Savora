@@ -20,7 +20,11 @@ export function AddRecipeDialog({ open, onOpenChange, onAddRecipe }: AddRecipeDi
   const { diet } = useDiet();
 
   const availableRecipes = useMemo(() => {
-    return allRecipes.filter(recipe => diet === 'veg' ? recipe.diet === 'veg' : true);
+    if (diet === 'veg') {
+      return allRecipes.filter(recipe => recipe.diet === 'veg');
+    }
+    // In non-veg mode, show all recipes
+    return allRecipes;
   }, [diet]);
 
   const filteredRecipes = useMemo(() => {
