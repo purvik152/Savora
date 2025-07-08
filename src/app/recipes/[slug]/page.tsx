@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart } from "lucide-react";
 import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
+import { InstructionStep } from '@/components/recipes/InstructionStep';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -445,12 +446,9 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold">Instructions</h2>
                   </div>
-                  <ol className="space-y-6">
+                  <ol className="space-y-4">
                     {displayedInstructions.map((step, index) => (
-                      <li key={index} className="flex items-start gap-4">
-                        <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
-                        <p className="flex-1 text-base text-foreground/90">{step}</p>
-                      </li>
+                      <InstructionStep key={index} step={step} index={index} />
                     ))}
                   </ol>
                 </div>
