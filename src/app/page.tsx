@@ -48,7 +48,15 @@ const allFeaturedRecipes = [
     description: 'Fragrant and spicy Thai green curry with tender chicken and vegetables.',
     href: '/recipes/thai-green-curry-chicken',
     diet: 'non-veg'
-  }
+  },
+  {
+    name: 'Plan Your Week with Savora',
+    image: 'https://placehold.co/800x600.png',
+    hint: 'meal planner calendar',
+    description: 'Easily organize your weekly meals, track nutrition, and stay on top of your health goals.',
+    href: '/meal-planner',
+    diet: 'all',
+  },
 ];
 
 const allSubCategories = [
@@ -135,9 +143,9 @@ export default function Home() {
 
   const featuredRecipes = useMemo(() => {
     if (diet === 'veg') {
-      return allFeaturedRecipes.filter(r => r.diet === 'veg');
+      return allFeaturedRecipes.filter(r => r.diet === 'veg' || r.diet === 'all');
     }
-    return allFeaturedRecipes.filter(r => r.diet === 'non-veg');
+    return allFeaturedRecipes.filter(r => r.diet === 'non-veg' || r.diet === 'all');
   }, [diet]);
 
   const subCategories = useMemo(() => {
