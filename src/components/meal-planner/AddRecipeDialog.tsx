@@ -23,8 +23,8 @@ export function AddRecipeDialog({ open, onOpenChange, onAddRecipe }: AddRecipeDi
     if (diet === 'veg') {
       return allRecipes.filter(recipe => recipe.diet === 'veg');
     }
-    // In non-veg mode, show all recipes
-    return allRecipes;
+    // In non-veg mode, show only non-veg recipes
+    return allRecipes.filter(recipe => recipe.diet === 'non-veg');
   }, [diet]);
 
   const filteredRecipes = useMemo(() => {

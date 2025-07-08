@@ -138,23 +138,23 @@ export default function Home() {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes;
+    return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   const featuredRecipes = useMemo(() => {
     if (diet === 'veg') {
       return allFeaturedRecipes.filter(r => r.diet === 'veg' || r.diet === 'all');
     }
-    // In non-veg mode, show all recipes
-    return allFeaturedRecipes;
+    // In non-veg mode, show only non-veg recipes and the generic planner slide
+    return allFeaturedRecipes.filter(r => r.diet === 'non-veg' || r.diet === 'all');
   }, [diet]);
 
   const subCategories = useMemo(() => {
     if (diet === 'veg') {
       return allSubCategories.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show all recipes
-    return allSubCategories;
+    // In non-veg mode, show only non-veg subcategories
+    return allSubCategories.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   const mainCategories = useMemo(() => {

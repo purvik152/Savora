@@ -68,16 +68,16 @@ export default function DashboardPage() {
     if (diet === 'veg') {
         return pastRecipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show all recipes
-    return pastRecipes;
+    // In non-veg mode, show only non-veg recipes
+    return pastRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, pastRecipes]);
 
   const filteredFavoriteRecipes = useMemo(() => {
     if (diet === 'veg') {
         return favoriteRecipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show all recipes
-    return favoriteRecipes;
+    // In non-veg mode, show only non-veg recipes
+    return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
