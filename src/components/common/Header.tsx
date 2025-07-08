@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/recipes', label: 'Recipes' },
+  { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
 ];
