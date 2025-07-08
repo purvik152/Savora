@@ -63,34 +63,37 @@ const allSubCategories = [
   { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
 ];
 
-const allMainCategories = [
+const vegMainCategories = [
+  { name: 'Quick and Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/creamy-mushroom-risotto.jpg', hint: 'mushroom risotto' },
+  { name: 'Most Popular', href: '/recipes?q=pasta', image: '/images/recipes/creamy-tomato-pasta.jpg', hint: 'vegetarian pasta' },
+  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food' },
+];
+
+const nonVegMainCategories = [
   {
     name: 'Quick and Easy',
     href: '/recipes?q=quick',
     image: '/images/recipes/chicken-caesar-wrap.jpg',
     hint: 'chicken rice bowl',
-    diet: 'non-veg'
   },
   {
     name: 'Dinner',
     href: '/recipes?q=dinner',
     image: '/images/recipes/classic-beef-lasagna.jpg',
     hint: 'creamy pasta',
-    diet: 'non-veg'
   },
   {
     name: 'Most Popular',
     href: '/recipes?q=pasta',
     image: '/images/recipes/creamy-tomato-pasta.jpg',
     hint: 'noodle stirfry',
-    diet: 'veg'
   },
   {
     name: 'Salads',
     href: '/recipes?q=salad',
     image: '/images/recipes/greek-salad-with-grilled-chicken.jpg',
     hint: 'salad bowl',
-    diet: 'non-veg'
   },
 ];
 
@@ -127,14 +130,14 @@ export default function Home() {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes;
+    return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   const featuredRecipes = useMemo(() => {
     if (diet === 'veg') {
       return allFeaturedRecipes.filter(r => r.diet === 'veg');
     }
-    return allFeaturedRecipes;
+    return allFeaturedRecipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   const subCategories = useMemo(() => {
@@ -146,9 +149,9 @@ export default function Home() {
 
   const mainCategories = useMemo(() => {
     if (diet === 'veg') {
-      return allMainCategories.filter(r => r.diet === 'veg');
+      return vegMainCategories;
     }
-    return allMainCategories;
+    return nonVegMainCategories;
   }, [diet]);
 
   const subCategoriesFirstRow = subCategories.slice(0, 4);
