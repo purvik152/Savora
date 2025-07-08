@@ -138,7 +138,7 @@ export default function Home() {
     if (diet === 'veg') {
       return recipes.filter(r => r.diet === 'veg');
     }
-    return recipes.filter(r => r.diet === 'non-veg');
+    return recipes;
   }, [diet]);
 
   const featuredRecipes = useMemo(() => {
