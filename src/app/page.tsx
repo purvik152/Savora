@@ -457,7 +457,7 @@ export default function Home() {
                 placeholder="I want to make..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-12 pr-12 rounded-md text-base"
+                className="w-full h-12 pl-12 pr-12 rounded-lg text-base"
                 autoComplete="off"
               />
               {isBrowserSupported && hasMounted && (
@@ -476,7 +476,7 @@ export default function Home() {
               )}
             </form>
             {searchQuery.trim().length > 1 && (
-              <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-20 max-h-80 overflow-y-auto">
+              <div className="absolute top-full mt-2 w-full bg-background border rounded-lg shadow-lg z-20 max-h-80 overflow-y-auto">
                 {isSearching ? (
                   <div className="p-4 flex items-center justify-center text-muted-foreground">
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
