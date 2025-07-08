@@ -64,11 +64,14 @@ const allSubCategories = [
   { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/easy-beef-stir-fry.jpg', hint: 'stir fry dinner', diet: 'non-veg' },
   { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: '/images/recipes/black-bean-burgers.jpg', hint: 'vegetarian dish', diet: 'veg' },
   { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food', diet: 'veg' },
-  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'pot roast', diet: 'veg' },
+  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/instant-pot-pot-roast.jpg', hint: 'pot roast', diet: 'non-veg' },
   { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'vegan pasta', diet: 'veg' },
-  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/hearty-breakfast-burrito.jpg', hint: 'meal prep', diet: 'veg' },
+  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/meal-prep-burrito-bowls.jpg', hint: 'meal prep', diet: 'non-veg' },
   { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'tortilla soup', diet: 'veg' },
   { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
+  { name: 'Breakfast', href: '/recipes?q=breakfast', image: '/images/recipes/fluffy-pancakes.jpg', hint: 'pancakes breakfast', diet: 'veg' },
+  { name: 'Lunch', href: '/recipes?q=lunch', image: '/images/recipes/chicken-caesar-wrap.jpg', hint: 'lunch wrap', diet: 'non-veg' },
+  { name: 'Desserts', href: '/recipes?q=dessert', image: 'https://placehold.co/112x112.png', hint: 'chocolate cake', diet: 'veg' },
 ];
 
 const vegMainCategories = [
@@ -136,8 +139,9 @@ export default function Home() {
 
   const filteredRecipes = useMemo(() => {
     if (diet === 'veg') {
-      return recipes.filter(r => r.diet === 'veg');
+        return recipes.filter(r => r.diet === 'veg');
     }
+    // In non-veg mode, show only non-veg recipes
     return recipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
@@ -164,8 +168,8 @@ export default function Home() {
     return nonVegMainCategories;
   }, [diet]);
 
-  const subCategoriesFirstRow = subCategories.slice(0, 4);
-  const subCategoriesSecondRow = subCategories.slice(4);
+  const subCategoriesFirstRow = subCategories.slice(0, 6);
+  const subCategoriesSecondRow = subCategories.slice(6);
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
