@@ -127,7 +127,7 @@ export function SubmitRecipeForm() {
                         <FormControl>
                           <Input placeholder="e.g., Ultimate Chocolate Chip Cookies" {...field} />
                         </FormControl>
-                        <Button type="button" variant="outline" onClick={handleSuggestTitles} disabled={isSuggesting || !currentTitle || !currentDescription}>
+                        <Button type="button" variant="outline" onClick={handleSuggestTitles} disabled={isSuggesting}>
                             {isSuggesting ? <Loader2 className="h-4 w-4 animate-spin" /> : <WandSparkles className="h-4 w-4"/>}
                             <span className="ml-2 hidden sm:inline">Suggest</span>
                         </Button>
