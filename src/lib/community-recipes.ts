@@ -111,6 +111,51 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     upvotes: 210,
     isTopContributor: true,
   },
+  {
+    id: 107,
+    slug: 'ultimate-breakfast-burrito',
+    title: 'The Ultimate Breakfast Burrito',
+    diet: 'non-veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'breakfast burrito',
+    description: 'Packed with eggs, sausage, potatoes, and cheese, this is the only breakfast burrito recipe you\'ll ever need.',
+    submitter: {
+      name: 'MorningChef',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 195,
+    isTopContributor: false,
+  },
+  {
+    id: 108,
+    slug: 'creamy-avocado-pasta',
+    title: 'Creamy Avocado Pasta',
+    diet: 'veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'avocado pasta',
+    description: 'A surprisingly creamy and healthy pasta dish made with avocados. Ready in just 15 minutes!',
+    submitter: {
+      name: 'GreenGourmet',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 220,
+    isTopContributor: true,
+  },
+  {
+    id: 109,
+    slug: 'honey-garlic-glazed-salmon',
+    title: 'Honey-Garlic Glazed Salmon',
+    diet: 'non-veg',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'glazed salmon',
+    description: 'A sweet and savory salmon dish that is baked to perfection and packed with flavor.',
+    submitter: {
+      name: 'FishFanatic',
+      avatar: 'https://placehold.co/128x128.png',
+    },
+    upvotes: 310,
+    isTopContributor: true,
+  },
 ];
 
 function getFromStorage<T>(key: string, defaultValue: T): T {
