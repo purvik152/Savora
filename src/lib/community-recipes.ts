@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { UserCredentials } from './user-data';
@@ -24,13 +25,13 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 101,
     slug: 'grandmas-secret-chili',
-    title: "Grandma's Secret Chili",
+    title: "Classic Beef Tacos",
     diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'chili bowl',
-    description: "A hearty chili recipe passed down through generations. It's got a secret ingredient!",
+    image: '/images/recipes/classic-beef-tacos.jpg',
+    imageHint: 'beef tacos',
+    description: "A family-favorite taco recipe that is quick, easy, and endlessly customizable.",
     submitter: {
-      name: 'CoolCook_22',
+      name: 'TacoTuesday',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 142,
@@ -39,11 +40,11 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 102,
     slug: 'zesty-lentil-salad',
-    title: 'Zesty Lentil Salad',
+    title: 'Vibrant Quinoa Salad',
     diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'lentil salad',
-    description: 'A vibrant and refreshing lentil salad that is perfect for summer picnics.',
+    image: '/images/recipes/vibrant-quinoa-salad.jpg',
+    imageHint: 'quinoa salad',
+    description: 'A colorful and nutrient-packed quinoa salad with a zesty lemon vinaigrette.',
     submitter: {
       name: 'VeggieVibes',
       avatar: 'https://placehold.co/128x128.png',
@@ -54,13 +55,13 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 103,
     slug: 'spicy-gochujang-wings',
-    title: 'Spicy Gochujang Wings',
+    title: 'Chicken Tikka Masala',
     diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'chicken wings',
-    description: 'Crispy, sticky, and spicy Korean-style chicken wings that are absolutely addictive.',
+    image: '/images/recipes/chicken-tikka-masala.jpg',
+    imageHint: 'chicken curry',
+    description: 'A rich and creamy curry that is a staple in Indian cuisine. Perfect with naan or rice.',
     submitter: {
-      name: 'ChefMaster',
+      name: 'CurryMaster',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 256,
@@ -69,13 +70,13 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 104,
     slug: 'weekend-warrior-waffles',
-    title: "Weekend Warrior Waffles",
+    title: "Best-Ever Black Bean Burgers",
     diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'waffles breakfast',
-    description: "The crispiest, fluffiest waffles you'll ever make. Perfect for a lazy Sunday morning.",
+    image: '/images/recipes/black-bean-burgers.jpg',
+    imageHint: 'bean burger',
+    description: "Hearty and flavorful homemade vegetarian burgers that even meat-eaters will love.",
     submitter: {
-      name: 'BreakfastKing',
+      name: 'BurgerBoss',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 180,
@@ -84,11 +85,11 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 105,
     slug: 'one-pan-lemon-herb-salmon',
-    title: "One-Pan Lemon Herb Salmon",
+    title: "Sheet Pan Salmon & Veggies",
     diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'salmon dinner',
-    description: "A healthy and incredibly easy one-pan dinner. Salmon and veggies roasted to perfection.",
+    image: '/images/recipes/sheet-pan-salmon-and-veggies.jpg',
+    imageHint: 'salmon veggies',
+    description: "A healthy, delicious, and incredibly easy one-pan dinner for minimal cleanup.",
     submitter: {
       name: 'EasyEats',
       avatar: 'https://placehold.co/128x128.png',
@@ -99,11 +100,11 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 106,
     slug: 'spicy-black-bean-soup',
-    title: 'Spicy Black Bean Soup',
+    title: 'Creamy Red Lentil Soup',
     diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'black bean soup',
-    description: 'A thick, hearty, and spicy black bean soup that will warm you up from the inside out. Vegan friendly!',
+    image: '/images/recipes/creamy-lentil-soup.jpg',
+    imageHint: 'lentil soup',
+    description: 'A comforting and hearty soup that is surprisingly easy to make and full of flavor.',
     submitter: {
       name: 'SouperStar',
       avatar: 'https://placehold.co/128x128.png',
@@ -114,11 +115,11 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 107,
     slug: 'ultimate-breakfast-burrito',
-    title: 'The Ultimate Breakfast Burrito',
+    title: 'Hearty Breakfast Burrito',
     diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
+    image: '/images/recipes/hearty-breakfast-burrito.jpg',
     imageHint: 'breakfast burrito',
-    description: 'Packed with eggs, sausage, potatoes, and cheese, this is the only breakfast burrito recipe you\'ll ever need.',
+    description: 'A filling and customizable breakfast burrito to keep you energized all morning.',
     submitter: {
       name: 'MorningChef',
       avatar: 'https://placehold.co/128x128.png',
@@ -131,7 +132,7 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     slug: 'creamy-avocado-pasta',
     title: 'Creamy Avocado Pasta',
     diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
+    image: '/images/recipes/creamy-avocado-pasta.jpg',
     imageHint: 'avocado pasta',
     description: 'A surprisingly creamy and healthy pasta dish made with avocados. Ready in just 15 minutes!',
     submitter: {
@@ -144,13 +145,13 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 109,
     slug: 'honey-garlic-glazed-salmon',
-    title: 'Honey-Garlic Glazed Salmon',
+    title: 'Lemon Herb Roast Chicken',
     diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'glazed salmon',
-    description: 'A sweet and savory salmon dish that is baked to perfection and packed with flavor.',
+    image: '/images/recipes/lemon-herb-roast-chicken.jpg',
+    imageHint: 'roast chicken',
+    description: 'A juicy, flavorful roast chicken that is impressive enough for guests but easy enough for a weeknight.',
     submitter: {
-      name: 'FishFanatic',
+      name: 'RoastMaster',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 310,
