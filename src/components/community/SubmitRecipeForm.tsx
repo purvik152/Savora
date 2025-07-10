@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState, useCallback } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -11,8 +11,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Mic, Circle } from 'lucide-react';
+import { Loader2, Upload, Mic, Circle, WandSparkles } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { generateRecipeTitle } from '@/ai/flows/generate-recipe-title-flow';
 import { cn } from '@/lib/utils';
 
 
@@ -28,6 +29,8 @@ const formSchema = z.object({
 export function SubmitRecipeForm() {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,6 +42,47 @@ export function SubmitRecipeForm() {
       instructions: "",
     },
   });
+  
+  const currentTitle = useWatch({ control: form.control, name: 'title' });
+  const currentDescription = useWatch({ control: form.control, name: 'description' });
+
+  const handleSuggestTitles = useCallback(async () => {
+      if (!currentTitle || !currentDescription) {
+          toast({
+              variant: 'destructive',
+              title: "Can't Suggest Yet",
+              description: "Please enter a title and description before getting suggestions."
+          });
+          return;
+      }
+      setIsSuggesting(true);
+      setTitleSuggestions([]);
+      try {
+          const result = await generateRecipeTitle({
+              title: currentTitle,
+              description: currentDescription,
+          });
+          if (result.suggestions && result.suggestions.length > 0) {
+              setTitleSuggestions(result.suggestions);
+          } else {
+              toast({ title: "Couldn't find any suggestions. Try a different description!" });
+          }
+      } catch (e) {
+          console.error(e);
+          toast({
+              variant: 'destructive',
+              title: "AI Error",
+              description: "There was a problem getting suggestions."
+          });
+      } finally {
+          setIsSuggesting(false);
+      }
+  }, [currentTitle, currentDescription, toast]);
+
+  const handleSuggestionClick = (suggestion: string) => {
+      form.setValue('title', suggestion);
+      setTitleSuggestions([]);
+  }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
@@ -79,9 +123,24 @@ export function SubmitRecipeForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Recipe Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Ultimate Chocolate Chip Cookies" {...field} />
-                    </FormControl>
+                    <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Input placeholder="e.g., Ultimate Chocolate Chip Cookies" {...field} />
+                        </FormControl>
+                        <Button type="button" variant="outline" onClick={handleSuggestTitles} disabled={isSuggesting || !currentTitle || !currentDescription}>
+                            {isSuggesting ? <Loader2 className="h-4 w-4 animate-spin" /> : <WandSparkles className="h-4 w-4"/>}
+                            <span className="ml-2 hidden sm:inline">Suggest</span>
+                        </Button>
+                    </div>
+                     {titleSuggestions.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            {titleSuggestions.map((suggestion, index) => (
+                                <Button key={index} type="button" variant="secondary" size="sm" onClick={() => handleSuggestionClick(suggestion)}>
+                                    {suggestion}
+                                </Button>
+                            ))}
+                        </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
