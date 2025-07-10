@@ -44,7 +44,7 @@ import { isFavoriteRecipe, addFavoriteRecipe, removeFavoriteRecipe, addPastRecip
 
 function RecipePageSkeleton() {
   return (
-    <div className="bg-background">
+    <div>
       <div className="container mx-auto px-4 py-8 md:py-16">
         <Card className="overflow-hidden shadow-2xl">
           <CardHeader className="p-0 relative h-64 md:h-96">
@@ -335,7 +335,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   }
   
   return (
-    <div className="bg-background">
+    <div>
       <div className="container mx-auto px-4 py-8 md:py-16">
         <Card className="overflow-hidden shadow-2xl">
           <CardHeader className="p-0 relative h-64 md:h-96">
