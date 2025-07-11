@@ -40,6 +40,7 @@ import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { isFavoriteRecipe, addFavoriteRecipe, removeFavoriteRecipe, addPastRecipe } from '@/lib/user-data';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 function RecipePageSkeleton() {
@@ -85,6 +86,7 @@ function RecipePageSkeleton() {
 function RecipeView({ recipe }: { recipe: Recipe }) {
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const [hasMounted, setHasMounted] = useState(false);
   
@@ -107,8 +109,10 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   useEffect(() => {
     setHasMounted(true);
     setCheckedIngredients(new Set());
-    setIsFavorite(isFavoriteRecipe(recipe.id));
-  }, [recipe.id, displayedIngredients]);
+    if (user) {
+      setIsFavorite(isFavoriteRecipe(recipe.id, user.uid));
+    }
+  }, [recipe.id, displayedIngredients, user]);
   
 
   const chartConfig = useMemo(() => ({
@@ -288,19 +292,29 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   };
 
   const handleFavoriteToggle = () => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Please log in",
+            description: "You need to be logged in to favorite recipes.",
+        });
+        return;
+    }
     if (isFavorite) {
-        removeFavoriteRecipe(recipe.id);
+        removeFavoriteRecipe(recipe.id, user.uid);
         setIsFavorite(false);
         toast({ title: "Removed from favorites" });
     } else {
-        addFavoriteRecipe(recipe);
+        addFavoriteRecipe(recipe, user.uid);
         setIsFavorite(true);
         toast({ title: "Added to favorites" });
     }
   };
 
   const handleStartCooking = () => {
-    addPastRecipe(recipe);
+    if (user) {
+      addPastRecipe(recipe, user.uid);
+    }
   };
 
   const ServingsControl = () => {

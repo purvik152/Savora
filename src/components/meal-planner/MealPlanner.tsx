@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -34,7 +36,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function MealPlanner() {
-  const [hasMounted, setHasMounted] = useState(false);
+  const { user, loading } = useAuth();
   const [mealPlan, setMealPlan] = useState<MealPlan>(initialMealPlan);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ day: string; meal: MealSlot } | null>(null);
@@ -42,23 +44,24 @@ export function MealPlanner() {
   const { toast } = useToast();
 
   useEffect(() => {
-    setHasMounted(true);
-    const storedUser = localStorage.getItem('savora-user');
-    if (!storedUser) {
-      router.push('/login');
-      return;
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      const savedPlan = getMealPlan(user.uid);
+      if (savedPlan) {
+        // Ensure all days are present
+        const fullPlan = { ...initialMealPlan, ...savedPlan };
+        setMealPlan(fullPlan);
+      }
     }
-    const savedPlan = getMealPlan();
-    if (savedPlan) {
-      // Ensure all days are present
-      const fullPlan = { ...initialMealPlan, ...savedPlan };
-      setMealPlan(fullPlan);
-    }
-  }, [router]);
+  }, [user, loading, router]);
 
   const updateMealPlan = (newPlan: MealPlan) => {
+    if (!user) return;
     setMealPlan(newPlan);
-    saveMealPlan(newPlan);
+    saveMealPlan(newPlan, user.uid);
   };
 
   const handleOpenDialog = (day: string, meal: MealSlot) => {
@@ -108,7 +111,7 @@ export function MealPlanner() {
     }));
   }, [dailyTotals]);
 
-  if (!hasMounted) {
+  if (loading || !user) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />

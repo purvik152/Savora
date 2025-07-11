@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Recipe } from './recipes';
@@ -15,21 +16,6 @@ export interface MealPlan {
 }
 
 const MEAL_PLAN_PREFIX = 'savora-meal-plan_';
-
-function getCurrentUserEmail(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  const storedUser = window.localStorage.getItem('savora-user');
-  if (!storedUser) return null;
-  try {
-    const user = JSON.parse(storedUser);
-    return user.email;
-  } catch (error) {
-    console.error('Error parsing user data from localStorage:', error);
-    return null;
-  }
-}
 
 // Helper to safely get data from localStorage
 function getFromStorage<T>(key: string): T | null {
@@ -57,16 +43,14 @@ function setInStorage<T>(key: string, value: T): void {
   }
 }
 
-export function getMealPlan(): MealPlan | null {
-    const email = getCurrentUserEmail();
-    if (!email) return null;
-    const key = `${MEAL_PLAN_PREFIX}${email}`;
+export function getMealPlan(userId: string): MealPlan | null {
+    if (!userId) return null;
+    const key = `${MEAL_PLAN_PREFIX}${userId}`;
     return getFromStorage<MealPlan>(key);
 }
 
-export function saveMealPlan(plan: MealPlan): void {
-    const email = getCurrentUserEmail();
-    if (!email) return;
-    const key = `${MEAL_PLAN_PREFIX}${email}`;
+export function saveMealPlan(plan: MealPlan, userId: string): void {
+    if (!userId) return;
+    const key = `${MEAL_PLAN_PREFIX}${userId}`;
     setInStorage(key, plan);
 }

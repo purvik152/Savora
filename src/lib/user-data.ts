@@ -3,17 +3,17 @@
 
 import type { Recipe } from './recipes';
 
-// --- User Credentials ---
+// --- User Credentials (Now handled by Firebase) ---
 export interface UserCredentials {
   username: string;
   email: string;
-  password?: string; // Password is used for signup/login check, but not stored in the active user session
+  password?: string;
+  uid: string;
 }
 
 // Prefixes for user-specific localStorage keys
 const PAST_RECIPES_PREFIX = 'savora-past-recipes_';
 const FAVORITE_RECIPES_PREFIX = 'savora-favorite-recipes_';
-const USERS_KEY = 'savora-users'; // For mock user db
 
 // Helper to safely get data from localStorage
 function getFromStorage<T>(key: string): T[] {
@@ -41,54 +41,17 @@ function setInStorage<T>(key: string, value: T[]): void {
   }
 }
 
-// Helper to get the current user's email
-function getCurrentUserEmail(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  const storedUser = window.localStorage.getItem('savora-user');
-  if (!storedUser) return null;
-  try {
-    const user: UserCredentials = JSON.parse(storedUser);
-    return user.email;
-  } catch (error) {
-    console.error('Error parsing user data from localStorage:', error);
-    return null;
-  }
-}
-
-
-// --- User Management (Mock Database) ---
-
-export function getUsers(): UserCredentials[] {
-    return getFromStorage<UserCredentials>(USERS_KEY);
-}
-
-export function findUserByEmail(email: string): UserCredentials | undefined {
-    const users = getUsers();
-    return users.find((user) => user.email.toLowerCase() === email.toLowerCase());
-}
-
-export function addUser(newUser: UserCredentials): void {
-    const users = getUsers();
-    const updatedUsers = [...users, newUser];
-    setInStorage(USERS_KEY, updatedUsers);
-}
-
-
 // --- Past Recipes ---
 
-export function getPastRecipes(): Recipe[] {
-  const email = getCurrentUserEmail();
-  if (!email) return [];
-  const key = `${PAST_RECIPES_PREFIX}${email}`;
+export function getPastRecipes(userId: string): Recipe[] {
+  if (!userId) return [];
+  const key = `${PAST_RECIPES_PREFIX}${userId}`;
   return getFromStorage<Recipe>(key);
 }
 
-export function addPastRecipe(recipe: Recipe): void {
-  const email = getCurrentUserEmail();
-  if (!email) return;
-  const key = `${PAST_RECIPES_PREFIX}${email}`;
+export function addPastRecipe(recipe: Recipe, userId: string): void {
+  if (!userId) return;
+  const key = `${PAST_RECIPES_PREFIX}${userId}`;
 
   const pastRecipes = getFromStorage<Recipe>(key);
   // Avoid duplicates, but move to top if it exists
@@ -100,20 +63,17 @@ export function addPastRecipe(recipe: Recipe): void {
   setInStorage(key, updatedRecipes.slice(0, 50)); // Limit to 50 past recipes
 }
 
-
 // --- Favorite Recipes ---
 
-export function getFavoriteRecipes(): Recipe[] {
-  const email = getCurrentUserEmail();
-  if (!email) return [];
-  const key = `${FAVORITE_RECIPES_PREFIX}${email}`;
+export function getFavoriteRecipes(userId: string): Recipe[] {
+  if (!userId) return [];
+  const key = `${FAVORITE_RECIPES_PREFIX}${userId}`;
   return getFromStorage<Recipe>(key);
 }
 
-export function addFavoriteRecipe(recipe: Recipe): void {
-  const email = getCurrentUserEmail();
-  if (!email) return;
-  const key = `${FAVORITE_RECIPES_PREFIX}${email}`;
+export function addFavoriteRecipe(recipe: Recipe, userId: string): void {
+  if (!userId) return;
+  const key = `${FAVORITE_RECIPES_PREFIX}${userId}`;
 
   const favoriteRecipes = getFromStorage<Recipe>(key);
   if (!favoriteRecipes.some((r) => r.id === recipe.id)) {
@@ -122,20 +82,18 @@ export function addFavoriteRecipe(recipe: Recipe): void {
   }
 }
 
-export function removeFavoriteRecipe(recipeId: number): void {
-  const email = getCurrentUserEmail();
-  if (!email) return;
-  const key = `${FAVORITE_RECIPES_PREFIX}${email}`;
+export function removeFavoriteRecipe(recipeId: number, userId: string): void {
+  if (!userId) return;
+  const key = `${FAVORITE_RECIPES_PREFIX}${userId}`;
 
   const favoriteRecipes = getFromStorage<Recipe>(key);
   const updatedFavorites = favoriteRecipes.filter((r) => r.id !== recipeId);
   setInStorage(key, updatedFavorites);
 }
 
-export function isFavoriteRecipe(recipeId: number): boolean {
-  const email = getCurrentUserEmail();
-  if (!email) return false;
+export function isFavoriteRecipe(recipeId: number, userId: string): boolean {
+  if (!userId) return false;
   
-  const favoriteRecipes = getFavoriteRecipes();
+  const favoriteRecipes = getFavoriteRecipes(userId);
   return favoriteRecipes.some((r) => r.id === recipeId);
 }

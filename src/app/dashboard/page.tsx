@@ -1,23 +1,19 @@
 
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Utensils, Loader2, Heart, LogOut } from "lucide-react";
+import { Edit, Utensils, Loader2, Heart, LogOut, Shield } from "lucide-react";
 import Image from "next/image";
 import { getPastRecipes, getFavoriteRecipes } from "@/lib/user-data";
 import type { Recipe } from "@/lib/recipes";
 import { useToast } from "@/hooks/use-toast";
 import { useDiet } from "@/contexts/DietContext";
-
-interface User {
-  username: string;
-  email: string;
-}
 
 function LoadingDashboard() {
   return (
@@ -29,46 +25,38 @@ function LoadingDashboard() {
 }
 
 export default function DashboardPage() {
+  const { user, userRole, loading, logout } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const { diet } = useDiet();
 
-  const [user, setUser] = useState<User | null>(null);
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useState<HTMLInputElement>(null);
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    // This code runs only on the client
-    const storedUser = localStorage.getItem('savora-user');
-
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-
-      // Fetch user-specific avatar
-      const storedAvatar = localStorage.getItem(`savora-avatar_${parsedUser.email}`);
-      if (storedAvatar) {
-        setAvatarSrc(storedAvatar);
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else {
+        // User is logged in, fetch their data
+        const storedAvatar = localStorage.getItem(`savora-avatar_${user.email}`);
+        if (storedAvatar) {
+          setAvatarSrc(storedAvatar);
+        }
+        setPastRecipes(getPastRecipes(user.uid));
+        setFavoriteRecipes(getFavoriteRecipes(user.uid));
       }
-      
-      // These functions are now user-aware internally
-      setPastRecipes(getPastRecipes());
-      setFavoriteRecipes(getFavoriteRecipes());
-    } else {
-      // If no user, redirect to login
-      router.push('/login');
-      return;
     }
-  }, [router]);
+  }, [user, loading, router]);
+
 
   const filteredPastRecipes = useMemo(() => {
     if (diet === 'veg') {
         return pastRecipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show only non-veg recipes
     return pastRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, pastRecipes]);
 
@@ -76,7 +64,6 @@ export default function DashboardPage() {
     if (diet === 'veg') {
         return favoriteRecipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show only non-veg recipes
     return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
@@ -88,7 +75,6 @@ export default function DashboardPage() {
         const result = e.target?.result;
         if (typeof result === 'string') {
           setAvatarSrc(result);
-          // Save avatar with user-specific key
           localStorage.setItem(`savora-avatar_${user.email}`, result);
         }
       };
@@ -100,25 +86,16 @@ export default function DashboardPage() {
     fileInputRef.current?.click();
   };
 
-  const handleLogout = () => {
-    // Clear user data from localStorage
-    if (user) {
-        // Remove user-specific avatar
-        localStorage.removeItem(`savora-avatar_${user.email}`);
-    }
-    localStorage.removeItem('savora-user');
-
-    // Show a success toast
+  const handleLogout = async () => {
+    await logout();
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out.',
     });
-
-    // Redirect to the login page
     router.push('/login');
   };
   
-  if (!user) {
+  if (loading || !user) {
     return <LoadingDashboard />;
   }
 
@@ -127,8 +104,8 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={avatarSrc} alt={user.username} data-ai-hint="avatar user" />
-            <AvatarFallback>{user.username ? user.username.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
+            <AvatarImage src={avatarSrc} alt={user.displayName || 'User'} data-ai-hint="avatar user" />
+            <AvatarFallback>{user.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
           </Avatar>
            <input
             type="file"
@@ -142,8 +119,8 @@ export default function DashboardPage() {
           </Button>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{user.username}</h1>
-          <p className="text-muted-foreground mt-1">Lover of all things pasta.</p>
+          <h1 className="text-4xl font-bold">{user.displayName || 'Savora User'}</h1>
+          <p className="text-muted-foreground mt-1">{user.email}</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
               <p className="text-2xl font-bold text-foreground">{filteredPastRecipes.length}</p>
@@ -154,10 +131,20 @@ export default function DashboardPage() {
               <p className="text-sm">Favorites</p>
             </div>
           </div>
-          <Button variant="outline" className="mt-6" onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Button>
+          <div className="mt-6 flex gap-4 justify-center md:justify-start">
+             <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+              {userRole === 'admin' && (
+                <Button asChild>
+                    <Link href="/admin">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin Panel
+                    </Link>
+                </Button>
+              )}
+          </div>
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Savora: Your AI Recipe Assistant',
@@ -40,13 +41,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DietProvider>
-            <FloatingDoodles />
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-            <Toaster />
-          </DietProvider>
+          <AuthProvider>
+            <DietProvider>
+              <FloatingDoodles />
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+              <Toaster />
+            </DietProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

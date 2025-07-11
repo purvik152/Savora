@@ -1,8 +1,6 @@
 
 'use client';
 
-import type { UserCredentials } from './user-data';
-
 export interface CommunityRecipe {
   id: number;
   slug: string;
@@ -12,12 +10,12 @@ export interface CommunityRecipe {
   imageHint: string;
   description: string;
   submitter: {
+    uid: string;
     name: string;
     avatar: string;
   };
   upvotes: number;
   isTopContributor: boolean;
-  // Add detailed recipe fields
   ingredients?: string[];
   instructions?: string[];
 }
@@ -34,6 +32,7 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     imageHint: 'chili bowl',
     description: "A secret family recipe for a hearty and flavorful chili that's been passed down for generations.",
     submitter: {
+      uid: 'admin_user',
       name: 'ChiliMaster',
       avatar: 'https://placehold.co/128x128.png',
     },
@@ -49,95 +48,12 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     imageHint: 'lentil salad',
     description: 'A light, refreshing, and protein-packed lentil salad perfect for a summer lunch.',
     submitter: {
+      uid: 'user_1',
       name: 'VeggieVibes',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 98,
     isTopContributor: false,
-  },
-  {
-    id: 103,
-    slug: 'spicy-gochujang-wings',
-    title: 'Spicy Gochujang Wings',
-    diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'chicken wings',
-    description: 'Crispy, sticky, sweet, and spicy Korean-style chicken wings that are absolutely addictive.',
-    submitter: {
-      name: 'WingKing',
-      avatar: 'https://placehold.co/128x128.png',
-    },
-    upvotes: 256,
-    isTopContributor: true,
-    ingredients: [
-        '2 lbs chicken wings, separated into flats and drumettes',
-        '1/2 cup all-purpose flour',
-        '1/2 cup cornstarch',
-        '1 tsp salt',
-        '1 tsp black pepper',
-        'Vegetable oil, for frying',
-        'For the sauce:',
-        '1/2 cup gochujang (Korean chili paste)',
-        '1/4 cup honey or rice syrup',
-        '1/4 cup soy sauce',
-        '2 tbsp rice vinegar',
-        '2 tbsp minced garlic',
-        '1 tbsp sesame oil'
-    ],
-    instructions: [
-        'In a large bowl, whisk together flour, cornstarch, salt, and pepper. Add the chicken wings and toss to coat evenly.',
-        'In a large pot or deep fryer, heat about 2-3 inches of vegetable oil to 350°F (175°C).',
-        'Fry the wings in batches for 6-8 minutes, until golden brown and cooked through. Drain on a wire rack.',
-        'While the wings are frying, combine all sauce ingredients in a small saucepan over medium heat. Bring to a simmer and cook for 2-3 minutes, until slightly thickened. Remove from heat.',
-        'In a large clean bowl, pour the warm sauce over the fried wings.',
-        'Toss gently until all the wings are coated in the sticky sauce.',
-        'Serve immediately, garnished with sesame seeds and chopped green onions if desired.'
-    ]
-  },
-  {
-    id: 104,
-    slug: 'weekend-warrior-waffles',
-    title: 'Weekend Warrior Waffles',
-    diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'waffles breakfast',
-    description: "The fluffiest, crispiest waffles to make your weekend breakfast something special.",
-    submitter: {
-      name: 'BreakfastQueen',
-      avatar: 'https://placehold.co/128x128.png',
-    },
-    upvotes: 180,
-    isTopContributor: false,
-  },
-  {
-    id: 105,
-    slug: 'one-pan-lemon-herb-salmon',
-    title: 'One-Pan Lemon Herb Salmon',
-    diet: 'non-veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'salmon dinner',
-    description: "A healthy, delicious, and incredibly easy one-pan dinner with salmon and veggies.",
-    submitter: {
-      name: 'EasyEats',
-      avatar: 'https://placehold.co/128x128.png',
-    },
-    upvotes: 115,
-    isTopContributor: false,
-  },
-  {
-    id: 106,
-    slug: 'spicy-black-bean-soup',
-    title: 'Spicy Black Bean Soup',
-    diet: 'veg',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'bean soup',
-    description: 'A rich and hearty black bean soup with a spicy kick. Perfect for a cold day.',
-    submitter: {
-      name: 'SouperStar',
-      avatar: 'https://placehold.co/128x128.png',
-    },
-    upvotes: 210,
-    isTopContributor: true,
   },
 ];
 
@@ -174,19 +90,21 @@ export function getCommunityRecipes(): CommunityRecipe[] {
     return getFromStorage<CommunityRecipe[]>(COMMUNITY_RECIPES_KEY, initialCommunityRecipes);
 }
 
-export function addCommunityRecipe(recipeData: Omit<CommunityRecipe, 'id' | 'slug' | 'submitter' | 'upvotes' | 'isTopContributor'>): CommunityRecipe {
+export function addCommunityRecipe(
+    recipeData: Omit<CommunityRecipe, 'id' | 'slug' | 'submitter' | 'upvotes' | 'isTopContributor'>,
+    user: { uid: string; displayName?: string | null; email?: string | null }
+): CommunityRecipe {
     const recipes = getCommunityRecipes();
-    const storedUser = localStorage.getItem('savora-user');
-    const user = storedUser ? JSON.parse(storedUser) : { name: 'Anonymous', email: '' };
-
+    
     const newRecipe: CommunityRecipe = {
         ...recipeData,
         id: Date.now(),
         slug: recipeData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(),
         upvotes: 1,
-        isTopContributor: false,
+        isTopContributor: false, // This could be calculated based on user's total contributions
         submitter: {
-            name: user.username || 'Anonymous',
+            uid: user.uid,
+            name: user.displayName || 'Anonymous',
             avatar: localStorage.getItem(`savora-avatar_${user.email}`) || 'https://placehold.co/128x128.png'
         }
     };

@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { findUserByEmail } from '@/lib/user-data';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -22,6 +22,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,38 +34,26 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    // Simulate async operation for better UX
-    await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      const user = findUserByEmail(values.email);
-
-      // In a real app, you would compare a hashed password.
-      // For this prototype, we'll do a simple string comparison.
-      if (user && user.password === values.password) {
-        toast({
-          title: 'Login Successful',
-          description: 'Redirecting to your dashboard...',
-        });
-        
-        // Save user data to localStorage, excluding the password
-        if (typeof window !== 'undefined') {
-            const { password, ...userToStore } = user;
-            localStorage.setItem('savora-user', JSON.stringify(userToStore));
-        }
-
-        router.push(`/dashboard`);
+      const userRole = await login(values.email, values.password);
+      toast({
+        title: 'Login Successful',
+        description: 'Redirecting to your dashboard...',
+      });
+      
+      // Redirect based on role
+      if (userRole === 'admin') {
+        router.push('/admin');
       } else {
-        toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: 'Invalid email or password.',
-        });
+        router.push('/dashboard');
       }
-    } catch (error) {
+
+    } catch (error: any) {
+      console.error(error);
       toast({
         variant: 'destructive',
-        title: 'Login Error',
-        description: 'An unexpected error occurred. Please try again.',
+        title: 'Login Failed',
+        description: error.message || 'Invalid email or password.',
       });
     } finally {
       setLoading(false);

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { addUser, findUserByEmail } from '@/lib/user-data';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z
   .object({
@@ -27,6 +27,7 @@ const formSchema = z
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { signup } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,35 +41,18 @@ export function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    // Simulate async operation for better UX
-    await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      const existingUser = findUserByEmail(values.email);
-      if (existingUser) {
-        toast({
-          variant: 'destructive',
-          title: 'Sign Up Failed',
-          description: 'An account with this email already exists.',
-        });
-        return;
-      }
-
-      addUser({
-        username: values.username,
-        email: values.email,
-        password: values.password, // IMPORTANT: In a real app, this should be hashed!
-      });
-
+      await signup(values.email, values.password, values.username);
       toast({
         title: 'Account Created',
         description: 'You have successfully signed up! Please switch to the Login tab.',
       });
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Sign Up Error',
-        description: 'An unexpected error occurred. Please try again.',
+        description: error.message || 'An unexpected error occurred. Please try again.',
       });
     } finally {
       setLoading(false);

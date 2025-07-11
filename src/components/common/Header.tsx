@@ -13,7 +13,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -22,7 +22,6 @@ const navLinks = [
   { href: '/mood-kitchen', label: 'Mood Kitchen' },
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
-  { href: '/dashboard', label: 'Dashboard' },
 ];
 
 function DietToggle() {
@@ -47,21 +46,9 @@ function DietToggle() {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  const { user, loading } = useAuth();
   const pathname = usePathname();
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (hasMounted) {
-      const user = localStorage.getItem('savora-user');
-      setIsLoggedIn(!!user);
-    }
-  }, [pathname, hasMounted]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,8 +69,10 @@ export function Header() {
       document.removeEventListener('keydown', down);
     };
   }, []);
-
+  
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const finalNavLinks = user ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
 
   return (
     <>
@@ -96,7 +85,7 @@ export function Header() {
             </Link>
 
             <nav className="hidden md:flex items-center space-x-6">
-              {navLinks.map((link) => (
+              {finalNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -123,7 +112,7 @@ export function Header() {
                 <span className="sr-only">Search recipes</span>
               </Button>
               <ThemeToggle />
-              {hasMounted && !isLoggedIn && (
+              {!loading && !user && (
                   <Button asChild>
                       <Link href="/login">Login</Link>
                   </Button>
@@ -149,7 +138,7 @@ export function Header() {
                          </Button>
                       </div>
                       <nav className="flex flex-col space-y-4 mt-4">
-                        {navLinks.map((link) => (
+                        {finalNavLinks.map((link) => (
                           <Link
                             key={link.href}
                             href={link.href}
@@ -165,7 +154,7 @@ export function Header() {
                         <div className="pt-4 border-t">
                             <DietToggle />
                         </div>
-                        {hasMounted && !isLoggedIn && (
+                        {!loading && !user && (
                            <Button asChild onClick={closeMobileMenu}>
                               <Link href="/login">Login</Link>
                            </Button>
