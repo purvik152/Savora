@@ -4,16 +4,18 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { CommunityRecipe, getCommunityRecipes } from '@/lib/community-recipes';
+import { CommunityRecipe, getCommunityRecipes, removeCommunityRecipe } from '@/lib/community-recipes';
 import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
 import { Users, Upload, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useDiet } from '@/contexts/DietContext';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CommunityPage() {
   const [recipes, setRecipes] = useState<CommunityRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const { diet } = useDiet();
+  const { toast } = useToast();
   const pathname = usePathname();
 
   const fetchRecipes = useCallback(() => {
@@ -33,6 +35,15 @@ export default function CommunityPage() {
     fetchRecipes();
   };
   
+  const handleRemove = (recipeId: number, recipeTitle: string) => {
+    removeCommunityRecipe(recipeId);
+    toast({
+        title: "Recipe Removed",
+        description: `"${recipeTitle}" has been removed from the community kitchen.`
+    });
+    fetchRecipes();
+  }
+
   const filteredRecipes = useMemo(() => {
     const sorted = [...recipes].sort((a, b) => b.upvotes - a.upvotes);
     if (diet === 'veg') {
@@ -68,7 +79,12 @@ export default function CommunityPage() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredRecipes.map((recipe) => (
-          <CommunityRecipeCard key={recipe.id} recipe={recipe} onUpvote={handleUpvote} />
+          <CommunityRecipeCard 
+            key={recipe.id} 
+            recipe={recipe} 
+            onUpvote={handleUpvote}
+            onRemove={handleRemove}
+          />
         ))}
       </div>
 

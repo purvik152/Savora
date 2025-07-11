@@ -207,3 +207,9 @@ export function upvoteRecipe(recipeId: number): CommunityRecipe[] {
     setInStorage(COMMUNITY_RECIPES_KEY, updatedRecipes);
     return updatedRecipes;
 }
+
+export function removeCommunityRecipe(recipeId: number): void {
+    const recipes = getCommunityRecipes();
+    const updatedRecipes = recipes.filter(recipe => recipe.id !== recipeId);
+    setInStorage(COMMUNITY_RECIPES_KEY, updatedRecipes);
+}

@@ -1,16 +1,31 @@
 
 'use client';
 
-import { notFound, useParams } from 'next/navigation';
-import { getCommunityRecipes, CommunityRecipe } from '@/lib/community-recipes';
+import { notFound, useParams, useRouter } from 'next/navigation';
+import { getCommunityRecipes, CommunityRecipe, removeCommunityRecipe } from '@/lib/community-recipes';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Loader2, Users, ArrowUp, Award, Check } from 'lucide-react';
+import { Loader2, Users, ArrowUp, Award, Check, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 function CommunityRecipePage() {
     const params = useParams<{ slug: string }>();
+    const router = useRouter();
+    const { toast } = useToast();
     const slug = params?.slug;
     const [recipe, setRecipe] = useState<CommunityRecipe | undefined>(undefined);
     const [loading, setLoading] = useState(true);
@@ -23,6 +38,16 @@ function CommunityRecipePage() {
         }
         setLoading(false);
     }, [slug]);
+    
+    const handleRemoveRecipe = () => {
+        if (!recipe) return;
+        removeCommunityRecipe(recipe.id);
+        toast({
+            title: "Recipe Removed",
+            description: `"${recipe.title}" has been removed.`,
+        });
+        router.push('/community');
+    };
 
     if (loading) {
         return (
@@ -51,6 +76,31 @@ function CommunityRecipePage() {
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <div className="absolute top-4 right-4 z-10">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="icon">
+                                <Trash2 className="h-5 w-5" />
+                                <span className="sr-only">Delete Recipe</span>
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete this recipe
+                                from the community kitchen.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleRemoveRecipe}>
+                                Continue
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
                     <div className="absolute bottom-0 left-0 p-6 md:p-8">
                         <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{recipe.title}</h1>
                         <div className="flex items-center gap-2 mt-4">
