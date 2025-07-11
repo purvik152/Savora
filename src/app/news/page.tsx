@@ -49,13 +49,18 @@ export default function NewsPage() {
         if (result.articles) {
           setLatestNews(result.articles);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch latest news:", error);
         toast({
           variant: 'destructive',
           title: 'Error Fetching News',
-          description: 'Could not load the latest news articles. Please try again later.'
+          description: error.message || 'Could not load the latest news articles. Please try again later.'
         });
+        // Set mock data on error so the page doesn't look broken
+        setLatestNews([
+          { title: `Could not fetch news.`, url: '#', source: 'Error', imageUrl: 'https://placehold.co/600x400.png' },
+          { title: `Please ensure your NewsAPI key is set in the .env file.`, url: '#', source: 'Error', imageUrl: 'https://placehold.co/600x400.png' },
+        ]);
       } finally {
         setLoading(false);
       }
