@@ -13,6 +13,9 @@ interface InstructionStepProps {
   index: number;
 }
 
+// Regex to find time mentions like "10 mins", "1 hour", "5-7 minutes"
+const timeRegex = /(\d+)(?:-(\d+))?\s*(min|minute|minutes|hr|hour|hours)/i;
+
 export function InstructionStep({ step, index }: InstructionStepProps) {
   const { toast } = useToast();
   const [duration, setDuration] = useState<number | null>(null);
@@ -21,9 +24,6 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
   const [isFinished, setIsFinished] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  
-  // Regex to find time mentions like "10 mins", "1 hour", "5-7 minutes"
-  const timeRegex = /(\d+)(?:-(\d+))?\s*(min|minute|minutes|hr|hour|hours)/i;
 
   useEffect(() => {
     const match = step.match(timeRegex);
