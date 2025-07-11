@@ -1,6 +1,8 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CommunityRecipe, getCommunityRecipes } from '@/lib/community-recipes';
 import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
@@ -12,19 +14,23 @@ export default function CommunityPage() {
   const [recipes, setRecipes] = useState<CommunityRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const { diet } = useDiet();
+  const pathname = usePathname();
 
-  useEffect(() => {
+  const fetchRecipes = useCallback(() => {
+    setLoading(true);
     setRecipes(getCommunityRecipes());
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    // Fetch recipes whenever the page is loaded/focused.
+    fetchRecipes();
+  }, [pathname, fetchRecipes]);
+
   const handleUpvote = (recipeId: number) => {
-    // In a real app, this would be an optimistic update followed by a server call.
-    // For this prototype, we'll just update the local state.
-    const updatedRecipes = recipes.map(r => 
-      r.id === recipeId ? { ...r, upvotes: r.upvotes + 1 } : r
-    );
-    setRecipes(updatedRecipes);
+    // This is an optimistic update. The actual data is updated in localStorage
+    // by the upvoteRecipeAction in the card, but we re-fetch to be safe.
+    fetchRecipes();
   };
   
   const filteredRecipes = useMemo(() => {
