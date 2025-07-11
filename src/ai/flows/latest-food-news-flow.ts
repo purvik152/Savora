@@ -37,7 +37,7 @@ async function getNewsFromAPI(): Promise<NewsArticle[]> {
   }
   
   // Query for general food, nutrition, health, and recipe topics
-  const url = `https://newsapi.org/v2/top-headlines?q=food,nutrition,health,recipes&category=health&language=en&pageSize=10&apiKey=${apiKey}`;
+  const url = `https://newsapi.org/v2/top-headlines?category=health&language=en&pageSize=10&apiKey=${apiKey}`;
 
   const response = await fetch(url);
   if (!response.ok) {
