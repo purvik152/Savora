@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { generatePersonalizedNewsFeed } from '@/ai/flows/personalized-news-feed';
+import { generatePersonalizedNewsFeed, PersonalizedNewsFeedOutput } from '@/ai/flows/personalized-news-feed';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, ThumbsUp } from 'lucide-react';
+import { Loader2, Sparkles, ThumbsUp, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 const formSchema = z.object({
   userSearchHistory: z.string().min(3, "Please enter at least one past search (e.g., 'keto recipes')."),
@@ -21,7 +22,7 @@ const formSchema = z.object({
 
 export function NewsFeedForm() {
   const [loading, setLoading] = useState(false);
-  const [newsSuggestions, setNewsSuggestions] = useState<string[]>([]);
+  const [newsSuggestions, setNewsSuggestions] = useState<PersonalizedNewsFeedOutput['newsSuggestions']>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -132,10 +133,18 @@ export function NewsFeedForm() {
             {newsSuggestions.map((suggestion, index) => (
               <Card key={index} className="bg-background/70">
                 <CardContent className="p-6 flex items-start gap-4">
-                  <div className="bg-primary/20 text-primary p-2 rounded-full">
+                  <div className="bg-primary/20 text-primary p-2 rounded-full mt-1">
                     <ThumbsUp className="h-6 w-6" />
                   </div>
-                  <p className="flex-1 text-foreground font-medium">{suggestion}</p>
+                  <div className="flex-1">
+                      <Link href={suggestion.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">
+                        {suggestion.title}
+                      </Link>
+                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                          <ExternalLink className="h-3 w-3"/>
+                          <span>Read full article</span>
+                      </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
