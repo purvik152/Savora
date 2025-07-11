@@ -47,9 +47,7 @@ export function CommunityRecipeCard({ recipe, onUpvote, onRemove }: CommunityRec
     toast({ title: `Upvoted "${recipe.title}"!` });
   };
   
-  const handleRemoveClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleRemoveClick = () => {
     onRemove(recipe.id, recipe.title);
   };
 
@@ -71,11 +69,11 @@ export function CommunityRecipeCard({ recipe, onUpvote, onRemove }: CommunityRec
             <div className="absolute top-2 right-2">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); }}>
+                    <Button variant="destructive" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent onClick={(e) => { e.stopPropagation(); }}>
+                  <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
