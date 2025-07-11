@@ -3,14 +3,6 @@
 
 import type { Recipe } from './recipes';
 
-// --- User Credentials (Now handled by Firebase) ---
-export interface UserCredentials {
-  username: string;
-  email: string;
-  password?: string;
-  uid: string;
-}
-
 // Prefixes for user-specific localStorage keys
 const PAST_RECIPES_PREFIX = 'savora-past-recipes_';
 const FAVORITE_RECIPES_PREFIX = 'savora-favorite-recipes_';

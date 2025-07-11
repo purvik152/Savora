@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,7 +31,7 @@ export default function DashboardPage() {
   const { diet } = useDiet();
 
   const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
-  const fileInputRef = useState<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
@@ -86,8 +86,8 @@ export default function DashboardPage() {
     fileInputRef.current?.click();
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out.',

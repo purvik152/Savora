@@ -1,6 +1,8 @@
 
 'use client';
 
+import type { User } from '@/lib/auth-data';
+
 export interface CommunityRecipe {
   id: number;
   slug: string;
@@ -32,7 +34,7 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     imageHint: 'chili bowl',
     description: "A secret family recipe for a hearty and flavorful chili that's been passed down for generations.",
     submitter: {
-      uid: 'admin_user',
+      uid: 'admin-savora',
       name: 'ChiliMaster',
       avatar: 'https://placehold.co/128x128.png',
     },
@@ -48,7 +50,7 @@ const initialCommunityRecipes: CommunityRecipe[] = [
     imageHint: 'lentil salad',
     description: 'A light, refreshing, and protein-packed lentil salad perfect for a summer lunch.',
     submitter: {
-      uid: 'user_1',
+      uid: 'user-savora',
       name: 'VeggieVibes',
       avatar: 'https://placehold.co/128x128.png',
     },
@@ -92,7 +94,7 @@ export function getCommunityRecipes(): CommunityRecipe[] {
 
 export function addCommunityRecipe(
     recipeData: Omit<CommunityRecipe, 'id' | 'slug' | 'submitter' | 'upvotes' | 'isTopContributor'>,
-    user: { uid: string; displayName?: string | null; email?: string | null }
+    user: User
 ): CommunityRecipe {
     const recipes = getCommunityRecipes();
     

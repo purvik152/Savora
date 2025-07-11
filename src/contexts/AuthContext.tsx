@@ -1,28 +1,25 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { auth, db } from '@/lib/firebase';
-import { 
-    onAuthStateChanged, 
-    User, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    signOut,
-    updateProfile
-} from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-
-type UserRole = 'user' | 'admin';
+import { 
+    type User, 
+    type UserRole, 
+    authenticateUser, 
+    registerUser, 
+    getUserByEmail, 
+    initializeUsers 
+} from '@/lib/auth-data';
 
 interface AuthContextType {
   user: User | null;
   userRole: UserRole | null;
   loading: boolean;
-  login: (email: string, pass: string) => Promise<void>;
-  signup: (email: string, pass: string, username: string) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (email: string, pass: string) => Promise<User | null>;
+  signup: (email: string, pass: string, username: string) => Promise<User | null>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,52 +30,60 @@ const LoadingScreen = () => (
     </div>
 );
 
+const SESSION_KEY = 'savora-session';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().role);
-        } else {
-            // This case might happen if user document creation fails during signup
-            setUserRole('user');
-        }
-        setUser(user);
-      } else {
-        setUser(null);
-        setUserRole(null);
-      }
-      setLoading(false);
-    });
+    // Initialize default users if not already present
+    initializeUsers();
 
-    return () => unsubscribe();
+    try {
+        const session = localStorage.getItem(SESSION_KEY);
+        if (session) {
+            const sessionUser = JSON.parse(session);
+            const fullUser = getUserByEmail(sessionUser.email);
+            if (fullUser) {
+                setUser(fullUser);
+                setUserRole(fullUser.role);
+            }
+        }
+    } catch (error) {
+        console.error("Failed to parse user session:", error);
+        localStorage.removeItem(SESSION_KEY);
+    } finally {
+        setLoading(false);
+    }
   }, []);
 
-  const signup = async (email: string, password: string, username: string) => {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    await updateProfile(user, { displayName: username });
-    await setDoc(doc(db, 'users', user.uid), {
-      uid: user.uid,
-      email: user.email,
-      displayName: username,
-      role: 'user', // Default role
-    });
+  const signup = async (email: string, password: string, username: string): Promise<User | null> => {
+    const newUser = registerUser({ email, password, displayName: username, role: 'user' });
+    if (newUser) {
+      return newUser;
+    }
+    throw new Error("User with this email already exists.");
   };
 
-  const login = async (email: string, password: string): Promise<void> => {
-      await signInWithEmailAndPassword(auth, email, password);
-      // The onAuthStateChanged listener will handle setting user and userRole state
+  const login = async (email: string, password: string): Promise<User | null> => {
+    const authenticatedUser = authenticateUser(email, password);
+    if (authenticatedUser) {
+      setUser(authenticatedUser);
+      setUserRole(authenticatedUser.role);
+      localStorage.setItem(SESSION_KEY, JSON.stringify(authenticatedUser));
+      return authenticatedUser;
+    }
+    throw new Error("Invalid email or password.");
   };
 
-  const logout = async () => {
-    await signOut(auth);
-  };
+  const logout = useCallback(() => {
+    setUser(null);
+    setUserRole(null);
+    localStorage.removeItem(SESSION_KEY);
+    // The redirect will be handled by the pages themselves
+  }, []);
 
   const value = {
     user,

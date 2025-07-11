@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,19 +22,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const { login, user, userRole } = useAuth();
-  
-  const [loginAttempted, setLoginAttempted] = useState(false);
-
-  useEffect(() => {
-    if (loginAttempted && user) {
-        if (userRole === 'admin') {
-            router.push('/admin');
-        } else {
-            router.push('/dashboard');
-        }
-    }
-  }, [user, userRole, loginAttempted, router]);
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,21 +34,25 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    setLoginAttempted(false);
     try {
-      await login(values.email, values.password);
-      toast({
-        title: 'Login Successful',
-        description: 'Redirecting to your dashboard...',
-      });
-      setLoginAttempted(true);
-
+      const user = await login(values.email, values.password);
+      if (user) {
+          toast({
+            title: 'Login Successful',
+            description: 'Redirecting to your dashboard...',
+          });
+          if (user.role === 'admin') {
+            router.push('/admin');
+          } else {
+            router.push('/dashboard');
+          }
+      }
     } catch (error: any) {
       console.error(error);
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message || 'Invalid email or password.',
+        description: error.message || 'An unexpected error occurred.',
       });
     } finally {
       setLoading(false);
@@ -100,6 +92,10 @@ export function LoginForm() {
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Log In
         </Button>
+         <div className="text-center text-sm text-muted-foreground">
+            <p>Admin: admin@savora.com / admin123</p>
+            <p>User: user@savora.com / user123</p>
+         </div>
       </form>
     </Form>
   );

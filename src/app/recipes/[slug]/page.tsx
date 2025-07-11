@@ -111,6 +111,8 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     setCheckedIngredients(new Set());
     if (user) {
       setIsFavorite(isFavoriteRecipe(recipe.id, user.uid));
+    } else {
+      setIsFavorite(false);
     }
   }, [recipe.id, displayedIngredients, user]);
   
