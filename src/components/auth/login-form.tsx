@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,7 +22,19 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user, userRole } = useAuth();
+  
+  const [loginAttempted, setLoginAttempted] = useState(false);
+
+  useEffect(() => {
+    if (loginAttempted && user) {
+        if (userRole === 'admin') {
+            router.push('/admin');
+        } else {
+            router.push('/dashboard');
+        }
+    }
+  }, [user, userRole, loginAttempted, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,19 +46,14 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+    setLoginAttempted(false);
     try {
-      const userRole = await login(values.email, values.password);
+      await login(values.email, values.password);
       toast({
         title: 'Login Successful',
         description: 'Redirecting to your dashboard...',
       });
-      
-      // Redirect based on role
-      if (userRole === 'admin') {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard');
-      }
+      setLoginAttempted(true);
 
     } catch (error: any) {
       console.error(error);

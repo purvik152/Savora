@@ -20,7 +20,7 @@ interface AuthContextType {
   user: User | null;
   userRole: UserRole | null;
   loading: boolean;
-  login: (email: string, pass: string) => Promise<UserRole>;
+  login: (email: string, pass: string) => Promise<void>;
   signup: (email: string, pass: string, username: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -41,7 +41,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUser(user);
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           setUserRole(userDoc.data().role);
@@ -49,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // This case might happen if user document creation fails during signup
             setUserRole('user');
         }
+        setUser(user);
       } else {
         setUser(null);
         setUserRole(null);
@@ -71,15 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const login = async (email: string, password: string): Promise<UserRole> => {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-      if (userDoc.exists()) {
-          const role = userDoc.data().role as UserRole;
-          return role;
-      }
-      // If no doc, default to user role
-      return 'user';
+  const login = async (email: string, password: string): Promise<void> => {
+      await signInWithEmailAndPassword(auth, email, password);
+      // The onAuthStateChanged listener will handle setting user and userRole state
   };
 
   const logout = async () => {
