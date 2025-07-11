@@ -33,7 +33,7 @@ export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
 async function getNewsFromAPI(): Promise<NewsArticle[]> {
   const apiKey = process.env.NEWS_API_KEY;
   if (!apiKey || apiKey === 'YOUR_NEWS_API_KEY_HERE') {
-    throw new Error("NewsAPI key not found. Please add it to your .env file.");
+    throw new Error("NewsAPI key not found or is a placeholder. Please add a valid key to your .env file.");
   }
   
   // Query for general food, nutrition, health, and recipe topics
