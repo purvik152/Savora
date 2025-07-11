@@ -40,7 +40,7 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
       setDuration(seconds);
       setTimeLeft(seconds);
     }
-  }, [step, timeRegex]);
+  }, [step]);
 
   const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
