@@ -72,11 +72,44 @@ export default function DashboardPage() {
     if (file && user) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === 'string') {
-          setAvatarSrc(result);
-          localStorage.setItem(`savora-avatar_${user.email}`, result);
-        }
+        const img = document.createElement('img');
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 256;
+          const MAX_HEIGHT = 256;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL(file.type, 0.9); // Use file's mime type, jpeg with quality 0.9
+          setAvatarSrc(dataUrl);
+          try {
+            localStorage.setItem(`savora-avatar_${user.email}`, dataUrl);
+          } catch (error) {
+            console.error(error);
+            toast({
+              variant: 'destructive',
+              title: 'Could not save avatar',
+              description: 'The image might still be too large. Please try a smaller one.',
+            });
+          }
+        };
+        img.src = e.target?.result as string;
       };
       reader.readAsDataURL(file);
     }
