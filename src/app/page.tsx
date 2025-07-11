@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useDiet } from '@/contexts/DietContext';
 import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
-import { getCommunityRecipes, CommunityRecipe } from '@/lib/community-recipes';
+import { getCommunityRecipes, removeCommunityRecipe, CommunityRecipe } from '@/lib/community-recipes';
 
 
 const allFeaturedRecipes = [
@@ -145,6 +145,14 @@ export default function Home() {
   // State for community recipes
   const [communityRecipes, setCommunityRecipes] = useState<CommunityRecipe[]>([]);
 
+  const fetchCommunityRecipes = useCallback(() => {
+    setCommunityRecipes(getCommunityRecipes());
+  }, []);
+
+  useEffect(() => {
+    fetchCommunityRecipes();
+  }, [fetchCommunityRecipes]);
+
   const filteredRecipes = useMemo(() => {
     if (diet === 'veg') {
         return recipes.filter(r => r.diet === 'veg');
@@ -188,11 +196,17 @@ export default function Home() {
   }, [diet, communityRecipes]);
 
   const handleCommunityUpvote = (recipeId: number) => {
-    const updatedRecipes = communityRecipes.map(r => 
-      r.id === recipeId ? { ...r, upvotes: r.upvotes + 1 } : r
-    );
-    setCommunityRecipes(updatedRecipes);
+    fetchCommunityRecipes();
   };
+  
+  const handleRemoveCommunityRecipe = (recipeId: number, recipeTitle: string) => {
+    removeCommunityRecipe(recipeId);
+    toast({
+        title: "Recipe Removed",
+        description: `"${recipeTitle}" has been removed from the community kitchen.`
+    });
+    fetchCommunityRecipes();
+  }
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim().length > 1) {
@@ -566,7 +580,12 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {topCommunityRecipes.length > 0 ? topCommunityRecipes.map(recipe => (
-                <CommunityRecipeCard key={recipe.id} recipe={recipe} onUpvote={handleCommunityUpvote} />
+                <CommunityRecipeCard 
+                  key={recipe.id} 
+                  recipe={recipe} 
+                  onUpvote={handleCommunityUpvote} 
+                  onRemove={handleRemoveCommunityRecipe}
+                />
             )) : (
                 <p className="text-muted-foreground text-center col-span-full">No community recipes in this view yet.</p>
             )}
