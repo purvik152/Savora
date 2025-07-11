@@ -53,7 +53,7 @@ export function getUserByEmail(email: string): User | undefined {
     return users.find(u => u.email.toLowerCase() === email.toLowerCase());
 }
 
-export function registerUser(userData: Omit<User, 'uid'>): User | null {
+export function registerUser(userData: Omit<User, 'uid' | 'role'> & { role?: UserRole }): User | null {
     const users = getUsers();
     if (getUserByEmail(userData.email)) {
         return null; // User already exists
@@ -62,6 +62,7 @@ export function registerUser(userData: Omit<User, 'uid'>): User | null {
     const newUser: User = {
         ...userData,
         uid: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        role: userData.role || 'user',
     };
 
     saveUsers([...users, newUser]);

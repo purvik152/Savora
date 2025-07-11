@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signup = async (email: string, password: string, username: string): Promise<User | null> => {
-    const newUser = registerUser({ email, password, displayName: username, role: 'user' });
+    const newUser = registerUser({ email, password, displayName: username });
     if (newUser) {
       return newUser;
     }

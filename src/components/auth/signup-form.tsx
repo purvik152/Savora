@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z
   .object({
@@ -28,6 +29,7 @@ export function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { signup } = useAuth();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,9 +47,11 @@ export function SignUpForm() {
       await signup(values.email, values.password, values.username);
       toast({
         title: 'Account Created',
-        description: 'You have successfully signed up! Please switch to the Login tab.',
+        description: 'You have successfully signed up! Please switch to the Login tab to log in.',
       });
       form.reset();
+      // Note: We don't log the user in automatically. 
+      // They must go to the login tab.
     } catch (error: any) {
       toast({
         variant: 'destructive',
