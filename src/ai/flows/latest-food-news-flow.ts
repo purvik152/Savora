@@ -25,15 +25,15 @@ export type LatestFoodNewsOutput = z.infer<typeof LatestFoodNewsOutputSchema>;
 
 
 export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
-  return latestFoodNewsFlow();
+  // Correctly invoke the flow using .run()
+  return latestFoodNewsFlow.run();
 }
 
 // This is not a tool for an LLM to decide to use, but a direct function call.
-// So we define it as a regular async function.
 async function getNewsFromAPI(): Promise<NewsArticle[]> {
   const apiKey = process.env.NEWS_API_KEY;
   if (!apiKey || apiKey === 'YOUR_NEWS_API_KEY_HERE') {
-    throw new Error("NewsAPI key not found or is a placeholder. Please add a valid key to your .env file.");
+    throw new Error("NewsAPI key not found. Please sign up for a free key at NewsAPI.org and add it to your .env file.");
   }
   
   // Query for general food, nutrition, health, and recipe topics
@@ -42,6 +42,7 @@ async function getNewsFromAPI(): Promise<NewsArticle[]> {
   const response = await fetch(url);
   if (!response.ok) {
       const errorData = await response.json();
+      console.error("NewsAPI Error:", errorData);
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
   }
   const data = await response.json();
