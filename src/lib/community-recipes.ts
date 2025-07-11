@@ -17,6 +17,9 @@ export interface CommunityRecipe {
   };
   upvotes: number;
   isTopContributor: boolean;
+  // Add detailed recipe fields
+  ingredients?: string[];
+  instructions?: string[];
 }
 
 const COMMUNITY_RECIPES_KEY = 'savora-community-recipes';
@@ -55,17 +58,41 @@ const initialCommunityRecipes: CommunityRecipe[] = [
   {
     id: 103,
     slug: 'spicy-gochujang-wings',
-    title: 'Chicken Tikka Masala',
+    title: 'Spicy Gochujang Wings',
     diet: 'non-veg',
-    image: '/images/recipes/chicken-tikka-masala.jpg',
-    imageHint: 'chicken curry',
-    description: 'A rich and creamy curry that is a staple in Indian cuisine. Perfect with naan or rice.',
+    image: '/images/recipes/spicy-gochujang-wings.jpg',
+    imageHint: 'chicken wings',
+    description: 'Crispy, sticky, sweet, and spicy Korean-style chicken wings that are absolutely addictive.',
     submitter: {
       name: 'CurryMaster',
       avatar: 'https://placehold.co/128x128.png',
     },
     upvotes: 256,
     isTopContributor: true,
+    ingredients: [
+        '2 lbs chicken wings, separated into flats and drumettes',
+        '1/2 cup all-purpose flour',
+        '1/2 cup cornstarch',
+        '1 tsp salt',
+        '1 tsp black pepper',
+        'Vegetable oil, for frying',
+        'For the sauce:',
+        '1/2 cup gochujang (Korean chili paste)',
+        '1/4 cup honey or rice syrup',
+        '1/4 cup soy sauce',
+        '2 tbsp rice vinegar',
+        '2 tbsp minced garlic',
+        '1 tbsp sesame oil'
+    ],
+    instructions: [
+        'In a large bowl, whisk together flour, cornstarch, salt, and pepper. Add the chicken wings and toss to coat evenly.',
+        'In a large pot or deep fryer, heat about 2-3 inches of vegetable oil to 350°F (175°C).',
+        'Fry the wings in batches for 6-8 minutes, until golden brown and cooked through. Drain on a wire rack.',
+        'While the wings are frying, combine all sauce ingredients in a small saucepan over medium heat. Bring to a simmer and cook for 2-3 minutes, until slightly thickened. Remove from heat.',
+        'In a large clean bowl, pour the warm sauce over the fried wings.',
+        'Toss gently until all the wings are coated in the sticky sauce.',
+        'Serve immediately, garnished with sesame seeds and chopped green onions if desired.'
+    ]
   },
   {
     id: 104,

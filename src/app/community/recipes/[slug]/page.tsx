@@ -3,7 +3,7 @@
 import { notFound, useParams } from 'next/navigation';
 import { getCommunityRecipes, CommunityRecipe } from '@/lib/community-recipes';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Loader2, Users, ArrowUp, Award } from 'lucide-react';
+import { Loader2, Users, ArrowUp, Award, Check } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -75,10 +75,46 @@ function CommunityRecipePage() {
                 </CardHeader>
                 <CardContent className="p-6 md:p-8">
                     <p className="text-lg text-muted-foreground">{recipe.description}</p>
-                    <div className="mt-8 text-center">
-                        <h2 className="text-2xl font-bold">This is a community recipe!</h2>
-                        <p className="text-muted-foreground">Full ingredient and instruction details would be displayed here.</p>
-                    </div>
+                    
+                    {(recipe.ingredients || recipe.instructions) && (
+                         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {recipe.ingredients && (
+                                <div className="md:col-span-1">
+                                    <h2 className="text-2xl font-bold mb-4">Ingredients</h2>
+                                    <ul className="space-y-3">
+                                    {recipe.ingredients.map((ingredient, index) => (
+                                        <li key={index} className="flex items-start gap-3">
+                                        <Check className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                                        <span>{ingredient}</span>
+                                        </li>
+                                    ))}
+                                    </ul>
+                                </div>
+                            )}
+                            {recipe.instructions && (
+                                <div className="md:col-span-2">
+                                    <h2 className="text-2xl font-bold mb-4">Instructions</h2>
+                                    <ol className="space-y-4">
+                                        {recipe.instructions.map((step, index) => (
+                                            <li key={index} className="flex items-start gap-4">
+                                                <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
+                                                <p className="flex-1 text-base text-foreground/90">{step}</p>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                   
+
+                    {!(recipe.ingredients || recipe.instructions) && (
+                        <div className="mt-8 text-center">
+                            <h2 className="text-2xl font-bold">This is a community recipe!</h2>
+                            <p className="text-muted-foreground">Full ingredient and instruction details would be displayed here.</p>
+                        </div>
+                    )}
+
                 </CardContent>
             </Card>
         </div>
