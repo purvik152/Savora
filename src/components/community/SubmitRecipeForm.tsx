@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useState, useCallback } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,16 +16,17 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Upload, Mic, Circle, WandSparkles } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { generateRecipeTitle } from '@/ai/flows/generate-recipe-title-flow';
-import { cn } from '@/lib/utils';
+import { addCommunityRecipe } from '@/lib/community-recipes';
 
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters long."),
   description: z.string().min(20, "Please provide a more detailed description."),
-  image: z.any().refine(files => files?.length === 1, "An image is required."),
+  image: z.instanceof(FileList).refine(files => files?.length === 1, "An image is required."),
   ingredients: z.string().min(10, "Please list the ingredients."),
   instructions: z.string().min(20, "Please provide the instructions."),
   diet: z.enum(['veg', 'non-veg'], { required_error: "You need to select a diet type."}),
+  imageHint: z.string().optional(),
 });
 
 export function SubmitRecipeForm() {
@@ -32,6 +35,7 @@ export function SubmitRecipeForm() {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +44,7 @@ export function SubmitRecipeForm() {
       description: "",
       ingredients: "",
       instructions: "",
+      imageHint: "community recipe",
     },
   });
   
@@ -84,19 +89,56 @@ export function SubmitRecipeForm() {
       setTitleSuggestions([]);
   }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    console.log(values);
 
-    // Simulate an API call
-    setTimeout(() => {
+    const imageFile = values.image[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        const imageDataUri = e.target?.result as string;
+
+        try {
+            const newRecipe = addCommunityRecipe({
+                title: values.title,
+                description: values.description,
+                image: imageDataUri,
+                imageHint: values.imageHint || 'community recipe',
+                ingredients: values.ingredients.split('\n').filter(line => line.trim() !== ''),
+                instructions: values.instructions.split('\n').filter(line => line.trim() !== ''),
+                diet: values.diet,
+            });
+
+            toast({
+                title: "Recipe Submitted!",
+                description: "Thank you for sharing your recipe with the community.",
+            });
+
+            form.reset();
+            router.push(`/community/recipes/${newRecipe.slug}`);
+
+        } catch (error) {
+            console.error("Error submitting recipe:", error);
+            toast({
+                variant: 'destructive',
+                title: "Submission Failed",
+                description: "There was an error saving your recipe. Please try again.",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    reader.onerror = () => {
         toast({
-            title: "Recipe Submitted!",
-            description: "Thank you for sharing your recipe with the community.",
+            variant: 'destructive',
+            title: "Image Error",
+            description: "Could not read the image file. Please try a different image.",
         });
-        form.reset();
         setLoading(false);
-    }, 1500);
+    }
+    
+    reader.readAsDataURL(imageFile);
   }
 
   const handleRecordNarration = () => {
@@ -106,6 +148,8 @@ export function SubmitRecipeForm() {
         description: isRecording ? "Voice narration saved (simulation)." : "This is a prototype. No audio is actually being recorded.",
     });
   }
+
+  const fileRef = form.register('image');
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -165,7 +209,7 @@ export function SubmitRecipeForm() {
                     <FormItem>
                         <FormLabel>Recipe Image</FormLabel>
                         <FormControl>
-                            <Input type="file" accept="image/*" onChange={e => field.onChange(e.target.files)} />
+                            <Input type="file" accept="image/*" {...fileRef} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

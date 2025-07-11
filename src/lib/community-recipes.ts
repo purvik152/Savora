@@ -174,6 +174,28 @@ export function getCommunityRecipes(): CommunityRecipe[] {
     return getFromStorage<CommunityRecipe[]>(COMMUNITY_RECIPES_KEY, initialCommunityRecipes);
 }
 
+export function addCommunityRecipe(recipeData: Omit<CommunityRecipe, 'id' | 'slug' | 'submitter' | 'upvotes' | 'isTopContributor'>): CommunityRecipe {
+    const recipes = getCommunityRecipes();
+    const storedUser = localStorage.getItem('savora-user');
+    const user = storedUser ? JSON.parse(storedUser) : { name: 'Anonymous', email: '' };
+
+    const newRecipe: CommunityRecipe = {
+        ...recipeData,
+        id: Date.now(),
+        slug: recipeData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(),
+        upvotes: 1,
+        isTopContributor: false,
+        submitter: {
+            name: user.username || 'Anonymous',
+            avatar: localStorage.getItem(`savora-avatar_${user.email}`) || 'https://placehold.co/128x128.png'
+        }
+    };
+
+    const updatedRecipes = [newRecipe, ...recipes];
+    setInStorage(COMMUNITY_RECIPES_KEY, updatedRecipes);
+    return newRecipe;
+}
+
 export function upvoteRecipe(recipeId: number): CommunityRecipe[] {
     const recipes = getCommunityRecipes();
     const updatedRecipes = recipes.map(recipe => {
