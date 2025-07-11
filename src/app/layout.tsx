@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { Poppins } from 'next/font/google';
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
@@ -9,6 +10,12 @@ import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
 import { AuthProvider } from '@/contexts/AuthContext';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
+});
 
 export const metadata: Metadata = {
   title: 'Savora: Your AI Recipe Assistant',
@@ -22,17 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+      <head />
       <body
         className={cn(
-          'min-h-screen bg-background text-foreground font-body antialiased flex flex-col'
+          'min-h-screen bg-background text-foreground font-body antialiased flex flex-col',
+          poppins.variable
         )}
       >
         <ThemeProvider

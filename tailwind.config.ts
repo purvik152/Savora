@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Poppins', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        body: ['var(--font-poppins)', 'sans-serif'],
+        headline: ['var(--font-poppins)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -107,8 +107,8 @@ export default {
           },
         },
         'zoom-in': {
-          'from': { transform: 'scale(1.1)' },
-          'to': { transform: 'scale(1)' },
+          'from': { opacity: '0', transform: 'scale(1.1)' },
+          'to': { opacity: '1', transform: 'scale(1)' },
         },
         'float-1': {
           '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
@@ -147,7 +147,7 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-        'zoom-in': 'zoom-in 1.5s ease-out forwards',
+        'zoom-in': 'zoom-in 0.8s ease-out forwards',
         'float-1': 'float-1 15s ease-in-out infinite',
         'float-2': 'float-2 12s ease-in-out infinite',
         'float-3': 'float-3 18s ease-in-out infinite',

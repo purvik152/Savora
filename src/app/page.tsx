@@ -126,17 +126,12 @@ export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
 
   // Refs for animation targets
+  const heroRef = useRef<HTMLElement>(null);
   const subCategoriesRef = useRef<HTMLElement>(null);
   const mainCategoriesRef = useRef<HTMLElement>(null);
   const searchSectionRef = useRef<HTMLElement>(null);
   const communitySectionRef = useRef<HTMLElement>(null);
   
-  // State to track visibility
-  const [subCategoriesVisible, setSubCategoriesVisible] = useState(false);
-  const [mainCategoriesVisible, setMainCategoriesVisible] = useState(false);
-  const [searchSectionVisible, setSearchSectionVisible] = useState(false);
-  const [communitySectionVisible, setCommunitySectionVisible] = useState(false);
-
   // State for voice search
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -237,15 +232,7 @@ export default function Home() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (entry.target === subCategoriesRef.current) {
-              setSubCategoriesVisible(true);
-            } else if (entry.target === mainCategoriesRef.current) {
-              setMainCategoriesVisible(true);
-            } else if (entry.target === searchSectionRef.current) {
-              setSearchSectionVisible(true);
-            } else if (entry.target === communitySectionRef.current) {
-              setCommunitySectionVisible(true);
-            }
+            entry.target.classList.add('animate-in');
             observer.unobserve(entry.target);
           }
         });
@@ -253,7 +240,7 @@ export default function Home() {
       { threshold: 0.1 }
     );
 
-    const refs = [subCategoriesRef, mainCategoriesRef, searchSectionRef, communitySectionRef];
+    const refs = [heroRef, subCategoriesRef, mainCategoriesRef, searchSectionRef, communitySectionRef];
     refs.forEach(ref => {
       if (ref.current) {
         observer.observe(ref.current);
@@ -337,7 +324,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16">
+      <section ref={heroRef} className="mb-16 opacity-0">
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -355,6 +342,7 @@ export default function Home() {
                           sizes="100vw"
                           className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                           data-ai-hint={recipe.hint}
+                          priority
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
                         <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
@@ -376,10 +364,7 @@ export default function Home() {
       {subCategories.length > 0 && (
       <section
         ref={subCategoriesRef}
-        className={cn(
-          "mb-16 opacity-0",
-          subCategoriesVisible && "animate-fade-in-up"
-        )}
+        className="mb-16 opacity-0"
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -449,10 +434,7 @@ export default function Home() {
       {mainCategories.length > 0 && (
       <section
         ref={mainCategoriesRef}
-        className={cn(
-          "opacity-0",
-          mainCategoriesVisible && "animate-fade-in-up"
-        )}
+        className="opacity-0"
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -488,10 +470,7 @@ export default function Home() {
     {/* Search Section */}
     <section
       ref={searchSectionRef}
-      className={cn(
-        "my-24 opacity-0",
-        searchSectionVisible && "animate-fade-in-up"
-      )}
+      className="my-24 opacity-0"
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -573,7 +552,7 @@ export default function Home() {
     </section>
 
     {/* Community Section */}
-    <section ref={communitySectionRef} className={cn("my-24 opacity-0", communitySectionVisible && "animate-fade-in-up")}>
+    <section ref={communitySectionRef} className="my-24 opacity-0">
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
             <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
