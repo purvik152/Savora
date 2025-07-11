@@ -77,7 +77,7 @@ function CommunityRecipePage() {
                 <CardContent className="p-6 md:p-8">
                     <p className="text-lg text-muted-foreground">{recipe.description}</p>
                     
-                    {recipe.ingredients && recipe.instructions ? (
+                    {recipe.ingredients && recipe.instructions && recipe.ingredients.length > 0 && recipe.instructions.length > 0 ? (
                          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div className="md:col-span-1">
                                 <h2 className="text-2xl font-bold mb-4">Ingredients</h2>
@@ -105,7 +105,7 @@ function CommunityRecipePage() {
                     ) : (
                         <div className="mt-8 text-center bg-secondary/50 p-8 rounded-lg">
                             <h2 className="text-2xl font-bold">This is a community recipe!</h2>
-                            <p className="text-muted-foreground">Full ingredient and instruction details are coming soon for more recipes.</p>
+                            <p className="text-muted-foreground">The creator has not added detailed ingredients and instructions yet.</p>
                         </div>
                     )}
 
