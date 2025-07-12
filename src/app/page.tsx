@@ -250,7 +250,10 @@ export default function Home() {
     return () => {
       refs.forEach(ref => {
         if (ref.current) {
-          observer.unobserve(ref.current);
+          // Check if observer is still connected before unobserving
+          if(observer && observer.unobserve) {
+            observer.unobserve(ref.current);
+          }
         }
       });
     };
