@@ -69,6 +69,8 @@ const translateRecipeFlow = ai.defineFlow(
         translatedInstructions: input.instructions,
       };
     }
+    
+    // For all other languages, call the AI for translation.
     const {output} = await prompt(input);
     return output!;
   }
