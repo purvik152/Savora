@@ -22,6 +22,7 @@ const languageToCode: { [key: string]: string } = {
     french: 'fr-FR',
     german: 'de-DE',
     hindi: 'hi-IN',
+    bengali: 'bn-IN',
 };
 
 export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking }: VoiceAssistantProps) {

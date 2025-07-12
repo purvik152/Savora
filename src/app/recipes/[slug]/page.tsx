@@ -467,6 +467,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                                 <SelectItem value="french">Français</SelectItem>
                                 <SelectItem value="german">Deutsch</SelectItem>
                                 <SelectItem value="hindi">हिन्दी</SelectItem>
+                                <SelectItem value="bengali">বাংলা</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
