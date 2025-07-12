@@ -182,7 +182,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
           <Trash2 className="mr-2 h-4 w-4" /> Clear Week
         </Button>
       </div>
-      
+
        <Card className="mb-8">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -207,13 +207,13 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         </CardContent>
       </Card>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {daysOfWeek.map((day, index) => {
           const totals = dailyTotals[index];
           return (
-            <div key={day} className="flex flex-col gap-2 p-2 bg-card rounded-lg">
+            <div key={day} className="flex flex-col gap-2 p-2 bg-card rounded-lg border">
               <div className="text-center font-bold">{day}</div>
-              <div className="flex-grow space-y-2">
+              <div className="space-y-2">
                 {renderMealSlot(day, 'Breakfast')}
                 {renderMealSlot(day, 'Lunch')}
                 {renderMealSlot(day, 'Dinner')}
