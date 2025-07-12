@@ -8,15 +8,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Utensils, Loader2, Heart, LogOut, Shield, HeartPulse, Sparkles } from "lucide-react";
+import { Edit, Utensils, Loader2, Heart, LogOut, Shield, HeartPulse, Sparkles, Download } from "lucide-react";
 import Image from "next/image";
-import { getPastRecipes, getFavoriteRecipes } from "@/lib/user-data";
+import { getPastRecipes, getFavoriteRecipes, isRecipeAvailableOffline, saveRecipeForOffline } from "@/lib/user-data";
 import { recipes as allRecipes, type Recipe } from "@/lib/recipes";
 import { useToast } from "@/hooks/use-toast";
 import { useDiet } from "@/contexts/DietContext";
 import { getActivityBasedSuggestions, ActivityBasedSuggestionsOutput } from "@/ai/flows/activity-based-suggestions-flow";
 import { SuggestionCard } from "@/components/mood-kitchen/SuggestionCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 
 function LoadingDashboard() {
@@ -121,6 +122,100 @@ function ActivityTracker() {
       </CardContent>
     </Card>
   );
+}
+
+function FavoritesList() {
+    const { user } = useAuth();
+    const { toast } = useToast();
+    const { diet } = useDiet();
+    const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
+    const [offlineStatus, setOfflineStatus] = useState<Record<number, boolean>>({});
+    const [downloading, setDownloading] = useState<Record<number, boolean>>({});
+    
+    useEffect(() => {
+        if (user) {
+            const favs = getFavoriteRecipes(user.uid);
+            setFavoriteRecipes(favs);
+            const status: Record<number, boolean> = {};
+            favs.forEach(recipe => {
+                status[recipe.id] = isRecipeAvailableOffline(recipe.id, user.uid);
+            });
+            setOfflineStatus(status);
+        }
+    }, [user]);
+
+    const handleDownload = async (recipe: Recipe) => {
+        if (!user) return;
+        setDownloading(prev => ({ ...prev, [recipe.id]: true }));
+        try {
+            await saveRecipeForOffline(recipe, user.uid);
+            setOfflineStatus(prev => ({ ...prev, [recipe.id]: true }));
+            toast({
+                title: "Recipe Saved Offline",
+                description: `"${recipe.title}" is now available for offline use.`
+            });
+        } catch (error) {
+            console.error("Failed to save recipe for offline:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Download Failed',
+                description: 'Could not save the recipe for offline use. Please try again.'
+            });
+        } finally {
+            setDownloading(prev => ({ ...prev, [recipe.id]: false }));
+        }
+    };
+    
+    const filteredFavoriteRecipes = useMemo(() => {
+        if (diet === 'veg') {
+            return favoriteRecipes.filter(r => r.diet === 'veg');
+        }
+        return favoriteRecipes.filter(r => r.diet === 'non-veg');
+    }, [diet, favoriteRecipes]);
+
+    return (
+        <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Heart /> Favorites</CardTitle>
+              <CardDescription>Your all-time favorite recipes.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredFavoriteRecipes.length > 0 ? (
+                  filteredFavoriteRecipes.map(recipe => (
+                    <div key={recipe.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-secondary/50">
+                      <Link href={`/recipes/${recipe.slug}`} className="block flex-shrink-0">
+                        <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
+                      </Link>
+                       <div className="flex-grow">
+                         <Link href={offlineStatus[recipe.id] ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
+                           <h3 className="font-semibold hover:underline">{recipe.title}</h3>
+                         </Link>
+                         <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
+                       </div>
+                       <Button 
+                           variant="outline" 
+                           size="icon"
+                           onClick={() => handleDownload(recipe)}
+                           disabled={offlineStatus[recipe.id] || downloading[recipe.id]}
+                           className={cn(offlineStatus[recipe.id] && "border-green-500 text-green-500")}
+                           title={offlineStatus[recipe.id] ? 'Available Offline' : 'Download for Offline Use'}
+                       >
+                           {downloading[recipe.id] ? (
+                               <Loader2 className="h-4 w-4 animate-spin" />
+                           ) : (
+                               <Download className="h-4 w-4" />
+                           )}
+                       </Button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-center py-4">You haven't favorited any recipes in this view yet.</p>
+                )}
+              </div>
+            </CardContent>
+        </Card>
+    );
 }
 
 
@@ -312,33 +407,7 @@ export default function DashboardPage() {
           </Card>
         </div>
         <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Heart /> Favorites</CardTitle>
-              <CardDescription>Your all-time favorite recipes.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {filteredFavoriteRecipes.length > 0 ? (
-                  filteredFavoriteRecipes.map(recipe => (
-                    <div key={recipe.id} className="flex items-start gap-4 p-2 rounded-lg hover:bg-secondary/50">
-                      <Link href={`/recipes/${recipe.slug}`} className="block flex-shrink-0">
-                        <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
-                      </Link>
-                       <div className="flex-grow">
-                         <Link href={`/recipes/${recipe.slug}`}>
-                           <h3 className="font-semibold hover:underline">{recipe.title}</h3>
-                         </Link>
-                         <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
-                       </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground text-center py-4">You haven't favorited any recipes in this view yet.</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <FavoritesList />
         </div>
       </div>
     </div>

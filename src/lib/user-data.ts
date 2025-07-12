@@ -1,11 +1,21 @@
 
 'use client';
 
-import type { Recipe } from './recipes';
+import type { Recipe as FullRecipe } from './recipes';
+import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
+
+// The full recipe definition
+export type Recipe = FullRecipe;
+
+// A version of the recipe specifically for offline storage
+export interface OfflineRecipe extends Recipe {
+    audioDataUri?: string;
+}
 
 // Prefixes for user-specific localStorage keys
 const PAST_RECIPES_PREFIX = 'savora-past-recipes_';
 const FAVORITE_RECIPES_PREFIX = 'savora-favorite-recipes_';
+const OFFLINE_RECIPES_PREFIX = 'savora-offline-recipes_';
 
 // Helper to safely get data from localStorage
 function getFromStorage<T>(key: string): T[] {
@@ -88,4 +98,49 @@ export function isFavoriteRecipe(recipeId: number, userId: string): boolean {
   
   const favoriteRecipes = getFavoriteRecipes(userId);
   return favoriteRecipes.some((r) => r.id === recipeId);
+}
+
+
+// --- Offline Recipes ---
+
+function getOfflineRecipes(userId: string): OfflineRecipe[] {
+    if (!userId) return [];
+    const key = `${OFFLINE_RECIPES_PREFIX}${userId}`;
+    return getFromStorage<OfflineRecipe>(key);
+}
+
+export async function saveRecipeForOffline(recipe: Recipe, userId: string): Promise<void> {
+    if (!userId) throw new Error("User ID is required.");
+
+    // 1. Generate the audio narration from the instructions
+    const instructionsText = recipe.instructions.join('\n');
+    const ttsResult = await recipeToSpeech(instructionsText);
+    
+    // 2. Create the offline recipe object
+    const offlineRecipe: OfflineRecipe = {
+        ...recipe,
+        audioDataUri: ttsResult.audioDataUri,
+    };
+
+    // 3. Save to localStorage
+    const key = `${OFFLINE_RECIPES_PREFIX}${userId}`;
+    const offlineRecipes = getOfflineRecipes(userId);
+    
+    // Remove if it already exists to add the new version
+    const updatedRecipes = offlineRecipes.filter(r => r.id !== recipe.id);
+    updatedRecipes.unshift(offlineRecipe); // Add to the front
+
+    setInStorage(key, updatedRecipes);
+}
+
+export function isRecipeAvailableOffline(recipeId: number, userId: string): boolean {
+    if (!userId) return false;
+    const offlineRecipes = getOfflineRecipes(userId);
+    return offlineRecipes.some(r => r.id === recipeId);
+}
+
+export function getOfflineRecipe(slug: string, userId: string): OfflineRecipe | undefined {
+    if (!userId) return undefined;
+    const offlineRecipes = getOfflineRecipes(userId);
+    return offlineRecipes.find(r => r.slug === slug);
 }
