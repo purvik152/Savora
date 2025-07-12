@@ -212,17 +212,19 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-           <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-                <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <RechartsTooltip content={<ChartTooltipContent chartConfig={chartConfig} />} />
-                <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
-                <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
-                <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
-              </BarChart>
-           </ResponsiveContainer>
+           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+            <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
+                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <RechartsTooltip content={<ChartTooltipContent chartConfig={chartConfig} />} />
+                    <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
+                    <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
+                    <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
+                </BarChart>
+            </ResponsiveContainer>
+           </ChartContainer>
         </CardContent>
       </Card>
 
