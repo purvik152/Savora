@@ -143,7 +143,7 @@ export default {
           '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
           '50%': { transform: 'translateY(22px) translateX(25px) rotate(-10deg)' },
         },
-         "in": {
+         "animate-in": {
           "0%": {
             opacity: "0",
             transform: "translateY(1rem)",
@@ -167,7 +167,7 @@ export default {
         'float-6': 'float-6 19s ease-in-out infinite',
         'float-7': 'float-7 20s ease-in-out infinite',
         'float-8': 'float-8 13s ease-in-out infinite',
-        in: 'in 500ms ease-out forwards var(--animation-delay, 0ms)',
+        'animate-in': 'animate-in 500ms ease-out forwards var(--animation-delay, 0ms)',
       },
     },
   },
