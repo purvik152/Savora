@@ -26,7 +26,7 @@ export type LatestFoodNewsOutput = z.infer<typeof LatestFoodNewsOutputSchema>;
 
 
 export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
-  // Correctly invoke the flow using .run() and passing undefined.
+  // Correctly invoke the flow by running it without any input.
   return latestFoodNewsFlow.run(undefined);
 }
 

@@ -1,3 +1,4 @@
+
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Github, Twitter, Youtube } from 'lucide-react';
 import Link from 'next/link';
@@ -19,10 +20,10 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground">Recipes</h3>
             <ul className="mt-4 space-y-2">
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Breakfast</Link></li>
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Lunch</Link></li>
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Dinner</Link></li>
-              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary">Desserts</Link></li>
+              <li><Link href="/recipes?q=breakfast" className="text-sm text-muted-foreground hover:text-primary">Breakfast</Link></li>
+              <li><Link href="/recipes?q=lunch" className="text-sm text-muted-foreground hover:text-primary">Lunch</Link></li>
+              <li><Link href="/recipes?q=dinner" className="text-sm text-muted-foreground hover:text-primary">Dinner</Link></li>
+              <li><Link href="/recipes?q=dessert" className="text-sm text-muted-foreground hover:text-primary">Desserts</Link></li>
             </ul>
           </div>
           <div>
