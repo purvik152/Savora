@@ -44,10 +44,12 @@ export default function RootLayout({
         >
           <AuthProvider>
             <DietProvider>
-              <FloatingDoodles />
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
+              <div className="relative flex flex-col min-h-screen">
+                <FloatingDoodles />
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
               <Toaster />
             </DietProvider>
           </AuthProvider>
