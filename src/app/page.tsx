@@ -125,13 +125,6 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
-  // Refs for animation targets
-  const heroRef = useRef<HTMLElement>(null);
-  const subCategoriesRef = useRef<HTMLElement>(null);
-  const mainCategoriesRef = useRef<HTMLElement>(null);
-  const searchSectionRef = useRef<HTMLElement>(null);
-  const communitySectionRef = useRef<HTMLElement>(null);
-  
   // State for voice search
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -227,36 +220,6 @@ export default function Home() {
   useEffect(() => {
     setHasMounted(true);
     setCommunityRecipes(getCommunityRecipes());
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const refs = [heroRef, subCategoriesRef, mainCategoriesRef, searchSectionRef, communitySectionRef];
-    refs.forEach(ref => {
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
-    });
-
-    return () => {
-      refs.forEach(ref => {
-        if (ref.current) {
-          // Check if observer is still connected before unobserving
-          if(observer && observer.unobserve) {
-            observer.unobserve(ref.current);
-          }
-        }
-      });
-    };
   }, []);
   
   useEffect(() => {
@@ -327,7 +290,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section ref={heroRef} className="mb-16 opacity-0" style={{'--animation-delay': '0.1s'} as React.CSSProperties}>
+      <section className="mb-16 animate-fade-in-up">
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -366,9 +329,7 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        ref={subCategoriesRef}
-        className="mb-16 opacity-0"
-        style={{'--animation-delay': '0.3s'} as React.CSSProperties}
+        className="mb-16 animate-fade-in-up [animation-delay:200ms]"
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -437,9 +398,7 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        ref={mainCategoriesRef}
-        className="opacity-0"
-        style={{'--animation-delay': '0.5s'} as React.CSSProperties}
+        className="animate-fade-in-up [animation-delay:400ms]"
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -474,9 +433,7 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      ref={searchSectionRef}
-      className="my-24 opacity-0"
-      style={{'--animation-delay': '0.7s'} as React.CSSProperties}
+      className="my-24 animate-fade-in-up [animation-delay:600ms]"
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -558,7 +515,7 @@ export default function Home() {
     </section>
 
     {/* Community Section */}
-    <section ref={communitySectionRef} className="my-24 opacity-0" style={{'--animation-delay': '0.9s'} as React.CSSProperties}>
+    <section className="my-24 animate-fade-in-up [animation-delay:800ms]">
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
             <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
