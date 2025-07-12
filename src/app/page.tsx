@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useDiet } from '@/contexts/DietContext';
 import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
 import { getCommunityRecipes, removeCommunityRecipe, CommunityRecipe } from '@/lib/community-recipes';
+import { WhatsInYourKitchen } from '@/components/home/WhatsInYourKitchen';
 
 
 const allFeaturedRecipes = [
@@ -322,7 +323,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16 opacity-0 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+      <section className="mb-16 animate-fade-in-up" style={{animationDelay: '150ms'}}>
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -361,8 +362,8 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 opacity-0 animate-fade-in-up"
-        style={{ animationDelay: '300ms' }}
+        className="mb-16 animate-fade-in-up"
+        style={{animationDelay: '300ms'}}
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -431,8 +432,8 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="opacity-0 animate-fade-in-up"
-        style={{ animationDelay: '450ms' }}
+        className="animate-fade-in-up"
+        style={{animationDelay: '450ms'}}
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -467,8 +468,8 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      className="my-24 opacity-0 animate-fade-in-up"
-      style={{ animationDelay: '600ms' }}
+      className="my-24 animate-fade-in-up"
+      style={{animationDelay: '600ms'}}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -549,9 +550,17 @@ export default function Home() {
       </div>
     </section>
 
+    {/* What's in your Kitchen Section */}
+    <section 
+        className="my-24 animate-fade-in-up"
+        style={{animationDelay: '750ms'}}
+    >
+        <WhatsInYourKitchen />
+    </section>
+
     {/* Community Section */}
-    <section className="my-24 opacity-0 animate-fade-in-up"
-        style={{ animationDelay: '750ms' }}
+    <section className="my-24 animate-fade-in-up"
+        style={{animationDelay: '900ms'}}
     >
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
