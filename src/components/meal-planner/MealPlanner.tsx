@@ -14,11 +14,11 @@ import { AddRecipeDialog } from './AddRecipeDialog';
 import {
   ChartContainer,
   ChartConfig,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChartTooltipContent } from '@/components/ui/chart';
 
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -207,28 +207,24 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         </CardContent>
       </Card>
       
-      <div className="overflow-x-auto pb-4">
-        <div className="grid grid-cols-7 gap-1 min-w-[1024px]">
-            {daysOfWeek.map((day, index) => {
-                const totals = dailyTotals[index];
-                return (
-                    <div key={day} className="flex flex-col gap-1">
-                        <div className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base whitespace-nowrap">{day}</div>
-                        <div className="flex-grow space-y-1 bg-card p-2">
-                            {renderMealSlot(day, 'Breakfast')}
-                            {renderMealSlot(day, 'Lunch')}
-                            {renderMealSlot(day, 'Dinner')}
-                        </div>
-                        <div className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
-                            <p><strong>Cals:</strong> {totals.calories}</p>
-                            <p><strong>P:</strong> {totals.protein}g</p>
-                            <p><strong>C:</strong> {totals.carbs}g</p>
-                            <p><strong>F:</strong> {totals.fat}g</p>
-                        </div>
-                    </div>
-                )
-            })}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
+        {daysOfWeek.map((day, index) => {
+          const totals = dailyTotals[index];
+          return (
+            <div key={day} className="flex flex-col gap-2 p-2 bg-card rounded-lg">
+              <div className="text-center font-bold">{day}</div>
+              <div className="flex-grow space-y-2">
+                {renderMealSlot(day, 'Breakfast')}
+                {renderMealSlot(day, 'Lunch')}
+                {renderMealSlot(day, 'Dinner')}
+              </div>
+              <div className="text-xs text-muted-foreground pt-2 mt-2 border-t">
+                  <p><strong>Cals:</strong> {totals.calories}</p>
+                  <p><strong>P:</strong> {totals.protein}g, <strong>C:</strong> {totals.carbs}g, <strong>F:</strong> {totals.fat}g</p>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       <AddRecipeDialog
