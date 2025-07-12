@@ -100,7 +100,7 @@ const allSubCategories = [
   { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: '/images/recipes/black-bean-burgers.jpg', hint: 'vegetarian dish', diet: 'veg' },
   { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food', diet: 'veg' },
   { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/instant-pot-pot-roast.jpg', hint: 'pot roast', diet: 'non-veg' },
-  { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'vegan pasta', diet: 'veg' },
+  { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/creamy-vegan-tomato-soup.jpg', hint: 'vegan pasta', diet: 'veg' },
   { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/meal-prep-burrito-bowls.jpg', hint: 'meal prep', diet: 'non-veg' },
   { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'tortilla soup', diet: 'veg' },
   { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
@@ -322,7 +322,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+      <section className="mb-16 opacity-0 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -361,7 +361,7 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 animate-fade-in-up"
+        className="mb-16 opacity-0 animate-fade-in-up"
         style={{ animationDelay: '300ms' }}
       >
         {hasMounted ? (
@@ -431,7 +431,7 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="animate-fade-in-up"
+        className="opacity-0 animate-fade-in-up"
         style={{ animationDelay: '450ms' }}
       >
         {hasMounted ? (
@@ -467,7 +467,7 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      className="my-24 animate-fade-in-up"
+      className="my-24 opacity-0 animate-fade-in-up"
       style={{ animationDelay: '600ms' }}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
@@ -550,7 +550,7 @@ export default function Home() {
     </section>
 
     {/* Community Section */}
-    <section className="my-24 animate-fade-in-up"
+    <section className="my-24 opacity-0 animate-fade-in-up"
         style={{ animationDelay: '750ms' }}
     >
         <div className="text-center mb-12">
