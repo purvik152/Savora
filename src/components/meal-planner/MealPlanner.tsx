@@ -138,14 +138,14 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
       <div className="h-full">
         <h4 className="font-semibold text-sm text-muted-foreground mb-2">{meal}</h4>
         {recipe ? (
-          <Card className="group relative min-h-[150px] h-full flex flex-col">
+          <Card className="group relative min-h-[120px] h-full flex flex-col">
             <Link href={`/recipes/${recipe.slug}`} className="block">
               <Image
                 src={recipe.image}
                 alt={recipe.title}
                 width={200}
                 height={120}
-                className="w-full h-24 object-cover rounded-t-lg"
+                className="w-full h-16 object-cover rounded-t-lg"
                 data-ai-hint={recipe.imageHint}
               />
             </Link>
@@ -164,7 +164,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         ) : (
           <button
             onClick={() => handleOpenDialog(day, meal)}
-            className="w-full min-h-[150px] h-full border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-muted-foreground hover:bg-secondary hover:border-solid hover:border-primary transition-all"
+            className="w-full min-h-[120px] h-full border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-muted-foreground hover:bg-secondary hover:border-solid hover:border-primary transition-all"
           >
             <PlusCircle className="h-6 w-6 mb-1" />
             <span className="text-xs">Add Recipe</span>
@@ -207,7 +207,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         </CardContent>
       </Card>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         {daysOfWeek.map((day, index) => {
           const totals = dailyTotals[index];
           return (
