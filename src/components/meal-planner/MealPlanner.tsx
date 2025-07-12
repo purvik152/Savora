@@ -182,7 +182,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
           <Trash2 className="mr-2 h-4 w-4" /> Clear Week
         </Button>
       </div>
-
+      
        <Card className="mb-8">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -206,27 +206,29 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
            </ChartContainer>
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-1">
-        {daysOfWeek.map((day, index) => {
-            const totals = dailyTotals[index];
-            return (
-                <div key={day} className="flex flex-col gap-1">
-                    <div className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base">{day}</div>
-                    <div className="flex-grow space-y-1 bg-card p-2">
-                        {renderMealSlot(day, 'Breakfast')}
-                        {renderMealSlot(day, 'Lunch')}
-                        {renderMealSlot(day, 'Dinner')}
+      
+      <div className="overflow-x-auto pb-4">
+        <div className="grid grid-cols-7 gap-1 min-w-[1024px]">
+            {daysOfWeek.map((day, index) => {
+                const totals = dailyTotals[index];
+                return (
+                    <div key={day} className="flex flex-col gap-1">
+                        <div className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base whitespace-nowrap">{day}</div>
+                        <div className="flex-grow space-y-1 bg-card p-2">
+                            {renderMealSlot(day, 'Breakfast')}
+                            {renderMealSlot(day, 'Lunch')}
+                            {renderMealSlot(day, 'Dinner')}
+                        </div>
+                        <div className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
+                            <p><strong>Cals:</strong> {totals.calories}</p>
+                            <p><strong>P:</strong> {totals.protein}g</p>
+                            <p><strong>C:</strong> {totals.carbs}g</p>
+                            <p><strong>F:</strong> {totals.fat}g</p>
+                        </div>
                     </div>
-                    <div className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
-                        <p><strong>Cals:</strong> {totals.calories}</p>
-                        <p><strong>P:</strong> {totals.protein}g</p>
-                        <p><strong>C:</strong> {totals.carbs}g</p>
-                        <p><strong>F:</strong> {totals.fat}g</p>
-                    </div>
-                </div>
-            )
-        })}
+                )
+            })}
+        </div>
       </div>
 
       <AddRecipeDialog
