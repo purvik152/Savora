@@ -110,7 +110,8 @@ const ChartTooltipContent = React.forwardRef<
       hideIndicator?: boolean
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
-      labelKey?: string
+      labelKey?: string,
+      chartConfig?: ChartConfig
     }
 >(
   (
@@ -128,10 +129,13 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
+      chartConfig,
     },
     ref
   ) => {
-    const { config } = useChart()
+    const { config: contextConfig } = useChart()
+    const config = chartConfig || contextConfig;
+
 
     const tooltipLabel = React.useMemo(() => {
       if (hideLabel || !payload?.length) {

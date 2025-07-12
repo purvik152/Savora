@@ -14,12 +14,11 @@ import { AddRecipeDialog } from './AddRecipeDialog';
 import {
   ChartContainer,
   ChartConfig,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { ChartTooltipContent } from '@/components/ui/chart';
 
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -35,7 +34,11 @@ const chartConfig = {
   fat: { label: 'Fat (g)', color: 'hsl(var(--chart-4))' },
 } satisfies ChartConfig;
 
-export function MealPlanner() {
+interface MealPlannerProps {
+  initialPlan?: MealPlan | null;
+}
+
+export function MealPlanner({ initialPlan }: MealPlannerProps) {
   const { user, loading } = useAuth();
   const [mealPlan, setMealPlan] = useState<MealPlan>(initialMealPlan);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -49,14 +52,24 @@ export function MealPlanner() {
         router.push('/login');
         return;
       }
-      const savedPlan = getMealPlan(user.uid);
-      if (savedPlan) {
-        // Ensure all days are present
-        const fullPlan = { ...initialMealPlan, ...savedPlan };
+      
+      let planToLoad: MealPlan | null;
+      if (initialPlan) {
+        // If an AI plan is passed, use it and save it
+        planToLoad = initialPlan;
+        saveMealPlan(initialPlan, user.uid);
+      } else {
+        // Otherwise, load from storage
+        planToLoad = getMealPlan(user.uid);
+      }
+      
+      if (planToLoad) {
+        const fullPlan = { ...initialMealPlan, ...planToLoad };
         setMealPlan(fullPlan);
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, initialPlan]);
+
 
   const updateMealPlan = (newPlan: MealPlan) => {
     if (!user) return;
@@ -169,27 +182,26 @@ export function MealPlanner() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
-        {daysOfWeek.map(day => (
-          <div key={day} className="text-center font-bold p-2 bg-card rounded-t-lg">{day}</div>
-        ))}
-        {daysOfWeek.map(day => (
-          <div key={`${day}-B`} className="bg-card p-2 h-48">{renderMealSlot(day, 'Breakfast')}</div>
-        ))}
-        {daysOfWeek.map(day => (
-          <div key={`${day}-L`} className="bg-card p-2 h-48">{renderMealSlot(day, 'Lunch')}</div>
-        ))}
-        {daysOfWeek.map(day => (
-          <div key={`${day}-D`} className="bg-card p-2 h-48">{renderMealSlot(day, 'Dinner')}</div>
-        ))}
-        {dailyTotals.map((totals, index) => (
-          <div key={`${daysOfWeek[index]}-totals`} className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
-             <p><strong>Cals:</strong> {totals.calories}</p>
-             <p><strong>P:</strong> {totals.protein}g</p>
-             <p><strong>C:</strong> {totals.carbs}g</p>
-             <p><strong>F:</strong> {totals.fat}g</p>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1">
+          {daysOfWeek.map(day => (
+            <div key={day} className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base">{day}</div>
+          ))}
+          {/* Create a full grid layout for better responsiveness */}
+          {daysOfWeek.map(day => (
+            <div key={`${day}-content`} className="space-y-1 bg-card p-2">
+                {renderMealSlot(day, 'Breakfast')}
+                {renderMealSlot(day, 'Lunch')}
+                {renderMealSlot(day, 'Dinner')}
+            </div>
+          ))}
+          {dailyTotals.map((totals, index) => (
+            <div key={`${daysOfWeek[index]}-totals`} className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
+                <p><strong>Cals:</strong> {totals.calories}</p>
+                <p><strong>P:</strong> {totals.protein}g</p>
+                <p><strong>C:</strong> {totals.carbs}g</p>
+                <p><strong>F:</strong> {totals.fat}g</p>
+            </div>
+          ))}
       </div>
       
       <Card className="mt-12">
@@ -200,17 +212,17 @@ export function MealPlanner() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-           <ChartContainer config={chartConfig} className="w-full h-[400px]">
-            <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-              <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-              <RechartsTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
-              <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
-              <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
-            </BarChart>
-           </ChartContainer>
+           <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
+                <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                <RechartsTooltip content={<ChartTooltipContent chartConfig={chartConfig} />} />
+                <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
+                <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
+                <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
+              </BarChart>
+           </ResponsiveContainer>
         </CardContent>
       </Card>
 
