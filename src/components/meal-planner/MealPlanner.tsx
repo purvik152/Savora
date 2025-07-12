@@ -176,11 +176,36 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
   
   return (
     <>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Your Week at a Glance</h2>
         <Button onClick={handleClearWeek} variant="destructive" size="sm">
           <Trash2 className="mr-2 h-4 w-4" /> Clear Week
         </Button>
       </div>
+
+       <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart2 />
+            Weekly Nutrition Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pl-2">
+           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
+                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <RechartsTooltip content={<ChartTooltipContent chartConfig={chartConfig} />} />
+                    <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
+                    <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
+                    <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
+                </BarChart>
+            </ResponsiveContainer>
+           </ChartContainer>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-1">
         {daysOfWeek.map((day, index) => {
@@ -203,30 +228,6 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
             )
         })}
       </div>
-      
-      <Card className="mt-12">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart2 />
-            Weekly Nutrition Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pl-2">
-           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-            <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={nutritionChartData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                    <RechartsTooltip content={<ChartTooltipContent chartConfig={chartConfig} />} />
-                    <Bar dataKey="calories" stackId="a" fill="var(--color-calories)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="protein" stackId="a" fill="var(--color-protein)" />
-                    <Bar dataKey="carbs" stackId="a" fill="var(--color-carbs)" />
-                    <Bar dataKey="fat" stackId="a" fill="var(--color-fat)" />
-                </BarChart>
-            </ResponsiveContainer>
-           </ChartContainer>
-        </CardContent>
-      </Card>
 
       <AddRecipeDialog
         open={isDialogOpen}
