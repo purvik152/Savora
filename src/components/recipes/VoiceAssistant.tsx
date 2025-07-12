@@ -12,10 +12,19 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 interface VoiceAssistantProps {
   recipeTitle: string;
   instructions: string[];
+  language: string;
   onStartCooking?: () => void;
 }
 
-export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: VoiceAssistantProps) {
+const languageToCode: { [key: string]: string } = {
+    english: 'en-US',
+    spanish: 'es-ES',
+    french: 'fr-FR',
+    german: 'de-DE',
+    hindi: 'hi-IN',
+};
+
+export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking }: VoiceAssistantProps) {
   const { toast } = useToast();
   
   const [hasMounted, setHasMounted] = useState(false);
@@ -76,6 +85,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
   // --- Audio Controls using Web Speech API ---
   const playAudio = useCallback((text: string, options: { isFinal?: boolean; autoListen?: boolean } = {}) => {
     const { isFinal = false, autoListen = true } = options;
+    const langCode = languageToCode[language] || 'en-US';
 
     if (!('speechSynthesis' in window)) {
         console.error("Speech Synthesis not supported.");
@@ -85,7 +95,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
     window.speechSynthesis.cancel(); // Stop any previous speech
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = navigator.language || 'en-US';
+    utterance.lang = langCode;
     utterance.onstart = () => {
         setIsSpeaking(true);
         setIsPaused(false);
@@ -111,7 +121,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
     };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [toast, startListening]);
+  }, [toast, startListening, language]);
 
   const pauseAudio = useCallback(() => {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
@@ -140,14 +150,14 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
     stopAudio();
 
     try {
-      const lang = navigator.language || 'en-US';
+      const langCode = languageToCode[language] || 'en-US';
       const assistantInput: RecipeAssistantInput = {
         recipeTitle,
         instructions,
         currentStep,
         currentInstruction: instructions[currentStep] || "You are at the start.",
         userQuery: query,
-        language: lang,
+        language: langCode,
       };
 
       const assistantResult = await recipeAssistant(assistantInput);
@@ -185,7 +195,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
       setAssistantResponse('An error occurred. Please try again.');
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio, playAudio]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio, playAudio, language]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
@@ -201,7 +211,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = true;
-    recognition.lang = navigator.language || 'en-US';
+    recognition.lang = languageToCode[language] || 'en-US';
     
     recognition.onstart = () => {
       finalTranscriptRef.current = '';
@@ -253,7 +263,7 @@ export function VoiceAssistant({ recipeTitle, instructions, onStartCooking }: Vo
         recognitionRef.current.abort();
       }
     }
-  }, [hasMounted, handleUserQuery, toast]);
+  }, [hasMounted, handleUserQuery, toast, language]);
   
   // --- User Actions ---
   const startSession = () => {

@@ -612,6 +612,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                     <VoiceAssistant
                       recipeTitle={recipe.title}
                       instructions={displayedInstructions}
+                      language={language}
                       onStartCooking={handleStartCooking}
                     />
                   </div>
