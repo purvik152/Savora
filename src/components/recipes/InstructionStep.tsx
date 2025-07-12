@@ -23,8 +23,25 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
+  const speak = useCallback((text: string) => {
+    // Ensure this only runs on the client
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = navigator.language || 'en-US';
+      utterance.onerror = (event) => {
+        console.error("SpeechSynthesis Error", event);
+        toast({
+            variant: "destructive",
+            title: "Voice Error",
+            description: "Sorry, could not play the voice reminder.",
+        });
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [toast]);
+  
   useEffect(() => {
     const match = step.match(timeRegex);
     if (match) {
@@ -40,27 +57,14 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
       setDuration(seconds);
       setTimeLeft(seconds);
     }
+     // Cleanup function to cancel speech synthesis when the component unmounts
+     return () => {
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+    };
   }, [step]);
 
-  const speak = useCallback((text: string) => {
-    if ('speechSynthesis' in window) {
-      // Cancel any ongoing speech before starting a new one
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.onerror = (event) => {
-        console.error("SpeechSynthesis Error", event);
-        toast({
-            variant: "destructive",
-            title: "Voice Error",
-            description: "Sorry, could not play the voice reminder.",
-        });
-      };
-      utteranceRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
-    }
-  }, [toast]);
-  
   useEffect(() => {
     if (isActive && !isFinished) {
       intervalRef.current = setInterval(() => {
@@ -93,7 +97,7 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
       setTimeLeft(duration);
     }
     // Stop any speech if reset is hit
-    if (utteranceRef.current) {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel();
     }
   };
