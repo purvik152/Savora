@@ -74,7 +74,7 @@ const allSubCategories = [
   { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
   { name: 'Breakfast', href: '/recipes?q=breakfast', image: '/images/recipes/fluffy-pancakes.jpg', hint: 'pancakes breakfast', diet: 'veg' },
   { name: 'Lunch', href: '/recipes?q=lunch', image: '/images/recipes/chicken-caesar-wrap.jpg', hint: 'lunch wrap', diet: 'non-veg' },
-  { name: 'Desserts', href: '/recipes?q=dessert', image: 'https://placehold.co/112x112.png', hint: 'chocolate cake', diet: 'veg' },
+  { name: 'Desserts', href: '/recipes?q=dessert', image: '/images/recipes/classic-chocolate-cake.jpg', hint: 'chocolate cake', diet: 'veg' },
 ];
 
 const vegMainCategories = [
@@ -329,7 +329,8 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 animate-fade-in-up [animation-delay:200ms]"
+        className="mb-16 animate-fade-in-up"
+        style={{ animationDelay: '200ms' }}
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -398,7 +399,8 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="animate-fade-in-up [animation-delay:400ms]"
+        className="animate-fade-in-up"
+        style={{ animationDelay: '400ms' }}
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -433,7 +435,8 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      className="my-24 animate-fade-in-up [animation-delay:600ms]"
+      className="my-24 animate-fade-in-up"
+      style={{ animationDelay: '600ms' }}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -515,7 +518,9 @@ export default function Home() {
     </section>
 
     {/* Community Section */}
-    <section className="my-24 animate-fade-in-up [animation-delay:800ms]">
+    <section className="my-24 animate-fade-in-up"
+        style={{ animationDelay: '800ms' }}
+    >
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
             <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
