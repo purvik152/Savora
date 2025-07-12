@@ -37,6 +37,38 @@ const allFeaturedRecipes = [
     diet: 'non-veg'
   },
   {
+    name: 'Best-Ever Black Bean Burgers',
+    image: '/images/recipes/black-bean-burgers.jpg',
+    hint: 'bean burger',
+    description: 'Hearty and flavorful homemade vegetarian burgers that even meat-eaters will love.',
+    href: '/recipes/black-bean-burgers',
+    diet: 'veg'
+  },
+  {
+    name: 'Sheet Pan Salmon & Veggies',
+    image: '/images/recipes/sheet-pan-salmon-and-veggies.jpg',
+    hint: 'salmon veggies',
+    description: 'A healthy, delicious, and incredibly easy one-pan dinner for minimal cleanup.',
+    href: '/recipes/sheet-pan-salmon-and-veggies',
+    diet: 'non-veg'
+  },
+  {
+    name: 'Creamy Mushroom Risotto',
+    image: '/images/recipes/creamy-mushroom-risotto.jpg',
+    imageHint: 'mushroom risotto',
+    description: 'A creamy and savory vegetarian risotto. A true comfort food classic.',
+    href: '/recipes/creamy-mushroom-risotto',
+    diet: 'veg'
+  },
+  {
+    name: 'Chicken Tikka Masala',
+    image: '/images/recipes/chicken-tikka-masala.jpg',
+    imageHint: 'chicken curry',
+    description: 'A rich and creamy curry that is a staple in Indian cuisine. Perfect with naan or rice.',
+    href: '/recipes/chicken-tikka-masala',
+    diet: 'non-veg'
+  },
+  {
     name: 'Classic Beef Lasagna',
     image: '/images/recipes/classic-beef-lasagna.jpg',
     hint: 'lasagna dinner',
@@ -290,7 +322,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16 animate-fade-in-up">
+      <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -330,7 +362,7 @@ export default function Home() {
       {subCategories.length > 0 && (
       <section
         className="mb-16 animate-fade-in-up"
-        style={{ animationDelay: '200ms' }}
+        style={{ animationDelay: '300ms' }}
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -400,7 +432,7 @@ export default function Home() {
       {mainCategories.length > 0 && (
       <section
         className="animate-fade-in-up"
-        style={{ animationDelay: '400ms' }}
+        style={{ animationDelay: '450ms' }}
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -519,7 +551,7 @@ export default function Home() {
 
     {/* Community Section */}
     <section className="my-24 animate-fade-in-up"
-        style={{ animationDelay: '800ms' }}
+        style={{ animationDelay: '750ms' }}
     >
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
