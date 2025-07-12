@@ -20,7 +20,7 @@ const RecipeInfoSchema = z.object({
   allergens: z.array(z.string()).optional(),
 });
 
-export const GenerateMealPlanInputSchema = z.object({
+const GenerateMealPlanInputSchema = z.object({
   diet: z.enum(['veg', 'non-veg']).describe("The user's dietary preference."),
   targetCalories: z.number().describe('The user\'s target daily calorie intake.'),
   allergies: z.array(z.string()).describe('A list of allergies to avoid.'),
@@ -35,7 +35,7 @@ const MealSchema = z.object({
   Dinner: z.string().nullable().describe('The slug of the recipe for dinner.'),
 });
 
-export const GenerateMealPlanOutputSchema = z.object({
+const GenerateMealPlanOutputSchema = z.object({
     Sunday: MealSchema,
     Monday: MealSchema,
     Tuesday: MealSchema,
