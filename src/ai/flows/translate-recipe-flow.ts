@@ -14,7 +14,7 @@ import {z} from 'zod';
 const TranslateRecipeInputSchema = z.object({
   ingredients: z.array(z.string()).describe('The list of ingredients to translate.'),
   instructions: z.array(z.string()).describe('The list of instructions to translate.'),
-  targetLanguage: z.string().describe('The language to translate the content into (e.g., "Spanish", "French").'),
+  targetLanguage: z.string().describe('The language to translate the content into (e.g., "Spanish", "French", "Bengali").'),
 });
 export type TranslateRecipeInput = z.infer<typeof TranslateRecipeInputSchema>;
 

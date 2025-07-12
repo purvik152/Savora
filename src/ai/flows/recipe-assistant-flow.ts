@@ -18,7 +18,7 @@ const RecipeAssistantInputSchema = z.object({
   currentStep: z.number().describe('The index of the current instruction step (0-based).'),
   currentInstruction: z.string().describe('The text for the current instruction step.'),
   userQuery: z.string().describe("The user's spoken query or command."),
-  language: z.string().describe("The user's preferred language (e.g., 'en-US', 'es-ES')."),
+  language: z.string().describe("The user's preferred language (e.g., 'en-US', 'es-ES', 'bn-IN')."),
 });
 export type RecipeAssistantInput = z.infer<typeof RecipeAssistantInputSchema>;
 
@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
   output: {schema: RecipeAssistantOutputSchema},
   prompt: `You are Savora, a friendly and helpful voice assistant for cooking. You are guiding a user through the recipe for "{{recipeTitle}}".
 
-The user's preferred language is {{language}}. YOU MUST respond clearly and concisely in this language.
+The user's preferred language is {{language}}. YOU MUST respond clearly and concisely in this language. For example, if the language is 'bn-IN', you must respond in Bengali.
 
 **Current State:**
 - The user is on step with index {{currentStep}}.
