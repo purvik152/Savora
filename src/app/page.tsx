@@ -323,7 +323,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16 animate-fade-in-up" style={{animationDelay: '150ms'}}>
+      <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -363,20 +363,20 @@ export default function Home() {
       {subCategories.length > 0 && (
       <section
         className="mb-16 animate-fade-in-up"
-        style={{animationDelay: '300ms'}}
+        style={{ animationDelay: '300ms' }}
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
               {subCategoriesFirstRow.map((category) => (
-                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
-                  <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36">
+                  <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
                       alt={category.name}
                       fill
-                      className="object-cover rounded-lg"
-                      sizes="112px"
+                      className="object-cover"
+                      sizes="144px"
                       data-ai-hint={category.hint}
                     />
                   </div>
@@ -388,14 +388,14 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
               {subCategoriesSecondRow.map((category) => (
-                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-28">
-                  <div className="relative h-28 w-28 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36">
+                  <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
                       alt={category.name}
                       fill
-                      className="object-cover rounded-lg"
-                      sizes="112px"
+                      className="object-cover"
+                      sizes="144px"
                       data-ai-hint={category.hint}
                     />
                   </div>
@@ -410,17 +410,17 @@ export default function Home() {
           <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
               {subCategoriesFirstRow.map((category) => (
-                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
-                  <Skeleton className="h-28 w-28 rounded-full" />
-                  <Skeleton className="h-4 w-20 rounded-md" />
+                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-36">
+                  <Skeleton className="h-36 w-36 rounded-full" />
+                  <Skeleton className="h-4 w-24 rounded-md" />
                 </div>
               ))}
             </div>
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
               {subCategoriesSecondRow.map((category) => (
-                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-28">
-                  <Skeleton className="h-28 w-28 rounded-full" />
-                  <Skeleton className="h-4 w-20 rounded-md" />
+                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-36">
+                  <Skeleton className="h-36 w-36 rounded-full" />
+                  <Skeleton className="h-4 w-24 rounded-md" />
                 </div>
               ))}
             </div>
@@ -433,7 +433,7 @@ export default function Home() {
       {mainCategories.length > 0 && (
       <section
         className="animate-fade-in-up"
-        style={{animationDelay: '450ms'}}
+        style={{ animationDelay: '450ms' }}
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -469,7 +469,7 @@ export default function Home() {
     {/* Search Section */}
     <section
       className="my-24 animate-fade-in-up"
-      style={{animationDelay: '600ms'}}
+      style={{ animationDelay: '600ms' }}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -553,14 +553,14 @@ export default function Home() {
     {/* What's in your Kitchen Section */}
     <section 
         className="my-24 animate-fade-in-up"
-        style={{animationDelay: '750ms'}}
+        style={{ animationDelay: '750ms' }}
     >
         <WhatsInYourKitchen />
     </section>
 
     {/* Community Section */}
     <section className="my-24 animate-fade-in-up"
-        style={{animationDelay: '900ms'}}
+        style={{ animationDelay: '900ms' }}
     >
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
