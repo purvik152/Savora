@@ -182,26 +182,26 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1">
-          {daysOfWeek.map(day => (
-            <div key={day} className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base">{day}</div>
-          ))}
-          {/* Create a full grid layout for better responsiveness */}
-          {daysOfWeek.map(day => (
-            <div key={`${day}-content`} className="space-y-1 bg-card p-2">
-                {renderMealSlot(day, 'Breakfast')}
-                {renderMealSlot(day, 'Lunch')}
-                {renderMealSlot(day, 'Dinner')}
-            </div>
-          ))}
-          {dailyTotals.map((totals, index) => (
-            <div key={`${daysOfWeek[index]}-totals`} className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
-                <p><strong>Cals:</strong> {totals.calories}</p>
-                <p><strong>P:</strong> {totals.protein}g</p>
-                <p><strong>C:</strong> {totals.carbs}g</p>
-                <p><strong>F:</strong> {totals.fat}g</p>
-            </div>
-          ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-1">
+        {daysOfWeek.map((day, index) => {
+            const totals = dailyTotals[index];
+            return (
+                <div key={day} className="flex flex-col gap-1">
+                    <div className="text-center font-bold p-2 bg-card rounded-t-lg text-sm md:text-base">{day}</div>
+                    <div className="flex-grow space-y-1 bg-card p-2">
+                        {renderMealSlot(day, 'Breakfast')}
+                        {renderMealSlot(day, 'Lunch')}
+                        {renderMealSlot(day, 'Dinner')}
+                    </div>
+                    <div className="bg-card p-2 rounded-b-lg text-xs text-muted-foreground">
+                        <p><strong>Cals:</strong> {totals.calories}</p>
+                        <p><strong>P:</strong> {totals.protein}g</p>
+                        <p><strong>C:</strong> {totals.carbs}g</p>
+                        <p><strong>F:</strong> {totals.fat}g</p>
+                    </div>
+                </div>
+            )
+        })}
       </div>
       
       <Card className="mt-12">
