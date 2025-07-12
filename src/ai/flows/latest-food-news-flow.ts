@@ -27,7 +27,7 @@ export type LatestFoodNewsOutput = z.infer<typeof LatestFoodNewsOutputSchema>;
 
 export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
   // Correctly invoke the flow by running it without any input.
-  return latestFoodNewsFlow.run(undefined);
+  return latestFoodNewsFlow(undefined);
 }
 
 // This is not a tool for an LLM to decide to use, but a direct function call.
@@ -37,8 +37,10 @@ async function getNewsFromAPI(): Promise<NewsArticle[]> {
     throw new Error("NewsAPI key not found. Please sign up for a free key at NewsAPI.org and add it to your .env file.");
   }
   
-  // Query for general food, nutrition, health, and recipe topics
-  const url = `https://newsapi.org/v2/top-headlines?category=health&language=en&pageSize=10&apiKey=${apiKey}`;
+  // Query for general food, nutrition, health topics using the /everything endpoint,
+  // which is more flexible on the free plan.
+  const query = encodeURIComponent('food OR health OR nutrition');
+  const url = `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`;
 
   const response = await fetch(url);
   if (!response.ok) {
