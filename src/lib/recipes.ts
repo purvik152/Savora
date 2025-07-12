@@ -14,6 +14,7 @@ export interface Recipe {
   servings: string;
   ingredients: string[];
   instructions: string[];
+  allergens?: ('nuts' | 'dairy' | 'gluten')[];
   nutrition: {
     calories: string;
     protein: string;
@@ -56,6 +57,7 @@ export const recipes: Recipe[] = [
       'Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.',
       'Brown on both sides and serve hot with your favorite toppings.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '300 kcal',
       protein: '8g',
@@ -94,6 +96,7 @@ export const recipes: Recipe[] = [
       'Spread the mashed avocado over the toast.',
       'Top with the cooked egg. Sprinkle with red pepper flakes and serve immediately.',
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '350 kcal',
       protein: '15g',
@@ -131,6 +134,7 @@ export const recipes: Recipe[] = [
       'Arrange your favorite toppings over the smoothie bowl.',
       'Serve immediately and enjoy with a spoon.',
     ],
+    allergens: ['nuts'],
     nutrition: {
       calories: '400 kcal',
       protein: '10g',
@@ -170,6 +174,7 @@ export const recipes: Recipe[] = [
       'Place the soaked bread onto the hot skillet and cook for 2-3 minutes per side, until golden brown.',
       'Serve immediately with maple syrup and fresh fruit.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '15g',
@@ -209,6 +214,7 @@ export const recipes: Recipe[] = [
       'You can either serve immediately or place the burrito seam-side down on a hot skillet to toast for a minute per side.',
       'Repeat with the second tortilla.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '550 kcal',
       protein: '30g',
@@ -293,6 +299,7 @@ export const recipes: Recipe[] = [
         'Drizzle with olive oil and balsamic glaze.',
         'Place the top slice of bread on, press gently, and serve immediately.'
     ],
+    allergens: ['gluten', 'dairy', 'nuts'],
     nutrition: {
       calories: '500 kcal',
       protein: '20g',
@@ -332,6 +339,7 @@ export const recipes: Recipe[] = [
         'Fold in the sides and roll up the wraps tightly.',
         'Slice in half and serve.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '480 kcal',
       protein: '25g',
@@ -414,6 +422,7 @@ export const recipes: Recipe[] = [
       'Spoon the tuna salad into the avocado halves.',
       'Garnish with extra green onion and serve immediately.'
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '30g',
@@ -462,6 +471,7 @@ export const recipes: Recipe[] = [
       'Add the sliced chicken and feta cheese to the salad bowl.',
       'Drizzle with dressing, toss gently, and serve immediately.',
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '550 kcal',
       protein: '45g',
@@ -512,6 +522,7 @@ export const recipes: Recipe[] = [
       'Grill or pan-fry over medium-high heat for 3-4 minutes per side, until cooked through and slightly charred.',
       'Serve the hot skewers immediately with the peanut sauce for dipping, and a side of carrots, cucumber, and cilantro.',
     ],
+    allergens: ['nuts', 'gluten'],
     nutrition: {
       calories: '650 kcal',
       protein: '40g',
@@ -556,6 +567,7 @@ export const recipes: Recipe[] = [
       "Add cooked pasta to the sauce, adding pasta water if too thick.",
       "Stir in fresh basil and serve immediately.",
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: "650 kcal",
       protein: "25g",
@@ -637,6 +649,7 @@ export const recipes: Recipe[] = [
       'Heat a lightly oiled skillet over medium heat. Cook burgers for 5-7 minutes per side, until browned and firm.',
       'Serve on buns with your favorite toppings like lettuce, tomato, and avocado.',
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '400 kcal',
       protein: '20g',
@@ -721,6 +734,7 @@ export const recipes: Recipe[] = [
       'Return the beef to the skillet. Pour the sauce over everything and toss to combine until the sauce has thickened.',
       'Serve immediately over cooked rice.',
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '500 kcal',
       protein: '35g',
@@ -768,6 +782,7 @@ export const recipes: Recipe[] = [
       'Simmer for 10-15 minutes until chicken is cooked through and sauce has thickened.',
       'Garnish with cilantro and serve with rice or naan bread.',
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '600 kcal',
       protein: '50g',
@@ -805,6 +820,7 @@ export const recipes: Recipe[] = [
       'Spoon the beef mixture into the shells.',
       'Set up a topping bar with lettuce, tomatoes, cheese, salsa, and sour cream, and let everyone build their own tacos.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '25g',
@@ -892,6 +908,7 @@ export const recipes: Recipe[] = [
       'Remove from heat, stir in the parsley, and season with salt.',
       'Serve immediately in the skillet with crusty bread for dipping in the garlic oil.',
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '350 kcal',
       protein: '22g',
@@ -943,6 +960,7 @@ export const recipes: Recipe[] = [
       'Repeat layers. Top with remaining meat sauce and mozzarella and Parmesan cheese.',
       'Bake for 25-30 minutes or until bubbly. Let stand for 10 minutes before serving.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '750 kcal',
       protein: '45g',
@@ -985,6 +1003,7 @@ export const recipes: Recipe[] = [
         'Drizzle with Caesar dressing and toss gently to coat.',
         'Serve immediately.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: { calories: '550 kcal', protein: '40g', carbohydrates: '15g', fat: '35g', fiber: '4g', sugar: '5g', sodium: '900mg' }
   },
   {
@@ -1023,6 +1042,7 @@ export const recipes: Recipe[] = [
         'Cover and refrigerate for at least 30 minutes to allow the flavors to meld.',
         'Serve chilled or at room temperature.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: { calories: '480 kcal', protein: '15g', carbohydrates: '55g', fat: '22g', fiber: '6g', sugar: '8g', sodium: '1200mg' }
   },
   {
@@ -1060,6 +1080,7 @@ export const recipes: Recipe[] = [
       'When the rice is tender and creamy, stir in the cooked mushrooms, Parmesan cheese, and butter.',
       'Season with salt and pepper. Garnish with fresh parsley before serving.',
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '550 kcal',
       protein: '15g',
@@ -1103,6 +1124,7 @@ export const recipes: Recipe[] = [
       'Spoon the filling into the partially baked pepper halves.',
       'Bake for an additional 15-20 minutes, or until the peppers are tender and the filling is heated through.',
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '350 kcal',
       protein: '15g',
@@ -1153,6 +1175,7 @@ export const recipes: Recipe[] = [
       'Top with the mashed potatoes, spreading them evenly. Use a fork to create some texture on top.',
       'Bake for 20-25 minutes, or until the filling is bubbly and the potato topping is golden brown.',
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '480 kcal',
       protein: '20g',
@@ -1340,6 +1363,7 @@ export const recipes: Recipe[] = [
       'Top with lettuce and tomato, then add the remaining two slices of bread to complete the sandwiches.',
       'Serve immediately.'
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '450 kcal',
       protein: '15g',
@@ -1516,6 +1540,7 @@ export const recipes: Recipe[] = [
       'Crush the dried fenugreek leaves between your palms and stir them into the curry.',
       'Serve hot with naan or rice.'
     ],
+    allergens: ['nuts', 'dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '15g',
@@ -1562,6 +1587,7 @@ export const recipes: Recipe[] = [
       'Sprinkle with garam masala and stir gently.',
       'Serve hot with flatbread or rice.'
     ],
+    allergens: ['nuts', 'dairy'],
     nutrition: {
       calories: '380 kcal',
       protein: '10g',
@@ -1608,6 +1634,7 @@ export const recipes: Recipe[] = [
       'Stir in the garam masala and cook for a final 5 minutes.',
       'Serve hot, garnished with fresh cilantro.'
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '600 kcal',
       protein: '50g',
@@ -1651,6 +1678,7 @@ export const recipes: Recipe[] = [
       'Remove from heat, stir in the lemon juice and parsley. Spoon the sauce over the scallops.',
       'Serve immediately.'
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '35g',
@@ -1693,6 +1721,7 @@ export const recipes: Recipe[] = [
       'Stir in the coconut milk or cream. Season with salt and pepper.',
       'Serve hot, garnished with a swirl of cream and toasted pumpkin seeds if desired.'
     ],
+    allergens: ['dairy'],
     nutrition: {
       calories: '250 kcal',
       protein: '4g',
@@ -1736,6 +1765,7 @@ export const recipes: Recipe[] = [
       'Add the cooked noodles and the sauce to the skillet. Toss everything together until the noodles are well coated.',
       'Serve immediately, garnished with sesame seeds and chopped green onions.'
     ],
+    allergens: ['gluten'],
     nutrition: {
       calories: '400 kcal',
       protein: '12g',
@@ -1778,6 +1808,7 @@ export const recipes: Recipe[] = [
       'Repeat with the remaining ingredients to make a second quesadilla.',
       'Cut into wedges and serve hot with sour cream and salsa.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '550 kcal',
       protein: '25g',
@@ -1824,6 +1855,7 @@ export const recipes: Recipe[] = [
       'Cool in pans for 10 minutes before removing to wire racks to cool completely.',
       'Frost with your favorite chocolate frosting.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '450 kcal',
       protein: '6g',
@@ -1868,6 +1900,7 @@ export const recipes: Recipe[] = [
       'Turn off the oven and let the cheesecake cool in the oven with the door closed for 2 hours.',
       'Chill in the refrigerator for at least 4 hours before serving.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '550 kcal',
       protein: '8g',
@@ -1911,6 +1944,7 @@ export const recipes: Recipe[] = [
       'Bake for 35-45 minutes, or until the fruit is bubbly and the topping is golden brown.',
       'Let cool slightly before serving.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '480 kcal',
       protein: '4g',
@@ -1955,6 +1989,7 @@ export const recipes: Recipe[] = [
       'Cover and refrigerate for at least 4 hours, or overnight.',
       'Just before serving, dust generously with cocoa powder.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '500 kcal',
       protein: '8g',
@@ -1996,6 +2031,7 @@ export const recipes: Recipe[] = [
       'Let the tart cool completely on a wire rack.',
       'Refrigerate for at least 1 hour before serving. Dust with powdered sugar just before slicing.'
     ],
+    allergens: ['gluten', 'dairy'],
     nutrition: {
       calories: '420 kcal',
       protein: '6g',

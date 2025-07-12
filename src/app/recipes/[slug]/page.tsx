@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart, AlertTriangle } from "lucide-react";
 import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { InstructionStep } from '@/components/recipes/InstructionStep';
@@ -105,6 +105,8 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   const [isOrdering, setIsOrdering] = useState(false);
 
   const isProcessing = isAdjusting || isTranslating;
+  
+  const allergens = useMemo(() => recipe.allergens || [], [recipe.allergens]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -350,6 +352,12 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     return control;
   }
   
+  const checkAllergen = (ingredient: string): boolean => {
+    if (!allergens.length) return false;
+    const lowerIngredient = ingredient.toLowerCase();
+    return allergens.some(allergen => lowerIngredient.includes(allergen));
+  };
+  
   return (
     <div>
       <div className="container mx-auto px-4 py-8 md:py-16">
@@ -400,6 +408,22 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                         </span>
                     </div>
                 )}
+                
+                {allergens.length > 0 && (
+                  <div className="mb-8 p-4 bg-yellow-100 dark:bg-yellow-900/30 border-l-4 border-yellow-500 rounded-r-lg">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <AlertTriangle className="h-5 w-5 text-yellow-500" aria-hidden="true" />
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-yellow-700 dark:text-yellow-200">
+                          <span className="font-medium">Allergen Warning:</span> This recipe contains ingredients with common allergens: <span className="capitalize font-semibold">{allergens.join(', ')}</span>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 text-center">
                   <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
                     <Clock className="absolute -top-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
@@ -483,7 +507,8 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                           {displayedIngredients.map((ingredient, index) => (
                             <li key={index} className="flex items-start gap-3">
                               <Check className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                              <span>{ingredient}</span>
+                              <span className={cn(checkAllergen(ingredient) && "font-bold text-destructive")}>{ingredient}</span>
+                              {checkAllergen(ingredient) && <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />}
                             </li>
                           ))}
                         </ul>
@@ -509,7 +534,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                                     />
                                     <label
                                         htmlFor={`ingredient-${index}`}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        className={cn("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", checkAllergen(ingredient) && "text-destructive")}
                                     >
                                         {ingredient}
                                     </label>

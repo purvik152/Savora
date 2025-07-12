@@ -12,3 +12,4 @@ import '@/ai/flows/mood-based-suggestions-flow.ts';
 import '@/ai/flows/generate-recipe-title-flow.ts';
 import '@/ai/flows/latest-food-news-flow.ts';
 import '@/ai/flows/suggest-by-ingredients-flow.ts';
+import '@/ai/flows/activity-based-suggestions-flow.ts';
