@@ -205,8 +205,8 @@ export default function Home() {
     return nonVegMainCategories;
   }, [diet]);
 
-  const subCategoriesFirstRow = subCategories.slice(0, 6);
-  const subCategoriesSecondRow = subCategories.slice(6);
+  const subCategoriesFirstRow = subCategories.slice(0, 3);
+  const subCategoriesSecondRow = subCategories.slice(3, 7);
 
   const topCommunityRecipes = useMemo(() => {
     const filtered = diet === 'veg' 
