@@ -51,11 +51,14 @@ export const recipes: Recipe[] = [
       '3 tbsp butter, melted',
     ],
     instructions: [
-      'In a large bowl, sift together the flour, baking powder, salt and sugar.',
-      'Make a well in the center and pour in the milk, egg and melted butter; mix until smooth.',
-      'Heat a lightly oiled griddle or frying pan over medium high heat.',
-      'Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.',
-      'Brown on both sides and serve hot with your favorite toppings.',
+      'Prepare the dry ingredients: In a large bowl, sift together the 1 1/2 cups of all-purpose flour, 3 1/2 tsp of baking powder, 1 tsp of salt, and 1 tbsp of white sugar. Sifting helps to break up any lumps and create a lighter pancake.',
+      'Prepare the wet ingredients: In a separate smaller bowl, whisk the 1 egg. Then, stir in the 1 1/4 cups of milk and 3 tbsp of melted butter.',
+      'Combine wet and dry: Make a well in the center of the dry ingredients and pour the wet ingredient mixture into it. Whisk gently until just combined. Do not overmix; a few lumps are okay.',
+      'Rest the batter: Let the batter rest for 5-10 minutes. This allows the gluten to relax and the baking powder to start working, resulting in fluffier pancakes.',
+      'Cook the pancakes: Heat a lightly oiled griddle or non-stick frying pan over medium-high heat. You can test the heat by sprinkling a few drops of water; they should sizzle and evaporate.',
+      'Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake. Cook until bubbles appear on the surface and the edges look set, about 2-3 minutes.',
+      'Flip and finish: Flip carefully with a thin spatula, and cook until the other side is golden brown, about 1-2 minutes more.',
+      'Serve immediately: Serve hot with your favorite toppings like maple syrup, fresh berries, or whipped cream.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -90,11 +93,11 @@ export const recipes: Recipe[] = [
       'Salt and pepper, to taste',
     ],
     instructions: [
-      'Toast the slice of bread to your liking.',
-      'While bread is toasting, mash the avocado in a small bowl and season with salt and pepper.',
-      'Heat olive oil in a non-stick skillet over medium heat. Crack the egg into the skillet and cook to your desired doneness (sunny-side up, over easy, etc.).',
-      'Spread the mashed avocado over the toast.',
-      'Top with the cooked egg. Sprinkle with red pepper flakes and serve immediately.',
+      'Toast the bread: Toast the slice of sourdough bread to your desired level of crispness using a toaster or in a pan.',
+      'Prepare the avocado: While the bread is toasting, scoop the flesh of 1/2 ripe avocado into a small bowl. Mash it with a fork to your preferred consistency and season with salt and pepper.',
+      'Cook the egg: Heat 1 tsp of olive oil in a non-stick skillet over medium heat. Crack the egg into the skillet and cook it to your liking (e.g., sunny-side up, over easy, or scrambled).',
+      'Assemble the toast: Once the bread is toasted, spread the mashed avocado evenly over the surface.',
+      'Add the finishing touches: Gently place the cooked egg on top of the avocado. Sprinkle with red pepper flakes for a bit of heat and serve immediately.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -128,11 +131,11 @@ export const recipes: Recipe[] = [
       'Toppings: fresh berries, sliced banana, granola, coconut flakes',
     ],
     instructions: [
-      'In a blender, combine the frozen banana, mixed berries, almond milk, and chia seeds.',
-      'Blend on high until smooth and creamy. The consistency should be thick.',
-      'Pour the smoothie into a bowl.',
-      'Arrange your favorite toppings over the smoothie bowl.',
-      'Serve immediately and enjoy with a spoon.',
+      'Prepare the base: In a high-speed blender, combine the frozen banana, 1 cup of mixed frozen berries, 1/2 cup of almond milk, and 1 tbsp of chia seeds.',
+      'Blend until smooth: Blend on high until the mixture is completely smooth and has a thick, creamy, soft-serve-like consistency. Scrape down the sides as needed.',
+      'Assemble the bowl: Pour the thick smoothie mixture into a bowl.',
+      'Add your toppings: Artfully arrange your desired toppings, such as fresh berries, sliced banana, granola, and coconut flakes, over the surface of the smoothie.',
+      'Serve immediately: Enjoy your smoothie bowl with a spoon right away while it\'s cold and thick.',
     ],
     allergens: ['nuts'],
     nutrition: {
@@ -168,11 +171,11 @@ export const recipes: Recipe[] = [
       'Maple syrup and fresh fruit for serving',
     ],
     instructions: [
-      'In a shallow dish, whisk together eggs, milk, vanilla extract, and cinnamon.',
-      'Melt butter in a large skillet over medium heat.',
-      'Dip each slice of bread into the egg mixture, allowing it to soak for about 20 seconds per side.',
-      'Place the soaked bread onto the hot skillet and cook for 2-3 minutes per side, until golden brown.',
-      'Serve immediately with maple syrup and fresh fruit.',
+      'Prepare the custard: In a shallow dish wide enough to fit a slice of bread, whisk together the 2 large eggs, 1/2 cup of milk, 1 tsp of vanilla extract, and 1/2 tsp of cinnamon until well combined.',
+      'Preheat the skillet: Melt 2 tbsp of butter in a large non-stick skillet over medium heat until it starts to foam.',
+      'Soak the bread: Working one slice at a time, dip the bread into the egg mixture, allowing it to soak for about 20-30 seconds per side. Don\'t let it get too soggy.',
+      'Cook the French toast: Place the soaked bread onto the hot skillet. Cook for 2-3 minutes per side, until each side is golden brown and crisp.',
+      'Serve and enjoy: Serve the French toast immediately, topped with warm maple syrup and fresh fruit.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -207,12 +210,13 @@ export const recipes: Recipe[] = [
       'Optional: cooked sausage or bacon, avocado',
     ],
     instructions: [
-      'Warm the tortillas in a dry skillet or microwave until pliable.',
-      'Lay a tortilla flat and layer half of the scrambled eggs, black beans, and cheese down the center.',
-      'Top with salsa and any other optional fillings.',
-      'Fold in the sides of the tortilla, then tightly roll it up from the bottom.',
-      'You can either serve immediately or place the burrito seam-side down on a hot skillet to toast for a minute per side.',
-      'Repeat with the second tortilla.',
+      'Prepare your fillings: Scramble 4 large eggs to your liking. Warm up the 1/2 cup of black beans in a microwave or on the stovetop.',
+      'Warm the tortillas: Heat the 2 large flour tortillas in a dry skillet or in the microwave for about 20-30 seconds until they are soft and pliable.',
+      'Assemble the burrito: Lay one tortilla flat. Layer half of the scrambled eggs, black beans, and shredded cheddar cheese down the center.',
+      'Add toppings: Top the fillings with salsa and any other optional ingredients you are using, like avocado or cooked sausage.',
+      'Fold and roll: To roll the burrito, first fold in the left and right sides over the filling. Then, holding the sides in, tightly roll it up from the bottom.',
+      'Optional toasting: For a crispier exterior, place the burrito seam-side down on a hot, dry skillet and toast for a minute on each side.',
+      'Repeat and serve: Repeat the process for the second burrito and serve immediately.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -254,11 +258,11 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Cook quinoa according to package directions using water or broth. Fluff with a fork and let cool.',
-      'In a large bowl, combine the cooled quinoa, chickpeas, cucumber, cherry tomatoes, red onion, and parsley.',
-      'In a small bowl, whisk together the olive oil, lemon juice, Dijon mustard, salt, and pepper.',
-      'Pour the vinaigrette over the salad and toss to combine.',
-      'Serve immediately or chill for later. It\'s even better the next day!',
+      'Cook the quinoa: In a medium saucepan, combine 1 cup of rinsed quinoa with 2 cups of water or vegetable broth. Bring to a boil, then reduce heat to low, cover, and simmer for about 15 minutes, or until the water is absorbed. Remove from heat and let it sit covered for 5 minutes, then fluff with a fork and let it cool completely.',
+      'Prepare the salad components: While the quinoa cools, chop the cucumber, halve the cherry tomatoes, chop the red onion, and chop the fresh parsley. Rinse and drain the chickpeas.',
+      'Make the vinaigrette: In a small bowl or a jar with a lid, combine 1/4 cup olive oil, 1/4 cup lemon juice, 1 tsp Dijon mustard, and a pinch of salt and pepper. Whisk or shake until well emulsified.',
+      'Combine the salad: In a large bowl, add the cooled quinoa, chickpeas, cucumber, tomatoes, red onion, and parsley.',
+      'Dress and serve: Pour the vinaigrette over the salad and toss gently until everything is well coated. You can serve it immediately, or for best results, let it chill in the refrigerator for at least 30 minutes to allow the flavors to meld.',
     ],
     nutrition: {
       calories: '450 kcal',
@@ -293,11 +297,11 @@ export const recipes: Recipe[] = [
         '1 tsp olive oil'
     ],
     instructions: [
-        'Slice the bread and lightly toast or grill it.',
-        'Spread pesto on the inside of both slices of bread.',
-        'Layer the tomato slices, mozzarella slices, and fresh basil leaves on the bottom slice.',
-        'Drizzle with olive oil and balsamic glaze.',
-        'Place the top slice of bread on, press gently, and serve immediately.'
+        'Prepare the bread: Slice your ciabatta or focaccia. For extra flavor, you can lightly toast it or grill it on a pan with a little olive oil until golden.',
+        'Apply the pesto: Spread 1 tbsp of pesto evenly on the inside of both slices of bread.',
+        'Layer the ingredients: On the bottom slice of bread, arrange the slices of ripe tomato, followed by the slices of fresh mozzarella. Tuck a handful of fresh basil leaves in between the layers.',
+        'Add the final touches: Drizzle the layers with 1 tsp of olive oil and 1 tbsp of balsamic glaze.',
+        'Serve: Place the top slice of bread on, press down gently, and serve immediately for the best taste and texture.',
     ],
     allergens: ['gluten', 'dairy', 'nuts'],
     nutrition: {
@@ -332,12 +336,12 @@ export const recipes: Recipe[] = [
         '1/4 cup croutons'
     ],
     instructions: [
-        'In a medium bowl, toss the romaine lettuce, shredded chicken, Caesar dressing, and Parmesan cheese.',
-        'Warm the tortillas slightly to make them more pliable.',
-        'Spoon half of the salad mixture onto the center of each tortilla.',
-        'Sprinkle croutons over the salad.',
-        'Fold in the sides and roll up the wraps tightly.',
-        'Slice in half and serve.'
+        'Prepare the salad filling: In a medium bowl, combine 2 cups of chopped romaine lettuce, 1 cup of cooked shredded chicken, 1/4 cup of Caesar dressing, and 2 tbsp of grated Parmesan cheese. Toss everything together until well coated.',
+        'Warm the tortillas: To prevent them from breaking when you roll them, warm the tortillas in a dry skillet for 15-20 seconds per side, or in the microwave for 15 seconds.',
+        'Assemble the wraps: Lay one warm tortilla flat. Spoon half of the salad mixture down the center.',
+        'Add the crunch: Sprinkle half of the croutons over the salad mixture inside the tortilla.',
+        'Roll it up: Fold in the left and right sides of the tortilla, then tightly roll it from the bottom up to enclose the filling.',
+        'Serve: Repeat for the second wrap. You can slice them in half on a diagonal for easier eating. Serve immediately.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -376,13 +380,13 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Heat olive oil in a large pot or Dutch oven over medium heat. Add onion and carrots and cook until softened, about 5 minutes.',
-      'Add garlic and cook for another minute until fragrant.',
-      'Stir in the red lentils, vegetable broth, cumin, and turmeric.',
-      'Bring to a boil, then reduce heat and simmer for 20-25 minutes, or until lentils are tender.',
-      'For a creamy texture, use an immersion blender to partially or fully blend the soup.',
-      'Stir in the lemon juice and season with salt and pepper.',
-      'Serve hot, garnished with fresh parsley if desired.'
+      'Sauté the aromatics: Heat 1 tbsp of olive oil in a large pot or Dutch oven over medium heat. Add the chopped onion and carrots and cook until they have softened, which should take about 5-7 minutes.',
+      'Add garlic and spices: Stir in the 2 minced cloves of garlic and cook for another minute until fragrant. Then, add 1 tsp of cumin and 1/2 tsp of turmeric and stir for 30 seconds to toast the spices.',
+      'Simmer the soup: Add the rinsed red lentils and 4 cups of vegetable broth to the pot. Bring the mixture to a boil.',
+      'Cook until tender: Once boiling, reduce the heat to low, cover, and let it simmer for 20-25 minutes, or until the lentils are very tender and have started to break down.',
+      'Blend for creaminess: For a creamy texture, use an immersion blender to blend the soup directly in the pot until it reaches your desired smoothness. You can also carefully transfer it to a regular blender.',
+      'Finish and season: Stir in the juice of half a lemon to brighten the flavors. Season generously with salt and pepper to taste.',
+      'Serve: Ladle the hot soup into bowls. You can garnish with fresh parsley or a dollop of yogurt if you like.',
     ],
     nutrition: {
       calories: '300 kcal',
@@ -416,11 +420,11 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Slice the avocado in half and remove the pit.',
-      'In a small bowl, mix together the drained tuna, mayonnaise, sriracha, and green onion.',
-      'Season the tuna mixture with salt and pepper.',
-      'Spoon the tuna salad into the avocado halves.',
-      'Garnish with extra green onion and serve immediately.'
+      'Prepare the avocado: Slice the avocado in half lengthwise and carefully remove the pit. You can scoop out a little extra avocado flesh to make more room for the filling if needed.',
+      'Make the tuna salad: In a small bowl, combine the drained tuna, 2 tbsp of mayonnaise or Greek yogurt, 1 tsp of sriracha, and 1 tbsp of chopped green onion.',
+      'Season the filling: Mix everything together until well combined. Season the tuna mixture with salt and pepper to your taste.',
+      'Stuff the avocado: Spoon the spicy tuna salad mixture evenly into the two avocado halves.',
+      'Garnish and serve: Garnish with a sprinkle of extra chopped green onion and serve immediately. Enjoy this healthy and quick lunch!',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -464,12 +468,11 @@ export const recipes: Recipe[] = [
       '1/2 tsp dried oregano',
     ],
     instructions: [
-      'Season chicken breasts with olive oil, oregano, salt, and pepper.',
-      'Grill or pan-sear the chicken until cooked through, about 6-8 minutes per side. Let it rest, then slice.',
-      'In a large bowl, combine lettuce, cucumber, tomatoes, red onion, and olives.',
-      'In a small jar, shake together all dressing ingredients until well combined.',
-      'Add the sliced chicken and feta cheese to the salad bowl.',
-      'Drizzle with dressing, toss gently, and serve immediately.',
+      'Cook the chicken: Pat the chicken breasts dry and season them all over with 1 tbsp olive oil, 1 tsp dried oregano, salt, and pepper. Grill or pan-sear the chicken on a hot skillet for 6-8 minutes per side, until cooked through. Remove from heat and let it rest for 5 minutes before slicing.',
+      'Prepare the salad base: In a large salad bowl, combine the chopped romaine lettuce, diced cucumber, halved cherry tomatoes, and thinly sliced red onion.',
+      'Make the dressing: In a small jar or bowl, combine 1/4 cup extra virgin olive oil, 2 tbsp red wine vinegar, 1 tsp Dijon mustard, and 1/2 tsp dried oregano. Shake or whisk until well combined.',
+      'Assemble the final salad: Add the Kalamata olives, crumbled feta cheese, and the sliced grilled chicken to the salad bowl.',
+      'Dress and serve: Drizzle the dressing over the salad and toss gently to combine all the ingredients. Serve immediately for the best freshness and crunch.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -516,11 +519,11 @@ export const recipes: Recipe[] = [
       '1 tsp sriracha (optional)',
     ],
     instructions: [
-      'In a bowl, mix all marinade ingredients. Add chicken strips and marinate for at least 30 minutes.',
-      'While chicken marinates, whisk together all peanut sauce ingredients until smooth. Add more water if needed to reach desired consistency.',
-      'Thread chicken onto the soaked skewers.',
-      'Grill or pan-fry over medium-high heat for 3-4 minutes per side, until cooked through and slightly charred.',
-      'Serve the hot skewers immediately with the peanut sauce for dipping, and a side of carrots, cucumber, and cilantro.',
+      'Marinate the chicken: In a medium bowl, whisk together all the marinade ingredients (coconut milk, soy sauce, honey, turmeric, coriander, and garlic). Add the chicken strips and toss to coat completely. Cover and refrigerate for at least 30 minutes, or up to 4 hours.',
+      'Make the peanut sauce: While the chicken marinates, prepare the dipping sauce. In a small bowl, whisk together the creamy peanut butter, warm water, soy sauce, lime juice, and sriracha (if using) until smooth. Set aside.',
+      'Skewer the chicken: Thread the marinated chicken strips onto the soaked wooden skewers in a ribbon-like fashion.',
+      'Grill the skewers: Preheat your grill or a grill pan to medium-high heat. Place the skewers on the grill and cook for 3-4 minutes per side, until the chicken is cooked through and has light char marks.',
+      'Serve: Arrange the hot skewers on a platter. Serve immediately with the peanut sauce for dipping, and a side of shredded carrots, sliced cucumber, and fresh cilantro for garnish.',
     ],
     allergens: ['nuts', 'gluten'],
     nutrition: {
@@ -560,12 +563,14 @@ export const recipes: Recipe[] = [
       "1/4 cup fresh basil, chopped",
     ],
     instructions: [
-      "Cook pasta according to package directions. Reserve 1 cup pasta water.",
-      "Heat olive oil in a large skillet. Add onion and cook until soft.",
-      "Add garlic and cook for 1 minute. Add crushed tomatoes and oregano. Simmer for 10 minutes.",
-      "Reduce heat. Stir in heavy cream and Parmesan cheese until smooth.",
-      "Add cooked pasta to the sauce, adding pasta water if too thick.",
-      "Stir in fresh basil and serve immediately.",
+      'Cook the pasta: Bring a large pot of salted water to a boil. Add the rigatoni and cook according to package directions until al dente. Before draining, reserve about 1 cup of the starchy pasta water.',
+      'Sauté aromatics: While the pasta cooks, heat 2 tbsp of olive oil in a large skillet or Dutch oven over medium heat. Add the chopped onion and cook until softened, about 5-7 minutes.',
+      'Build the sauce base: Add the 4 minced garlic cloves and 1 tsp dried oregano to the skillet and cook for another minute until fragrant. Pour in the can of crushed tomatoes, season with salt and pepper, and bring to a simmer.',
+      'Simmer the sauce: Let the tomato sauce simmer for about 10 minutes to allow the flavors to meld together.',
+      'Make it creamy: Reduce the heat to low and stir in the 1/2 cup of heavy cream and 1/2 cup of grated Parmesan cheese. Stir continuously until the cheese is melted and the sauce is smooth and creamy.',
+      'Combine pasta and sauce: Add the drained pasta to the skillet with the sauce. Toss to coat the pasta completely. If the sauce is too thick, add a splash of the reserved pasta water until it reaches your desired consistency.',
+      'Finish with basil: Remove from heat and stir in the 1/4 cup of chopped fresh basil.',
+      'Serve: Divide among bowls and serve immediately, with extra Parmesan cheese on top if desired.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -600,12 +605,13 @@ export const recipes: Recipe[] = [
       'Salt and freshly ground black pepper',
     ],
     instructions: [
-      'Preheat oven to 425°F (220°C).',
-      'Pat the chicken dry with paper towels. Rub it all over with olive oil and season generously with salt and pepper.',
-      'Stuff the cavity of the chicken with the lemon halves, garlic, and fresh herbs.',
-      'Place the chicken in a roasting pan or large oven-safe skillet.',
-      'Roast for 1 hour and 15 minutes, or until the juices run clear when a thigh is pierced.',
-      'Let the chicken rest for 10-15 minutes before carving. Serve with pan juices.',
+      'Preheat the oven: Preheat your oven to 425°F (220°C) and place a rack in the middle.',
+      'Prepare the chicken: Remove any giblets from the chicken and pat it thoroughly dry with paper towels. A dry skin is key to getting it crispy.',
+      'Season the chicken: Rub the chicken all over with 2 tbsp of olive oil. Season it generously, inside and out, with salt and freshly ground black pepper.',
+      'Stuff the chicken: Place the halved lemon, halved head of garlic, and sprigs of fresh rosemary and thyme inside the chicken cavity. This will infuse the meat with flavor as it cooks.',
+      'Truss the chicken (optional): Tie the legs together with kitchen twine. This helps the chicken cook more evenly.',
+      'Roast the chicken: Place the chicken in a roasting pan or a large oven-safe skillet. Roast for 1 hour to 1 hour and 15 minutes. The chicken is done when the juices run clear when a thigh is pierced with a knife, or a meat thermometer inserted into the thickest part of the thigh reads 165°F (74°C).',
+      'Rest before serving: Let the chicken rest on a cutting board for 10-15 minutes before carving. This allows the juices to redistribute, ensuring a moist chicken. Serve with the pan juices.',
     ],
     nutrition: {
       calories: '700 kcal',
@@ -642,12 +648,11 @@ export const recipes: Recipe[] = [
       '4 hamburger buns and your favorite toppings',
     ],
     instructions: [
-      'In a food processor, combine bell pepper, onion, and garlic. Pulse until finely chopped.',
-      'Add black beans, egg, chili powder, and cumin. Pulse until combined but still chunky.',
-      'Transfer mixture to a bowl and stir in bread crumbs. Let sit for 5 minutes.',
-      'Divide mixture into 4 equal portions and shape into patties.',
-      'Heat a lightly oiled skillet over medium heat. Cook burgers for 5-7 minutes per side, until browned and firm.',
-      'Serve on buns with your favorite toppings like lettuce, tomato, and avocado.',
+      'Prepare the vegetables: In a food processor, add the chopped bell pepper, onion, and garlic. Pulse a few times until they are finely chopped but not pureed.',
+      'Combine the burger base: Add the rinsed and dried black beans, 1 egg, 1 tbsp chili powder, and 1 tbsp cumin to the food processor. Pulse again until the mixture is combined but still has some texture. You don\'t want it to be a smooth paste.',
+      'Form the patties: Transfer the mixture to a bowl and stir in 1/2 cup of bread crumbs. Let the mixture sit for about 5 minutes to firm up. Then, divide it into 4 equal portions and shape them into patties about 1/2-inch thick.',
+      'Cook the burgers: Heat a lightly oiled skillet over medium heat. Carefully place the patties in the pan and cook for 5-7 minutes per side, until they are browned and firm.',
+      'Assemble and serve: Serve the black bean burgers on toasted buns with your favorite toppings like lettuce, tomato, avocado, and a dollop of chipotle mayo.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -683,13 +688,13 @@ export const recipes: Recipe[] = [
       'Lemon wedges for serving',
     ],
     instructions: [
-      'Preheat oven to 400°F (200°C).',
-      'On a large baking sheet, toss the asparagus and cherry tomatoes with 1 tbsp of olive oil, dried herbs, salt, and pepper.',
-      'Roast the vegetables for 10 minutes.',
-      'While vegetables roast, pat the salmon fillets dry and rub with the remaining 1 tbsp of olive oil. Season with salt and pepper.',
-      'Remove the baking sheet from the oven, push the vegetables to the sides, and place the salmon in the center.',
-      'Return to the oven and bake for another 10-12 minutes, or until the salmon is cooked through.',
-      'Serve immediately with fresh lemon wedges.',
+      'Preheat oven and prepare pan: Preheat your oven to 400°F (200°C). Line a large baking sheet with parchment paper for easy cleanup.',
+      'Prepare the vegetables: On the baking sheet, toss the trimmed asparagus and cherry tomatoes with 1 tbsp of olive oil, 1 tsp of dried herbs, salt, and pepper. Spread them out in a single layer.',
+      'Roast the vegetables: Place the baking sheet in the oven and roast the vegetables for 10 minutes.',
+      'Prepare the salmon: While the vegetables are roasting, pat the salmon fillets dry with a paper towel. Rub them with the remaining 1 tbsp of olive oil and season with salt and pepper.',
+      'Add the salmon to the pan: After 10 minutes, remove the baking sheet from the oven. Push the vegetables to the sides and place the salmon fillets in the center of the pan.',
+      'Finish roasting: Return the baking sheet to the oven and bake for another 10-12 minutes, or until the salmon is cooked through and flakes easily with a fork.',
+      'Serve: Serve immediately, squeezing fresh lemon wedges over the salmon and vegetables.',
     ],
     nutrition: {
       calories: '550 kcal',
@@ -726,13 +731,13 @@ export const recipes: Recipe[] = [
       'Cooked rice for serving',
     ],
     instructions: [
-      'In a bowl, toss the sliced beef with cornstarch.',
-      'In a separate small bowl, whisk together soy sauce and sesame oil for the sauce.',
-      'Heat 1 tbsp of vegetable oil in a large skillet or wok over high heat. Add beef and cook until browned. Remove from skillet.',
-      'Add a little more oil to the skillet. Add broccoli and bell pepper and stir-fry for 3-4 minutes.',
-      'Add garlic and ginger and cook for 1 more minute.',
-      'Return the beef to the skillet. Pour the sauce over everything and toss to combine until the sauce has thickened.',
-      'Serve immediately over cooked rice.',
+      'Prepare the beef: In a medium bowl, toss the thinly sliced flank steak with 1 tbsp of cornstarch until lightly coated. This helps to create a velvety texture.',
+      'Make the sauce: In a separate small bowl, whisk together 2 tbsp of soy sauce and 1 tbsp of sesame oil. Set aside.',
+      'Sear the beef: Heat 1 tbsp of vegetable oil in a large skillet or wok over high heat. Once the oil is shimmering, add the beef in a single layer and cook until browned, about 1-2 minutes per side. Remove the beef from the skillet and set aside.',
+      'Stir-fry the vegetables: Add a little more oil to the skillet if needed. Add the broccoli florets and sliced red bell pepper and stir-fry for 3-4 minutes until they are tender-crisp.',
+      'Add aromatics: Add the minced garlic and grated ginger to the skillet and cook for another minute until fragrant.',
+      'Combine and finish: Return the cooked beef to the skillet with the vegetables. Pour the prepared sauce over everything and toss to combine until the sauce has thickened and coats everything well.',
+      'Serve: Serve the beef stir-fry immediately over a bed of cooked rice.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -775,12 +780,12 @@ export const recipes: Recipe[] = [
       'Fresh cilantro for garnish',
     ],
     instructions: [
-      'In a bowl, combine yogurt, lemon juice, cumin, paprika, turmeric, garam masala, ginger, and garlic. Add chicken and toss to coat. Marinate for at least 1 hour.',
-      'Heat oil in a large skillet over medium-high heat. Add chicken and cook until browned on all sides. Remove chicken from skillet.',
-      'Add onion to the skillet and cook until soft. Stir in tomato sauce and cook for 5 minutes.',
-      'Stir in heavy cream and bring to a simmer. Return chicken to the skillet.',
-      'Simmer for 10-15 minutes until chicken is cooked through and sauce has thickened.',
-      'Garnish with cilantro and serve with rice or naan bread.',
+      'Marinate the chicken: In a medium bowl, combine 1 cup of plain yogurt, 1 tbsp lemon juice, 2 tsp cumin, 2 tsp paprika, 1 tsp turmeric, 1 tsp garam masala, minced ginger, and minced garlic. Add the chicken cubes and toss to coat completely. Cover and marinate in the refrigerator for at least 1 hour, or up to 8 hours.',
+      'Cook the chicken: Heat 1 tbsp of vegetable oil in a large skillet over medium-high heat. Remove the chicken from the marinade, shaking off any excess. Cook the chicken in batches until browned on all sides. Remove the chicken from the skillet and set aside.',
+      'Start the sauce: In the same skillet, add the chopped onion and cook until soft and translucent, about 5 minutes. Stir in the can of tomato sauce and cook for 5 minutes, stirring occasionally.',
+      'Finish the sauce: Stir in 1 cup of heavy cream and bring the sauce to a simmer. Return the cooked chicken to the skillet.',
+      'Simmer and serve: Reduce the heat and simmer for 10-15 minutes, allowing the chicken to cook through and the sauce to thicken.',
+      'Garnish with fresh cilantro and serve hot with basmati rice or warm naan bread.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -814,11 +819,11 @@ export const recipes: Recipe[] = [
       'Toppings: shredded lettuce, diced tomatoes, shredded cheddar cheese, salsa, sour cream'
     ],
     instructions: [
-      'In a large skillet, cook ground beef over medium-high heat until no longer pink. Drain excess fat.',
-      'Stir in taco seasoning and water. Bring to a simmer and cook for 5-7 minutes, until the sauce has thickened.',
-      'Warm taco shells or tortillas according to package directions.',
-      'Spoon the beef mixture into the shells.',
-      'Set up a topping bar with lettuce, tomatoes, cheese, salsa, and sour cream, and let everyone build their own tacos.',
+      'Cook the beef: In a large skillet, cook 1 lb of ground beef over medium-high heat, breaking it up with a spoon, until it is no longer pink. Drain off any excess fat.',
+      'Season the meat: Stir in 1 packet of taco seasoning and 3/4 cup of water. Bring the mixture to a simmer.',
+      'Thicken the sauce: Cook for 5-7 minutes, stirring occasionally, until the sauce has thickened.',
+      'Prepare the shells and toppings: While the meat is simmering, warm your taco shells or tortillas according to the package directions. Prepare all your toppings like shredding lettuce, dicing tomatoes, and shredding cheese.',
+      'Assemble the tacos: Spoon the seasoned beef mixture into the warm shells. Let everyone build their own tacos by adding their favorite toppings.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -858,14 +863,12 @@ export const recipes: Recipe[] = [
       'Jasmine rice for serving',
     ],
     instructions: [
-      'Heat coconut oil in a large pot or skillet over medium-high heat.',
-      'Add the green curry paste and cook for 1 minute until fragrant.',
-      'Add the cubed chicken and cook until lightly browned.',
-      'Stir in the coconut milk and chicken broth. Bring to a simmer.',
-      'Reduce heat and cook for 15 minutes, stirring occasionally.',
-      'Add the bell pepper and snow peas and cook for another 5-7 minutes, until vegetables are tender-crisp.',
-      'Stir in the fish sauce and sugar.',
-      'Serve hot over jasmine rice, garnished with fresh basil.',
+      'Bloom the curry paste: Heat 1 tbsp of coconut oil in a large pot or deep skillet over medium-high heat. Add 1/4 cup of green curry paste and cook for 1 minute, stirring constantly, until it becomes fragrant.',
+      'Cook the chicken: Add the cubed chicken to the pot and cook, stirring occasionally, until it is lightly browned on all sides.',
+      'Create the curry base: Pour in the can of coconut milk and 1 cup of chicken broth. Stir well to combine with the curry paste. Bring the mixture to a simmer.',
+      'Simmer the curry: Reduce the heat to low, cover, and let it simmer for 15 minutes to allow the chicken to cook through and the flavors to meld.',
+      'Add vegetables and season: Add the sliced bell pepper and snow peas to the pot. Cook for another 5-7 minutes, until the vegetables are tender-crisp. Stir in 1 tbsp of fish sauce and 1 tsp of sugar.',
+      'Serve: Ladle the curry over hot jasmine rice and garnish generously with fresh basil leaves.',
     ],
     nutrition: {
       calories: '580 kcal',
@@ -900,13 +903,11 @@ export const recipes: Recipe[] = [
       'Crusty bread for serving',
     ],
     instructions: [
-      'Heat olive oil in a large skillet or cazuela over medium heat.',
-      'Add the sliced garlic and red pepper flakes. Cook until the garlic is golden and fragrant, but not burnt (about 1-2 minutes).',
-      'Turn the heat up to high, add the shrimp to the skillet in a single layer.',
-      'Cook the shrimp for 1-2 minutes per side, until they turn pink and opaque.',
-      'Pour in the sherry, and let it bubble for 30 seconds, scraping up any browned bits.',
-      'Remove from heat, stir in the parsley, and season with salt.',
-      'Serve immediately in the skillet with crusty bread for dipping in the garlic oil.',
+      'Infuse the oil: In a large skillet or a traditional clay cazuela, heat 1/2 cup of extra virgin olive oil over medium heat. Add the thinly sliced garlic and 1/2 tsp of red pepper flakes. Cook gently, stirring, until the garlic turns golden and fragrant, being careful not to let it burn (this should take about 1-2 minutes).',
+      'Cook the shrimp: Turn the heat up to high. Add the shrimp to the skillet in a single layer. Season with a pinch of salt.',
+      'Sear quickly: Cook the shrimp for 1-2 minutes on one side, then flip and cook for another 1-2 minutes, just until they turn pink and opaque. Do not overcook.',
+      'Deglaze the pan: Pour in 2 tbsp of sherry or white wine. Let it bubble and sizzle for about 30 seconds, scraping up any delicious browned bits from the bottom of the pan.',
+      'Finish and serve: Remove the skillet from the heat. Stir in 2 tbsp of chopped fresh parsley. Serve immediately, right in the skillet, with plenty of crusty bread for dipping into the flavorful garlic oil.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -951,14 +952,14 @@ export const recipes: Recipe[] = [
       '1 lb mozzarella cheese, sliced',
     ],
     instructions: [
-      'In a Dutch oven, cook beef, onion, and garlic over medium heat until browned. Drain fat.',
-      'Stir in crushed tomatoes, tomato paste, water, sugar, basil, fennel, salt, and pepper. Bring to a boil, reduce heat, and simmer for 1 hour, stirring occasionally.',
-      'Preheat oven to 375°F (190°C).',
-      'In a bowl, mix ricotta cheese, egg, and half of the Parmesan cheese.',
-      'To assemble, spread 1.5 cups of meat sauce in the bottom of a 9x13 inch baking dish.',
-      'Arrange noodles over meat sauce. Spread with half of the ricotta mixture. Top with a third of the mozzarella slices.',
-      'Repeat layers. Top with remaining meat sauce and mozzarella and Parmesan cheese.',
-      'Bake for 25-30 minutes or until bubbly. Let stand for 10 minutes before serving.',
+      'Make the meat sauce: In a large Dutch oven or pot, cook the ground beef, chopped onion, and minced garlic over medium heat until the beef is browned. Drain any excess fat. Stir in the crushed tomatoes, tomato paste, water, sugar, basil, fennel seeds, salt, and pepper. Bring to a boil, then reduce the heat, cover partially, and let it simmer for at least 1 hour, stirring occasionally.',
+      'Prepare cheese filling and preheat oven: While the sauce simmers, cook the lasagna noodles according to package directions. In a separate bowl, mix together the ricotta cheese, egg, and half of the Parmesan cheese. Preheat your oven to 375°F (190°C).',
+      'Begin layering: Spread about 1.5 cups of meat sauce in the bottom of a 9x13 inch baking dish.',
+      'First layer: Arrange a single layer of cooked noodles over the sauce. Spread with half of the ricotta cheese mixture. Top with a third of the mozzarella cheese slices.',
+      'Second layer: Repeat the layers: another layer of noodles, the remaining ricotta mixture, more meat sauce, and another third of the mozzarella.',
+      'Final layer: Top with the remaining noodles, remaining meat sauce, and the rest of the mozzarella and Parmesan cheese.',
+      'Bake the lasagna: Cover with foil and bake for 25 minutes. Then, remove the foil and bake for an additional 25-30 minutes, or until the top is bubbly and golden brown.',
+      'Rest before serving: Let the lasagna stand for at least 10-15 minutes before slicing and serving. This helps it to set.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -997,11 +998,11 @@ export const recipes: Recipe[] = [
         'Salt and pepper to taste'
     ],
     instructions: [
-        'Season chicken breast with salt and pepper. Grill or pan-sear until cooked through. Let rest, then slice.',
-        'In a small bowl, whisk together all dressing ingredients.',
-        'In a large salad bowl, combine the chopped romaine, sliced chicken, croutons, and Parmesan cheese.',
-        'Drizzle with Caesar dressing and toss gently to coat.',
-        'Serve immediately.'
+        'Grill the chicken: Season the chicken breast with salt and pepper. Grill or pan-sear it over medium-high heat for 6-8 minutes per side, until fully cooked. Let it rest for a few minutes before slicing.',
+        'Prepare the dressing: In a small bowl, whisk together 1/2 cup of mayonnaise, 2 tbsp of lemon juice, 1 tsp of Dijon mustard, and the minced garlic. Season with salt and pepper to taste.',
+        'Assemble the salad: In a large salad bowl, combine the chopped romaine lettuce, most of the croutons (save some for garnish), and half of the grated Parmesan cheese.',
+        'Dress the salad: Pour the Caesar dressing over the salad and toss gently until the lettuce is evenly coated.',
+        'Add chicken and serve: Add the sliced grilled chicken to the salad. Garnish with the remaining Parmesan cheese and croutons. Serve immediately.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: { calories: '550 kcal', protein: '40g', carbohydrates: '15g', fat: '35g', fiber: '4g', sugar: '5g', sodium: '900mg' }
@@ -1035,12 +1036,12 @@ export const recipes: Recipe[] = [
         'Salt and pepper to taste'
     ],
     instructions: [
-        'Cook pasta according to package directions. Drain, rinse with cold water, and set aside.',
-        'In a large bowl, combine the cooled pasta, tomatoes, cucumber, red onion, olives, salami, and mozzarella.',
-        'In a small bowl or jar, whisk or shake together all the dressing ingredients.',
-        'Pour the dressing over the pasta salad and toss everything to combine.',
-        'Cover and refrigerate for at least 30 minutes to allow the flavors to meld.',
-        'Serve chilled or at room temperature.'
+        'Cook the pasta: Bring a large pot of salted water to a boil. Cook the rotini pasta according to package directions until al dente. Drain the pasta and rinse it with cold water to stop the cooking process and cool it down.',
+        'Prepare the dressing: In a small bowl or jar, whisk or shake together 1/2 cup olive oil, 1/4 cup red wine vinegar, 1 tbsp Dijon mustard, 1 tsp dried oregano, and a pinch of salt and pepper.',
+        'Combine all ingredients: In a large salad bowl, combine the cooled pasta, halved cherry tomatoes, diced cucumber, thinly sliced red onion, sliced black olives, diced salami, and fresh mozzarella pearls.',
+        'Dress the salad: Pour the prepared dressing over the pasta salad.',
+        'Toss and chill: Gently toss all the ingredients together until everything is well coated with the dressing. For best results, cover and refrigerate for at least 30 minutes to allow the flavors to meld together.',
+        'Serve: Serve the pasta salad chilled or at room temperature.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: { calories: '480 kcal', protein: '15g', carbohydrates: '55g', fat: '22g', fiber: '6g', sugar: '8g', sodium: '1200mg' }
@@ -1072,13 +1073,13 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste',
     ],
     instructions: [
-      'In a large skillet, heat olive oil over medium-high heat. Add mushrooms and cook until browned. Set aside.',
-      'In the same skillet, add a bit more oil if needed. Add shallot and cook until translucent.',
-      'Add garlic and Arborio rice, stirring for 1 minute to toast the rice.',
-      'Pour in the white wine and cook until it is fully absorbed, stirring constantly.',
-      'Add one ladle of warm vegetable broth to the rice, stirring until it is absorbed. Continue adding broth one ladle at a time, allowing each addition to be absorbed before adding the next. This process should take about 15-20 minutes.',
-      'When the rice is tender and creamy, stir in the cooked mushrooms, Parmesan cheese, and butter.',
-      'Season with salt and pepper. Garnish with fresh parsley before serving.',
+      'Cook the mushrooms: In a large, heavy-bottomed skillet or pot, heat 1 tbsp of olive oil over medium-high heat. Add the sliced mushrooms and cook, stirring occasionally, until they have released their moisture and are nicely browned. Season with salt and pepper, then remove them from the skillet and set aside.',
+      'Sauté the aromatics: In the same skillet, add a bit more oil if needed. Add the finely chopped shallot and cook over medium heat until translucent, about 3 minutes. Add the minced garlic and cook for another minute until fragrant.',
+      'Toast the rice: Add 1 1/2 cups of Arborio rice to the skillet. Stir constantly for about 1 minute until the edges of the rice look translucent.',
+      'Deglaze with wine: Pour in 1/2 cup of dry white wine and continue to stir until it is completely absorbed by the rice.',
+      'Add broth gradually: Begin adding the warmed vegetable broth one ladleful (about 1/2 cup) at a time, stirring frequently. Wait until the liquid is almost completely absorbed before adding the next ladleful. Continue this process until the rice is creamy and al dente, which should take about 15-20 minutes. You may not need all the broth.',
+      'Finish the risotto: Stir in the cooked mushrooms, 1/2 cup of grated Parmesan cheese, and 2 tbsp of butter. The risotto should be creamy and rich.',
+      'Season and serve: Season with salt and pepper to taste. Serve immediately, garnished with chopped fresh parsley.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1116,13 +1117,12 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste',
     ],
     instructions: [
-      'Preheat oven to 400°F (200°C).',
-      'Place pepper halves cut-side up in a baking dish. Drizzle with a little olive oil and bake for 15 minutes to soften.',
-      'Meanwhile, heat 1 tbsp olive oil in a skillet over medium heat. Add onion and cook until soft.',
-      'Add garlic and cook for another minute. Add spinach and cook until wilted. Drain any excess liquid.',
-      'In a bowl, combine the spinach mixture, cooked quinoa, feta cheese, and dill. Season with salt and pepper.',
-      'Spoon the filling into the partially baked pepper halves.',
-      'Bake for an additional 15-20 minutes, or until the peppers are tender and the filling is heated through.',
+      'Preheat oven and prepare peppers: Preheat your oven to 400°F (200°C). Slice the bell peppers in half lengthwise and remove the seeds and membranes. Place them cut-side up in a baking dish, drizzle with a little olive oil, and bake for 15 minutes to soften them slightly.',
+      'Make the filling: While the peppers are baking, heat 1 tbsp of olive oil in a skillet over medium heat. Add the chopped onion and cook until soft, about 5 minutes.',
+      'Wilt the spinach: Add the minced garlic to the skillet and cook for one more minute until fragrant. Add the fresh spinach in batches and cook until it has completely wilted. Be sure to drain any excess liquid from the spinach mixture.',
+      'Combine filling ingredients: In a bowl, combine the spinach mixture, 1 cup of cooked quinoa, 1 cup of crumbled feta cheese, and 1/4 cup of chopped fresh dill. Season with salt and pepper to your taste.',
+      'Stuff and bake: Remove the peppers from the oven. Spoon the filling generously into each pepper half.',
+      'Final bake: Bake for an additional 15-20 minutes, or until the peppers are tender and the filling is heated through and slightly golden on top.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -1166,14 +1166,12 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste',
     ],
     instructions: [
-      'For the topping, boil potatoes until tender. Drain and mash with milk, butter, salt, and pepper until creamy.',
-      'For the filling, heat olive oil in a large oven-safe skillet or pot over medium heat. Add onion, carrots, and celery, cooking until softened.',
-      'Add mushrooms and cook until they release their liquid and start to brown.',
-      'Stir in the tomato paste and thyme. Add the rinsed lentils and vegetable broth. Bring to a boil, then reduce heat and simmer for 30-40 minutes, or until lentils are tender and the mixture has thickened.',
-      'Preheat oven to 375°F (190°C).',
-      'Spread the lentil filling evenly in the skillet or a baking dish.',
-      'Top with the mashed potatoes, spreading them evenly. Use a fork to create some texture on top.',
-      'Bake for 20-25 minutes, or until the filling is bubbly and the potato topping is golden brown.',
+      'Prepare the potato topping: Place the peeled and cubed potatoes in a large pot and cover with cold, salted water. Bring to a boil and cook until the potatoes are very tender, about 15-20 minutes. Drain well, then mash with milk, butter, salt, and pepper until creamy and smooth. Set aside.',
+      'Sauté the vegetables: While the potatoes are boiling, heat 2 tbsp of olive oil in a large oven-safe skillet or pot over medium heat. Add the chopped onion, carrots, and celery (the mirepoix) and cook until softened, about 8-10 minutes.',
+      'Cook the mushrooms and lentils: Add the chopped mushrooms and cook until they have released their liquid and started to brown. Stir in the tomato paste and thyme, then add the rinsed lentils and 4 cups of vegetable broth. Bring to a boil.',
+      'Simmer the filling: Reduce the heat to low, cover, and simmer for 30-40 minutes, or until the lentils are tender and the mixture has thickened into a rich stew.',
+      'Assemble the pie: Preheat your oven to 375°F (190°C). If your skillet isn\'t oven-safe, transfer the lentil filling to a baking dish. Spread the mashed potatoes evenly over the top of the filling. Use a fork to create some texture on the potato surface, which will help it brown nicely.',
+      'Bake: Place the shepherd\'s pie on a baking sheet to catch any drips and bake for 20-25 minutes, or until the filling is bubbly and the potato topping is golden brown. Let it rest for a few minutes before serving.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -1214,13 +1212,12 @@ export const recipes: Recipe[] = [
       '1 tbsp lemon juice'
     ],
     instructions: [
-      'Set the Instant Pot to the "Sauté" function. Add olive oil, onion, carrots, and celery. Cook for 5 minutes until softened.',
-      'Add garlic and cook for another minute until fragrant.',
-      'Press "Cancel". Add rinsed lentils, vegetable broth, diced tomatoes, thyme, and smoked paprika. Stir to combine.',
-      'Secure the lid and set the steam release valve to "Sealing". Select "Manual" or "Pressure Cook" and set the timer for 15 minutes at high pressure.',
-      'When the time is up, let the pressure release naturally for 10 minutes, then perform a quick release for any remaining pressure.',
-      'Carefully open the lid. Stir in the lemon juice and season with salt and pepper to taste.',
-      'Serve hot, garnished with fresh parsley if desired.'
+      'Sauté the aromatics: Set your Instant Pot to the "Sauté" function on normal. Add 1 tbsp of olive oil. Once hot, add the chopped onion, carrots, and celery. Cook, stirring occasionally, for 5 minutes until they have softened.',
+      'Add garlic and spices: Add the minced garlic and cook for another minute until fragrant. Then, stir in the dried thyme and smoked paprika.',
+      'Combine ingredients: Press "Cancel" to turn off the Sauté function. Pour in the rinsed lentils, vegetable broth, and the can of diced tomatoes (with their juice). Stir everything to combine.',
+      'Pressure cook: Secure the lid on the Instant Pot and ensure the steam release valve is set to "Sealing". Select "Manual" or "Pressure Cook" and set the timer for 15 minutes at high pressure.',
+      'Release the pressure: When the cooking time is complete, let the pressure release naturally for 10 minutes. Afterward, perform a quick release by carefully moving the valve to "Venting" to release any remaining pressure.',
+      'Finish and serve: Carefully open the lid. Stir in 1 tbsp of lemon juice to brighten the soup, and season with salt and pepper to taste. Serve hot.',
     ],
     nutrition: {
         calories: '280 kcal',
@@ -1260,17 +1257,14 @@ export const recipes: Recipe[] = [
         '2 tbsp cold water'
     ],
     instructions: [
-        'Season the chuck roast generously with salt and pepper.',
-        'Set the Instant Pot to "Sauté" on high. Add olive oil. Once hot, sear the roast for 3-4 minutes per side until well browned. Remove roast and set aside.',
-        'Add onion to the pot and cook for 3-4 minutes until softened. Add garlic and cook for 1 more minute.',
-        'Pour in beef broth to deglaze the pot, scraping up any browned bits from the bottom.',
-        'Stir in Worcestershire sauce, tomato paste, and thyme. Turn off the "Sauté" function.',
-        'Return the roast to the pot. Add the potatoes and carrots around the roast.',
-        'Secure the lid, set the valve to "Sealing". Cook on high pressure for 60 minutes.',
-        'Once done, let the pressure release naturally for 15 minutes, then quick release the remaining pressure.',
-        'Remove the roast and vegetables to a platter. Set the Instant Pot back to "Sauté".',
-        'In a small bowl, whisk together cornstarch and cold water to make a slurry. Whisk it into the liquid in the pot and simmer until the gravy has thickened.',
-        'Slice the roast and serve with the vegetables and gravy.'
+        'Sear the roast: Season the chuck roast generously on all sides with salt and pepper. Set your Instant Pot to "Sauté" on high heat. Add 2 tbsp of olive oil. Once the oil is hot, carefully place the roast in the pot and sear for 3-4 minutes per side, until a deep brown crust forms. Remove the roast and set it aside.',
+        'Sauté aromatics and deglaze: Add the chopped onion to the pot and cook for 3-4 minutes until softened. Add the minced garlic and cook for one more minute. Pour in the beef broth to deglaze the pot, using a wooden spoon to scrape up any browned bits from the bottom.',
+        'Build the cooking liquid: Stir in the Worcestershire sauce, tomato paste, and dried thyme. Turn off the "Sauté" function.',
+        'Pressure cook the roast: Return the seared roast to the pot. Arrange the halved baby potatoes and carrot chunks around the roast.',
+        'Cook: Secure the lid and set the valve to "Sealing". Cook on high pressure for 60 minutes.',
+        'Natural release: Once the cooking time is up, let the pressure release naturally for 15 minutes before performing a quick release for the remaining pressure.',
+        'Make the gravy: Carefully remove the roast and vegetables to a platter and cover with foil to keep warm. Set the Instant Pot back to "Sauté". In a small bowl, whisk together 2 tbsp cornstarch and 2 tbsp cold water to make a slurry. Whisk the slurry into the liquid in the pot and let it simmer until the gravy has thickened.',
+        'Serve: Slice the tender roast and serve it with the vegetables and the rich gravy.',
     ],
     nutrition: {
         calories: '650 kcal',
@@ -1311,14 +1305,13 @@ export const recipes: Recipe[] = [
       'Fresh cilantro for garnish'
     ],
     instructions: [
-      'Set the Instant Pot to "Sauté" mode. Add oil, then add the onion and cook until softened, about 3-4 minutes.',
-      'Add ginger and garlic and sauté for another minute until fragrant.',
-      'Stir in the diced tomatoes, chana masala powder, garam masala, and cayenne pepper. Cook for 1 minute.',
-      'Press "Cancel". Add the chickpeas and water/broth. Season with salt. Stir well.',
-      'Secure the lid and set the valve to "Sealing". Select "Pressure Cook" or "Manual" and cook on high pressure for 5 minutes.',
-      'Once the cooking is complete, let the pressure release naturally for 10 minutes, then perform a quick release.',
-      'Open the lid, stir in the lemon juice, and garnish with fresh cilantro.',
-      'Serve hot with rice or naan bread.'
+      'Sauté the aromatics: Set your Instant Pot to "Sauté" mode on medium heat. Add the oil, then add the chopped onion and cook until it softens, about 3-4 minutes.',
+      'Bloom the spices: Add the minced ginger and garlic and sauté for another minute until fragrant. Then, stir in the chana masala powder, garam masala, and cayenne pepper (if using). Cook for 30 seconds more to toast the spices.',
+      'Combine ingredients: Press "Cancel" to turn off the Sauté function. Add the diced tomatoes (with their juice), the rinsed chickpeas, and 1 cup of water or vegetable broth. Season with salt and stir everything well.',
+      'Pressure cook: Secure the lid and ensure the steam release valve is set to "Sealing". Select "Pressure Cook" or "Manual" and cook on high pressure for 5 minutes.',
+      'Natural release: After the cooking cycle is complete, let the pressure release naturally for 10 minutes. Then, carefully switch the valve to "Venting" to release any remaining pressure.',
+      'Finish the dish: Once the pin drops, carefully open the lid. Stir in the juice of half a lemon to brighten the flavors.',
+      'Serve: Garnish generously with fresh cilantro and serve hot with basmati rice or naan bread.',
     ],
     nutrition: {
         calories: '350 kcal',
@@ -1355,13 +1348,11 @@ export const recipes: Recipe[] = [
       'Lettuce and tomato slices for serving'
     ],
     instructions: [
-      'In a medium bowl, mash the chickpeas with a fork or potato masher until flaky.',
-      'Add the vegan mayonnaise, celery, red onion, Dijon mustard, and dill to the bowl.',
-      'Mix everything together until well combined. Season with salt and pepper to taste.',
-      'Toast your bread slices if desired.',
-      'Divide the chickpea salad mixture evenly between two slices of bread.',
-      'Top with lettuce and tomato, then add the remaining two slices of bread to complete the sandwiches.',
-      'Serve immediately.'
+      'Mash the chickpeas: In a medium bowl, use a fork or a potato masher to mash the rinsed and drained chickpeas. Aim for a flaky texture, leaving some chickpeas partially whole for better texture.',
+      'Combine the salad ingredients: To the mashed chickpeas, add 1/4 cup of vegan mayonnaise, the finely chopped celery, finely chopped red onion, 1 tbsp of Dijon mustard, and 1 tbsp of chopped fresh dill.',
+      'Mix and season: Stir everything together until it is well combined. Season with salt and pepper to your personal taste.',
+      'Assemble the sandwiches: If you like, toast your bread slices. Divide the chickpea salad mixture evenly and spread it onto two slices of bread.',
+      'Add toppings and serve: Top the chickpea salad with fresh lettuce and tomato slices, then place the remaining two slices of bread on top to complete the sandwiches. Serve immediately.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -1400,13 +1391,12 @@ export const recipes: Recipe[] = [
       'Fresh basil for garnish'
     ],
     instructions: [
-      'Heat olive oil in a large pot or Dutch oven over medium heat. Add the onion and cook until softened, about 5-7 minutes.',
-      'Add the minced garlic and cook for another minute until fragrant.',
-      'Pour in the crushed tomatoes and vegetable broth. Add the dried basil and sugar (if using).',
-      'Bring the soup to a simmer, then reduce the heat, cover, and let it cook for 15 minutes.',
-      'Use an immersion blender to blend the soup until smooth. Alternatively, carefully transfer it to a regular blender and blend in batches.',
-      'Return the soup to the pot. Stir in the coconut milk and heat through gently. Do not let it boil.',
-      'Season with salt and pepper to taste. Serve hot, garnished with fresh basil.'
+      'Sauté aromatics: Heat 1 tbsp of olive oil in a large pot or Dutch oven over medium heat. Add the chopped yellow onion and cook until it has softened and become translucent, which should take about 5-7 minutes.',
+      'Add garlic and tomatoes: Stir in the minced garlic and cook for another minute until fragrant. Then, pour in the can of crushed tomatoes, 1 cup of vegetable broth, 1 tsp of dried basil, and the optional sugar.',
+      'Simmer the soup: Bring the soup to a simmer, then reduce the heat to low, cover the pot, and let it cook for 15 minutes to allow the flavors to deepen.',
+      'Blend until smooth: Use an immersion blender to blend the soup directly in the pot until it\'s smooth and creamy. Alternatively, you can carefully transfer it in batches to a regular blender and blend until smooth.',
+      'Add creaminess: Return the soup to the pot if you used a regular blender. Stir in the 1/2 cup of coconut milk and heat it through gently. Be careful not to let it boil after adding the coconut milk.',
+      'Season and serve: Season the soup with salt and pepper to your taste. Serve hot, garnished with fresh basil leaves and perhaps a side of grilled cheese.',
     ],
     nutrition: {
       calories: '250 kcal',
@@ -1444,12 +1434,12 @@ export const recipes: Recipe[] = [
       'For serving: salsa, shredded lettuce, avocado, or shredded cheese'
     ],
     instructions: [
-      'In a bowl, toss the chicken pieces with olive oil and taco seasoning.',
-      'Heat a large skillet over medium-high heat. Add the chicken and cook until browned and cooked through, about 5-7 minutes. Set aside.',
-      'Cook rice with water according to package directions. Once cooked, fluff with a fork and stir in the cilantro and lime juice.',
-      'To assemble the meal prep bowls, divide the cilantro-lime rice evenly among four containers.',
-      'Top the rice with the cooked chicken, black beans, and corn.',
-      'Store in the refrigerator for up to 4 days. When ready to eat, reheat and add fresh toppings like salsa, lettuce, and avocado.'
+      'Cook the chicken: In a medium bowl, toss the bite-sized chicken pieces with 1 tbsp of olive oil and 1 packet of taco seasoning until evenly coated. Heat a large skillet over medium-high heat. Add the seasoned chicken and cook for 5-7 minutes, stirring occasionally, until browned and cooked through. Set aside.',
+      'Prepare the cilantro-lime rice: While the chicken cooks, cook 1 cup of rice with 2 cups of water according to the package directions. Once cooked, fluff the rice with a fork and stir in 1/4 cup of chopped fresh cilantro and the juice of 1 lime.',
+      'Assemble the meal prep bowls: Divide the cilantro-lime rice evenly among four airtight containers. This will be the base of your bowls.',
+      'Layer the toppings: Top the rice in each container with an equal portion of the cooked chicken, rinsed black beans, and corn.',
+      'Store for later: Let the bowls cool completely, then cover and store them in the refrigerator for up to 4 days.',
+      'Reheat and serve: When you are ready to eat, reheat a bowl in the microwave. Add your favorite fresh toppings like salsa, shredded lettuce, and avocado just before serving.',
     ],
     nutrition: {
       calories: '550 kcal',
@@ -1486,13 +1476,13 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Preheat oven to 400°F (200°C).',
-      'On a large baking sheet, combine the chicken chunks, broccoli, bell pepper, and red onion.',
-      'In a small bowl, whisk together the olive oil, lemon juice, oregano, basil, salt, and pepper.',
-      'Pour the olive oil mixture over the chicken and vegetables on the baking sheet and toss until everything is evenly coated.',
-      'Spread the mixture in a single layer on the baking sheet.',
-      'Bake for 25-30 minutes, or until the chicken is cooked through and the vegetables are tender and slightly browned.',
-      'Divide into four containers for meal prep. Serve on its own or with a side of quinoa or rice.'
+      'Preheat the oven: Preheat your oven to 400°F (200°C). Line a large baking sheet with parchment paper for easy cleanup.',
+      'Combine chicken and vegetables: On the large baking sheet, combine the chicken chunks, broccoli florets, chopped bell pepper, and red onion wedges.',
+      'Make the seasoning mix: In a small bowl, whisk together 2 tbsp of olive oil, 1 tbsp of lemon juice, 1 tsp of dried oregano, 1 tsp of dried basil, and a generous pinch of salt and pepper.',
+      'Coat everything: Pour the olive oil and herb mixture over the chicken and vegetables on the baking sheet. Use your hands or tongs to toss everything together until it is evenly coated.',
+      'Arrange and bake: Spread the mixture out in a single, even layer on the baking sheet to ensure everything cooks evenly.',
+      'Roast: Bake for 25-30 minutes, or until the chicken is cooked through and the vegetables are tender and slightly browned at the edges. You can toss the ingredients halfway through for more even browning.',
+      'Serve or store: Divide the cooked chicken and vegetables into four containers for meal prep. It can be served on its own or with a side of quinoa or rice.',
     ],
     nutrition: {
       calories: '420 kcal',
@@ -1531,14 +1521,14 @@ export const recipes: Recipe[] = [
       'Salt to taste'
     ],
     instructions: [
-      'Blend the soaked cashews into a smooth paste.',
-      'Heat butter in a pan over medium heat. Add the onion puree and ginger-garlic paste, and sauté until golden brown.',
-      'Add the tomato puree and cook until the oil starts to separate from the masala.',
-      'Stir in the cashew paste, chili powder, and garam masala. Cook for 2-3 minutes.',
-      'Add 1 cup of water, salt, and bring to a simmer. Let it cook for 5-7 minutes.',
-      'Add the paneer cubes and heavy cream. Simmer for another 2 minutes.',
-      'Crush the dried fenugreek leaves between your palms and stir them into the curry.',
-      'Serve hot with naan or rice.'
+      'Prepare the cashew paste: Blend the soaked cashews with a little water until you have a smooth, creamy paste.',
+      'Sauté the aromatics: Heat 2 tbsp of butter in a pan over medium heat. Add the onion puree and sauté until it turns golden brown and the raw smell disappears. Add the ginger-garlic paste and cook for another minute.',
+      'Build the gravy base: Add the tomato puree and cook until the mixture thickens and you see the oil starting to separate from the masala.',
+      'Add pastes and spices: Stir in the prepared cashew paste, 1 tsp of chili powder, and 1 tsp of garam masala. Cook for 2-3 minutes, stirring continuously.',
+      'Simmer the gravy: Add about 1 cup of water and salt to taste. Bring the mixture to a simmer and let it cook for 5-7 minutes until the gravy thickens.',
+      'Add paneer and cream: Gently add the paneer cubes and 1/2 cup of heavy cream to the gravy. Simmer for just another 2 minutes, being careful not to overcook the paneer.',
+      'Finish with fenugreek: Crush the dried fenugreek leaves between your palms and stir them into the curry. This adds a unique, aromatic finish.',
+      'Serve: Serve the Paneer Butter Masala hot with naan, roti, or basmati rice.',
     ],
     allergens: ['nuts', 'dairy'],
     nutrition: {
@@ -1578,14 +1568,14 @@ export const recipes: Recipe[] = [
       'Salt to taste'
     ],
     instructions: [
-      'Chop and boil the mixed vegetables until they are tender. Drain and set aside.',
-      'Heat oil in a pan, add the chopped onion and sauté until translucent.',
-      'Add ginger-garlic paste and sauté for another minute.',
-      'Lower the heat and add the yogurt, stirring continuously to prevent curdling.',
-      'Add the coconut milk, cashew paste, coriander powder, turmeric powder, and salt. Mix well.',
-      'Add the boiled vegetables to the gravy and simmer for 5-7 minutes.',
-      'Sprinkle with garam masala and stir gently.',
-      'Serve hot with flatbread or rice.'
+      'Prepare the vegetables: Chop your mixed vegetables into bite-sized pieces. You can either steam or boil them until they are tender but still have a slight bite. Drain and set aside.',
+      'Sauté aromatics: Heat 1 tbsp of oil in a pan over medium heat. Add the finely chopped onion and sauté until it becomes translucent.',
+      'Build the gravy: Add the ginger-garlic paste and sauté for another minute. Lower the heat and add 1/2 cup of yogurt, stirring continuously and quickly to prevent it from curdling.',
+      'Add creamy elements: Stir in the 1/2 cup of coconut milk and 1/4 cup of cashew paste. Mix well until you have a smooth gravy.',
+      'Add spices: Add 1 tsp coriander powder, 1/2 tsp turmeric powder, and salt to taste. Mix everything well.',
+      'Combine and simmer: Add the boiled vegetables to the gravy. Gently stir to coat the vegetables. Let the curry simmer for 5-7 minutes on low heat to allow the vegetables to absorb the flavors.',
+      'Final touch: Sprinkle with 1/2 tsp of garam masala and stir gently.',
+      'Serve: Serve the vegetable korma hot with flatbread (like naan or roti) or basmati rice.',
     ],
     allergens: ['nuts', 'dairy'],
     nutrition: {
@@ -1625,14 +1615,13 @@ export const recipes: Recipe[] = [
       'Salt to taste'
     ],
     instructions: [
-      'In a bowl, marinate the lamb cubes with yogurt and a pinch of salt for at least 30 minutes.',
-      'Heat oil in a heavy-bottomed pot. Add the sliced onions and fry until golden brown.',
-      'Add the ginger-garlic paste and sauté for a minute.',
-      'Add all the powdered spices (Kashmiri chili, turmeric, coriander, cumin) and fry for another minute.',
-      'Add the marinated lamb and brown it on all sides.',
-      'Pour in 2 cups of hot water, bring to a boil, then reduce the heat to low. Cover and simmer for 1 to 1.5 hours, or until the lamb is tender.',
-      'Stir in the garam masala and cook for a final 5 minutes.',
-      'Serve hot, garnished with fresh cilantro.'
+      'Marinate the lamb: In a medium bowl, combine the lamb cubes with 1/2 cup of plain yogurt and a pinch of salt. Mix well and set aside to marinate for at least 30 minutes.',
+      'Sauté the onions: Heat 4 tbsp of vegetable oil in a heavy-bottomed pot or Dutch oven over medium-high heat. Add the thinly sliced onions and fry until they are deep golden brown.',
+      'Cook the aromatics and spices: Add the ginger-garlic paste and sauté for one minute until fragrant. Then, add all the powdered spices: Kashmiri red chili, turmeric, coriander, and cumin. Fry for another minute, stirring constantly.',
+      'Brown the lamb: Add the marinated lamb to the pot and cook on high heat, stirring, until the lamb is well browned on all sides.',
+      'Simmer the curry: Pour in 2 cups of hot water, add salt to taste, and bring the mixture to a boil. Once boiling, reduce the heat to low, cover the pot, and let it simmer for 1 to 1.5 hours, or until the lamb is fall-apart tender. Stir occasionally.',
+      'Finish the dish: Stir in 1 tsp of garam masala and cook for a final 5 minutes without the lid to thicken the gravy slightly.',
+      'Serve: Serve hot, garnished with fresh cilantro, alongside basmati rice or naan.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -1669,14 +1658,12 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Season the dry scallops on both sides with salt and pepper.',
-      'Heat olive oil in a large skillet over high heat until it shimmers.',
-      'Carefully place the scallops in the hot skillet in a single layer, ensuring they don’t touch.',
-      'Sear for 1.5-2 minutes on one side without moving them, until a golden-brown crust forms.',
-      'Flip the scallops and add the butter to the pan. As it melts, add the garlic and cook for 1 minute.',
-      'Pour in the wine to deglaze the pan. Let it bubble for 30 seconds.',
-      'Remove from heat, stir in the lemon juice and parsley. Spoon the sauce over the scallops.',
-      'Serve immediately.'
+      'Prepare the scallops: Ensure your scallops are completely dry by patting them with a paper towel. This is the most important step for getting a good sear. Season both sides with salt and pepper.',
+      'Heat the pan: Heat 2 tbsp of olive oil in a large skillet over high heat. The pan should be very hot, and the oil should shimmer before you add the scallops.',
+      'Sear the scallops: Carefully place the scallops in the hot skillet in a single layer, making sure they don’t touch each other. Sear for 1.5 to 2 minutes on one side without moving them, until a beautiful golden-brown crust forms.',
+      'Flip and add butter/garlic: Flip the scallops. Immediately add 3 tbsp of unsalted butter to the pan. As it melts, add the minced garlic and swirl the pan to combine. Cook for another 1-2 minutes.',
+      'Create the sauce: Deglaze the pan by pouring in 1/4 cup of dry white wine or chicken broth. Let it bubble for 30 seconds, scraping up any browned bits from the bottom of the pan.',
+      'Finish and serve: Remove the skillet from the heat. Stir in the juice of half a lemon and 2 tbsp of chopped fresh parsley. Spoon the sauce over the scallops and serve immediately.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -1715,11 +1702,12 @@ export const recipes: Recipe[] = [
       'Salt and pepper to taste'
     ],
     instructions: [
-      'Heat olive oil in a large pot. Add onion, carrots, and celery. Cook until softened.',
-      'Add the cubed butternut squash, vegetable broth, sage, and nutmeg. Bring to a boil, then simmer for 20-25 minutes until squash is tender.',
-      'Use an immersion blender to puree the soup until smooth. Or, blend in batches in a regular blender.',
-      'Stir in the coconut milk or cream. Season with salt and pepper.',
-      'Serve hot, garnished with a swirl of cream and toasted pumpkin seeds if desired.'
+      'Sauté the vegetables: Heat 1 tbsp of olive oil in a large pot or Dutch oven over medium heat. Add the chopped onion, carrots, and celery. Cook until they are softened, about 8-10 minutes.',
+      'Add squash and broth: Add the cubed butternut squash to the pot, along with 4 cups of vegetable broth, 1/2 tsp of dried sage, and a pinch of nutmeg. Bring the mixture to a boil.',
+      'Simmer until tender: Reduce the heat to low, cover the pot, and let it simmer for 20-25 minutes, or until the butternut squash is very tender and can be easily pierced with a fork.',
+      'Blend the soup: Use an immersion blender to puree the soup directly in the pot until it is silky smooth. Alternatively, you can carefully blend it in batches in a regular blender and then return it to the pot.',
+      'Add creaminess: Stir in 1/2 cup of coconut milk or heavy cream. This will give the soup a rich, velvety texture.',
+      'Season and serve: Season the soup with salt and pepper to your taste. Serve hot, and if desired, garnish with a swirl of cream, toasted pumpkin seeds, or fresh herbs.',
     ],
     allergens: ['dairy'],
     nutrition: {
@@ -1758,12 +1746,12 @@ export const recipes: Recipe[] = [
       '1 tsp sriracha (optional)'
     ],
     instructions: [
-      'Cook noodles according to package directions. Drain and rinse with cold water.',
-      'While noodles cook, whisk all sauce ingredients together in a small bowl.',
-      'Heat sesame oil in a large skillet or wok over medium-high heat. Add the mixed vegetables and stir-fry for 5-7 minutes until tender-crisp.',
-      'Add the garlic and ginger and cook for 1 more minute until fragrant.',
-      'Add the cooked noodles and the sauce to the skillet. Toss everything together until the noodles are well coated.',
-      'Serve immediately, garnished with sesame seeds and chopped green onions.'
+      'Cook the noodles: Cook the lo mein noodles or spaghetti according to the package directions. Drain them and rinse with cold water to prevent sticking, then set aside.',
+      'Prepare the sauce: While the noodles are cooking, whisk together all the sauce ingredients (1/4 cup soy sauce, 2 tbsp honey or maple syrup, 1 tbsp rice vinegar, and 1 tsp sriracha if using) in a small bowl.',
+      'Stir-fry the vegetables: Heat 1 tbsp of sesame oil in a large skillet or wok over medium-high heat. Add your mixed vegetables (like broccoli, snow peas, carrots, and bell peppers) and stir-fry for 5-7 minutes until they are tender-crisp.',
+      'Add aromatics: Add the minced garlic and grated ginger to the skillet and cook for one more minute until they become fragrant.',
+      'Combine everything: Add the cooked noodles and the prepared sauce to the skillet with the vegetables. Use tongs to toss everything together until the noodles and vegetables are well coated in the sauce.',
+      'Serve: Serve the lo mein immediately, garnished with sesame seeds and chopped green onions if desired.',
     ],
     allergens: ['gluten'],
     nutrition: {
@@ -1800,13 +1788,12 @@ export const recipes: Recipe[] = [
       'Sour cream and salsa for serving'
     ],
     instructions: [
-      'Heat olive oil in a skillet over medium heat. Add mushrooms and cook until browned, about 5-7 minutes.',
-      'Add garlic and cook for 1 minute. Add the spinach and cook until just wilted. Season with salt and pepper.',
-      'Wipe out the skillet and place a tortilla in it. Sprinkle half of the tortilla with 1/4 of the cheese.',
-      'Spoon half of the mushroom and spinach mixture over the cheese. Sprinkle with another 1/4 of the cheese.',
-      'Fold the tortilla in half and cook for 2-3 minutes per side, until golden brown and the cheese is melted.',
-      'Repeat with the remaining ingredients to make a second quesadilla.',
-      'Cut into wedges and serve hot with sour cream and salsa.'
+      'Cook the filling: Heat 1 tbsp of olive oil in a skillet over medium heat. Add the sliced mushrooms and cook until they have released their liquid and are nicely browned, which should take about 5-7 minutes. Add the minced garlic and cook for 1 minute more. Add the fresh spinach in handfuls and cook until it is just wilted. Season the mixture with salt and pepper and remove from the skillet.',
+      'Assemble the first quesadilla: Wipe out the skillet and return it to medium heat. Place one tortilla in the skillet. Sprinkle about half of one side of the tortilla with 1/4 of the cheese.',
+      'Add filling: Spoon half of the mushroom and spinach mixture over the cheese. Sprinkle with another 1/4 of the cheese on top of the filling.',
+      'Cook the quesadilla: Fold the empty half of the tortilla over the filling. Cook for 2-3 minutes per side, until the tortilla is golden brown and crispy, and the cheese is fully melted.',
+      'Repeat: Remove the first quesadilla from the skillet and repeat the process with the remaining ingredients to make the second quesadilla.',
+      'Serve: Cut the quesadillas into wedges and serve them hot with sour cream and salsa for dipping.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1847,13 +1834,14 @@ export const recipes: Recipe[] = [
       '1 cup boiling water'
     ],
     instructions: [
-      'Preheat oven to 350°F (175°C). Grease and flour two 9-inch round cake pans.',
-      'In a large bowl, stir together flour, sugar, cocoa, baking soda, baking powder, and salt.',
-      'Add buttermilk, oil, eggs, and vanilla. Beat on medium speed for 2 minutes.',
-      'Stir in boiling water (batter will be thin). Pour evenly into prepared pans.',
-      'Bake for 30 to 35 minutes, or until a wooden skewer inserted into the center comes out clean.',
-      'Cool in pans for 10 minutes before removing to wire racks to cool completely.',
-      'Frost with your favorite chocolate frosting.'
+      'Preheat oven and prepare pans: Preheat your oven to 350°F (175°C). Grease and flour two 9-inch round cake pans. You can also line the bottoms with parchment paper for easy removal.',
+      'Combine dry ingredients: In a large bowl, sift or whisk together the flour, sugar, cocoa powder, baking soda, baking powder, and salt.',
+      'Combine wet ingredients: In a separate bowl, mix together the buttermilk, vegetable oil, eggs, and vanilla extract.',
+      'Mix the batter: Pour the wet ingredients into the dry ingredients and beat on medium speed with a mixer for about 2 minutes, until well combined.',
+      'Add boiling water: Carefully stir in 1 cup of boiling water. The batter will be very thin; this is normal and is the key to a moist cake.',
+      'Bake the cake: Pour the batter evenly into the two prepared pans. Bake for 30 to 35 minutes, or until a wooden skewer inserted into the center of the cakes comes out clean.',
+      'Cool the cakes: Let the cakes cool in the pans for about 10 minutes before inverting them onto wire racks to cool completely.',
+      'Frost and serve: Once the cakes are completely cool, frost with your favorite chocolate frosting.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1891,14 +1879,13 @@ export const recipes: Recipe[] = [
       '3/4 cup heavy cream'
     ],
     instructions: [
-      'Preheat oven to 350°F (175°C). Mix graham cracker crumbs, 1/4 cup sugar, and melted butter. Press into the bottom of a 9-inch springform pan.',
-      'Bake crust for 10 minutes. Cool on a wire rack.',
-      'In a large bowl, beat cream cheese, 1 1/4 cups sugar, and cornstarch until smooth.',
-      'Beat in vanilla, then add eggs one at a time, mixing on low speed until just combined.',
-      'Stir in heavy cream. Pour filling over the cooled crust.',
-      'Bake for 15 minutes. Reduce oven temperature to 200°F (95°C) and continue baking for 1 hour.',
-      'Turn off the oven and let the cheesecake cool in the oven with the door closed for 2 hours.',
-      'Chill in the refrigerator for at least 4 hours before serving.'
+      'Prepare the crust: Preheat your oven to 350°F (175°C). In a small bowl, mix together the graham cracker crumbs, 1/4 cup of sugar, and the melted butter. Press this mixture firmly and evenly into the bottom of a 9-inch springform pan.',
+      'Pre-bake the crust: Bake the crust for 10 minutes. Afterward, let it cool on a wire rack while you prepare the filling.',
+      'Make the filling base: In a large bowl, using an electric mixer, beat the softened cream cheese, 1 1/4 cups of sugar, and the cornstarch on medium speed until the mixture is smooth and creamy. Scrape down the sides of the bowl as needed.',
+      'Add remaining filling ingredients: Beat in the vanilla extract. Add the eggs one at a time, mixing on low speed until just combined after each addition. Be careful not to overmix. Stir in the heavy cream.',
+      'Bake the cheesecake: Pour the filling over the cooled crust. Bake for 15 minutes at 350°F (175°C). Then, reduce the oven temperature to 200°F (95°C) and continue baking for 1 hour. The center should still have a slight wobble.',
+      'Cool the cheesecake slowly: Turn off the oven and let the cheesecake cool in the oven with the door closed for 2 hours. This slow cooling process helps prevent cracks.',
+      'Chill before serving: Remove the cheesecake from the oven and let it cool completely at room temperature. Then, cover it and chill in the refrigerator for at least 4 hours, or preferably overnight, before serving.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1936,13 +1923,13 @@ export const recipes: Recipe[] = [
       '1/2 cup unsalted butter, cold and cubed'
     ],
     instructions: [
-      'Preheat oven to 375°F (190°C).',
-      'In a large bowl, toss the apple slices with 1/4 cup brown sugar, cinnamon, and lemon juice. Spread evenly in a baking dish.',
-      'In a separate bowl, combine flour, oats, and 1 cup brown sugar for the topping.',
-      'Cut in the cold butter using a pastry blender or your fingers until the mixture resembles coarse crumbs.',
-      'Sprinkle the crumble topping evenly over the apples.',
-      'Bake for 35-45 minutes, or until the fruit is bubbly and the topping is golden brown.',
-      'Let cool slightly before serving.'
+      'Preheat oven: Preheat your oven to 375°F (190°C).',
+      'Prepare the apple filling: In a large bowl, toss the peeled and sliced apples with 1/4 cup of brown sugar, 1 tsp of cinnamon, and 1 tbsp of lemon juice. The lemon juice will prevent the apples from browning. Spread this mixture evenly in a 9x9 inch baking dish.',
+      'Make the crumble topping: In a separate bowl, combine 1 cup of all-purpose flour, 1 cup of rolled oats, and 1 cup of brown sugar.',
+      'Cut in the butter: Add the cold, cubed butter to the dry topping ingredients. Use a pastry blender, two knives, or your fingertips to cut the butter into the mixture until it resembles coarse crumbs with some pea-sized pieces remaining.',
+      'Assemble the crumble: Sprinkle the crumble topping evenly over the apple mixture in the baking dish.',
+      'Bake: Bake for 35-45 minutes, or until the fruit filling is bubbly and tender, and the topping is golden brown and crisp.',
+      'Cool and serve: Let the crumble cool slightly before serving. It is delicious served warm, especially with a scoop of vanilla ice cream or a drizzle of cream.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1979,15 +1966,14 @@ export const recipes: Recipe[] = [
       'Unsweetened cocoa powder for dusting'
     ],
     instructions: [
-      'In a medium bowl, whisk together egg yolks and sugar until light and pale.',
-      'Whisk in mascarpone cheese until smooth.',
-      'Gently fold in the whipped cream.',
-      'In a shallow dish, combine cooled coffee and rum (if using).',
-      'Briefly dip each ladyfinger into the coffee mixture and arrange a single layer in the bottom of a serving dish.',
-      'Spread half of the mascarpone mixture over the ladyfingers.',
-      'Repeat with another layer of dipped ladyfingers and the remaining mascarpone mixture.',
-      'Cover and refrigerate for at least 4 hours, or overnight.',
-      'Just before serving, dust generously with cocoa powder.'
+      'Make the mascarpone cream: In a medium heatproof bowl set over a saucepan of simmering water, whisk together the 6 egg yolks and 3/4 cup of sugar continuously until the mixture is pale, thick, and has doubled in volume. Remove from heat and let it cool slightly. Whisk in the mascarpone cheese until smooth.',
+      'Fold in whipped cream: In a separate bowl, whip 1 1/2 cups of heavy cream to stiff peaks. Gently fold the whipped cream into the mascarpone mixture in two or three additions until just combined.',
+      'Prepare the coffee mixture: In a shallow dish, combine the cooled strong brewed coffee and the rum or brandy (if using).',
+      'Assemble the first layer: Working one at a time, briefly dip each ladyfinger into the coffee mixture (do not let them get soggy). Arrange them in a single layer in the bottom of an 8x8 inch or similar-sized serving dish.',
+      'Add cream layer: Spread half of the mascarpone cream mixture evenly over the ladyfingers.',
+      'Assemble the second layer: Repeat the process with another layer of dipped ladyfingers, followed by the remaining mascarpone mixture, spreading it smoothly.',
+      'Chill the tiramisu: Cover the dish with plastic wrap and refrigerate for at least 4 hours, but preferably overnight, to allow it to set and the flavors to meld.',
+      'Serve: Just before serving, dust the top generously with unsweetened cocoa powder.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -2023,13 +2009,13 @@ export const recipes: Recipe[] = [
       'Powdered sugar for dusting'
     ],
     instructions: [
-      'Preheat your oven to 325°F (165°C).',
-      'In a medium bowl, whisk the eggs and sugar together until well combined.',
-      'Whisk in the lemon juice, melted butter, and lemon zest until smooth.',
-      'Pour the lemon filling into the pre-baked tart shell.',
-      'Bake for 30-35 minutes, or until the center of the filling is just set (it should still have a slight wobble).',
-      'Let the tart cool completely on a wire rack.',
-      'Refrigerate for at least 1 hour before serving. Dust with powdered sugar just before slicing.'
+      'Preheat the oven: Preheat your oven to 325°F (165°C). Ensure your tart shell is pre-baked and ready.',
+      'Make the lemon filling: In a medium bowl, whisk the 4 large eggs and 1 cup of granulated sugar together until they are well combined and slightly pale.',
+      'Add lemon and butter: Whisk in 2/3 cup of fresh lemon juice, 1/2 cup of melted unsalted butter, and the zest of 2 lemons until the mixture is smooth.',
+      'Bake the tart: Pour the lemon filling into the pre-baked tart shell. Bake for 30-35 minutes. The filling is done when the center is just set; it should still have a slight wobble when gently shaken.',
+      'Cool the tart: Let the tart cool completely on a wire rack at room temperature.',
+      'Chill before serving: Once cooled, refrigerate the tart for at least 1 hour before serving to ensure it is fully set.',
+      'Garnish and serve: Just before slicing, dust the top with powdered sugar for a beautiful presentation.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
