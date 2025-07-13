@@ -1,24 +1,27 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  type User,
+} from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
-import { 
-    type User, 
-    type UserRole, 
-    authenticateUser, 
-    registerUser, 
-    getUserByEmail, 
-    initializeUsers 
-} from '@/lib/auth-data';
 
 interface AuthContextType {
   user: User | null;
-  userRole: UserRole | null;
   loading: boolean;
-  login: (email: string, pass: string) => Promise<User | null>;
-  signup: (email: string, pass: string, username: string) => Promise<User | null>;
+  loginWithGoogle: () => Promise<User | null>;
+  loginWithEmail: (email: string, pass: string) => Promise<User | null>;
+  signupWithEmail: (email: string, pass: string, username: string) => Promise<User | null>;
   logout: () => void;
 }
 
@@ -30,67 +33,68 @@ const LoadingScreen = () => (
     </div>
 );
 
-const SESSION_KEY = 'savora-session';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
-  
+  const router = useRouter();
+
   useEffect(() => {
-    // Initialize default users if not already present
-    initializeUsers();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
+    return () => unsubscribe();
+  }, []);
+
+  const loginWithGoogle = async (): Promise<User | null> => {
+    const provider = new GoogleAuthProvider();
     try {
-        const session = localStorage.getItem(SESSION_KEY);
-        if (session) {
-            const sessionUser = JSON.parse(session);
-            const fullUser = getUserByEmail(sessionUser.email);
-            if (fullUser) {
-                setUser(fullUser);
-                setUserRole(fullUser.role);
-            }
-        }
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
     } catch (error) {
-        console.error("Failed to parse user session:", error);
-        localStorage.removeItem(SESSION_KEY);
-    } finally {
-        setLoading(false);
+      console.error('Google sign-in error', error);
+      throw error;
     }
-  }, []);
-
-  const signup = async (email: string, password: string, username: string): Promise<User | null> => {
-    const newUser = registerUser({ email, password, displayName: username });
-    if (newUser) {
-      return newUser;
-    }
-    throw new Error("User with this email already exists.");
   };
 
-  const login = async (email: string, password: string): Promise<User | null> => {
-    const authenticatedUser = authenticateUser(email, password);
-    if (authenticatedUser) {
-      setUser(authenticatedUser);
-      setUserRole(authenticatedUser.role);
-      localStorage.setItem(SESSION_KEY, JSON.stringify(authenticatedUser));
-      return authenticatedUser;
+  const loginWithEmail = async (email: string, pass: string): Promise<User | null> => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        return userCredential.user;
+    } catch (error) {
+        console.error("Email/Password login error", error);
+        throw error;
     }
-    throw new Error("Invalid email or password.");
   };
 
-  const logout = useCallback(() => {
+  const signupWithEmail = async (email: string, pass: string, username: string): Promise<User | null> => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        if(userCredential.user) {
+            await updateProfile(userCredential.user, { displayName: username });
+            // Manually update the user state as onAuthStateChanged might not fire immediately
+            setUser({ ...userCredential.user, displayName: username });
+        }
+        return userCredential.user;
+    } catch (error) {
+        console.error("Email/Password signup error", error);
+        throw error;
+    }
+  };
+
+  const logout = async () => {
     setUser(null);
-    setUserRole(null);
-    localStorage.removeItem(SESSION_KEY);
-    // The redirect will be handled by the pages themselves
-  }, []);
+    await signOut(auth);
+    router.push('/login');
+  };
 
   const value = {
     user,
-    userRole,
     loading,
-    login,
-    signup,
+    loginWithGoogle,
+    loginWithEmail,
+    signupWithEmail,
     logout,
   };
 

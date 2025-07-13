@@ -32,7 +32,6 @@ import {
 } from "@/components/ui/select";
 import {
     Tooltip,
-    TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
@@ -112,7 +111,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     setHasMounted(true);
     setCheckedIngredients(new Set());
     if (user) {
-      setIsFavorite(isFavoriteRecipe(recipe.id, user.uid));
+      setIsFavorite(isFavoriteRecipe(recipe.id.toString(), user.uid));
     } else {
       setIsFavorite(false);
     }
@@ -305,7 +304,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
         return;
     }
     if (isFavorite) {
-        removeFavoriteRecipe(recipe.id, user.uid);
+        removeFavoriteRecipe(recipe.id.toString(), user.uid);
         setIsFavorite(false);
         toast({ title: "Removed from favorites" });
     } else {

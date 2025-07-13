@@ -28,7 +28,7 @@ const formSchema = z
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { signup } = useAuth();
+  const { signupWithEmail } = useAuth();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,14 +44,12 @@ export function SignUpForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      await signup(values.email, values.password, values.username);
+      await signupWithEmail(values.email, values.password, values.username);
       toast({
         title: 'Account Created',
-        description: 'You have successfully signed up! Please switch to the Login tab to log in.',
+        description: 'You have successfully signed up! Please log in to continue.',
       });
-      form.reset();
-      // Note: We don't log the user in automatically. 
-      // They must go to the login tab.
+      router.push('/dashboard'); 
     } catch (error: any) {
       toast({
         variant: 'destructive',

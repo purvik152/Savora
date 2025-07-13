@@ -78,26 +78,26 @@ export function addFavoriteRecipe(recipe: Recipe, userId: string): void {
   const key = `${FAVORITE_RECIPES_PREFIX}${userId}`;
 
   const favoriteRecipes = getFromStorage<Recipe>(key);
-  if (!favoriteRecipes.some((r) => r.id === recipe.id)) {
+  if (!favoriteRecipes.some((r) => r.id.toString() === recipe.id.toString())) {
     const updatedFavorites = [...favoriteRecipes, recipe];
     setInStorage(key, updatedFavorites);
   }
 }
 
-export function removeFavoriteRecipe(recipeId: number, userId: string): void {
+export function removeFavoriteRecipe(recipeId: string, userId: string): void {
   if (!userId) return;
   const key = `${FAVORITE_RECIPES_PREFIX}${userId}`;
 
   const favoriteRecipes = getFromStorage<Recipe>(key);
-  const updatedFavorites = favoriteRecipes.filter((r) => r.id !== recipeId);
+  const updatedFavorites = favoriteRecipes.filter((r) => r.id.toString() !== recipeId);
   setInStorage(key, updatedFavorites);
 }
 
-export function isFavoriteRecipe(recipeId: number, userId: string): boolean {
+export function isFavoriteRecipe(recipeId: string, userId: string): boolean {
   if (!userId) return false;
   
   const favoriteRecipes = getFavoriteRecipes(userId);
-  return favoriteRecipes.some((r) => r.id === recipeId);
+  return favoriteRecipes.some((r) => r.id.toString() === recipeId);
 }
 
 
@@ -127,16 +127,16 @@ export async function saveRecipeForOffline(recipe: Recipe, userId: string): Prom
     const offlineRecipes = getOfflineRecipes(userId);
     
     // Remove if it already exists to add the new version
-    const updatedRecipes = offlineRecipes.filter(r => r.id !== recipe.id);
+    const updatedRecipes = offlineRecipes.filter(r => r.slug !== recipe.slug);
     updatedRecipes.unshift(offlineRecipe); // Add to the front
 
     setInStorage(key, updatedRecipes);
 }
 
-export function isRecipeAvailableOffline(recipeId: number, userId: string): boolean {
+export function isRecipeAvailableOffline(slug: string, userId: string): boolean {
     if (!userId) return false;
     const offlineRecipes = getOfflineRecipes(userId);
-    return offlineRecipes.some(r => r.id === recipeId);
+    return offlineRecipes.some(r => r.slug === slug);
 }
 
 export function getOfflineRecipe(slug: string, userId: string): OfflineRecipe | undefined {

@@ -129,16 +129,16 @@ function FavoritesList() {
     const { toast } = useToast();
     const { diet } = useDiet();
     const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
-    const [offlineStatus, setOfflineStatus] = useState<Record<number, boolean>>({});
-    const [downloading, setDownloading] = useState<Record<number, boolean>>({});
+    const [offlineStatus, setOfflineStatus] = useState<Record<string, boolean>>({});
+    const [downloading, setDownloading] = useState<Record<string, boolean>>({});
     
     useEffect(() => {
         if (user) {
             const favs = getFavoriteRecipes(user.uid);
             setFavoriteRecipes(favs);
-            const status: Record<number, boolean> = {};
+            const status: Record<string, boolean> = {};
             favs.forEach(recipe => {
-                status[recipe.id] = isRecipeAvailableOffline(recipe.id, user.uid);
+                status[recipe.slug] = isRecipeAvailableOffline(recipe.slug, user.uid);
             });
             setOfflineStatus(status);
         }
@@ -146,10 +146,10 @@ function FavoritesList() {
 
     const handleDownload = async (recipe: Recipe) => {
         if (!user) return;
-        setDownloading(prev => ({ ...prev, [recipe.id]: true }));
+        setDownloading(prev => ({ ...prev, [recipe.slug]: true }));
         try {
             await saveRecipeForOffline(recipe, user.uid);
-            setOfflineStatus(prev => ({ ...prev, [recipe.id]: true }));
+            setOfflineStatus(prev => ({ ...prev, [recipe.slug]: true }));
             toast({
                 title: "Recipe Saved Offline",
                 description: `"${recipe.title}" is now available for offline use.`
@@ -162,7 +162,7 @@ function FavoritesList() {
                 description: 'Could not save the recipe for offline use. Please try again.'
             });
         } finally {
-            setDownloading(prev => ({ ...prev, [recipe.id]: false }));
+            setDownloading(prev => ({ ...prev, [recipe.slug]: false }));
         }
     };
     
@@ -188,7 +188,7 @@ function FavoritesList() {
                         <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
                       </Link>
                        <div className="flex-grow">
-                         <Link href={offlineStatus[recipe.id] ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
+                         <Link href={offlineStatus[recipe.slug] ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
                            <h3 className="font-semibold hover:underline">{recipe.title}</h3>
                          </Link>
                          <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
@@ -197,11 +197,11 @@ function FavoritesList() {
                            variant="outline" 
                            size="icon"
                            onClick={() => handleDownload(recipe)}
-                           disabled={offlineStatus[recipe.id] || downloading[recipe.id]}
-                           className={cn(offlineStatus[recipe.id] && "border-green-500 text-green-500")}
-                           title={offlineStatus[recipe.id] ? 'Available Offline' : 'Download for Offline Use'}
+                           disabled={offlineStatus[recipe.slug] || downloading[recipe.slug]}
+                           className={cn(offlineStatus[recipe.slug] && "border-green-500 text-green-500")}
+                           title={offlineStatus[recipe.slug] ? 'Available Offline' : 'Download for Offline Use'}
                        >
-                           {downloading[recipe.id] ? (
+                           {downloading[recipe.slug] ? (
                                <Loader2 className="h-4 w-4 animate-spin" />
                            ) : (
                                <Download className="h-4 w-4" />
@@ -220,30 +220,21 @@ function FavoritesList() {
 
 
 export default function DashboardPage() {
-  const { user, userRole, loading, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const { diet } = useDiet();
-
-  const [avatarSrc, setAvatarSrc] = useState('https://placehold.co/128x128.png');
-  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
+    if (!loading && !user) {
         router.push('/login');
-      } else {
+    } else if (user) {
         // User is logged in, fetch their data
-        const storedAvatar = localStorage.getItem(`savora-avatar_${user.email}`);
-        if (storedAvatar) {
-          setAvatarSrc(storedAvatar);
-        }
         setPastRecipes(getPastRecipes(user.uid));
         setFavoriteRecipes(getFavoriteRecipes(user.uid));
-      }
     }
   }, [user, loading, router]);
 
@@ -262,65 +253,12 @@ export default function DashboardPage() {
     return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && user) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement('img');
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 256;
-          const MAX_HEIGHT = 256;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
-          ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL(file.type, 0.9); // Use file's mime type, jpeg with quality 0.9
-          setAvatarSrc(dataUrl);
-          try {
-            localStorage.setItem(`savora-avatar_${user.email}`, dataUrl);
-          } catch (error) {
-            console.error(error);
-            toast({
-              variant: 'destructive',
-              title: 'Could not save avatar',
-              description: 'The image might still be too large. Please try a smaller one.',
-            });
-          }
-        };
-        img.src = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleEditClick = () => {
-    fileInputRef.current?.click();
-  };
-
   const handleLogout = () => {
     logout();
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out.',
     });
-    router.push('/login');
   };
   
   if (loading || !user) {
@@ -332,19 +270,9 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={avatarSrc} alt={user.displayName || 'User'} data-ai-hint="avatar user" />
-            <AvatarFallback>{user.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'SU'}</AvatarFallback>
+            <AvatarImage src={user.photoURL || `https://placehold.co/128x128.png`} alt={user.displayName || 'User'} data-ai-hint="avatar user" />
+            <AvatarFallback>{user.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'U'}</AvatarFallback>
           </Avatar>
-           <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-            accept="image/*"
-          />
-          <Button size="icon" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleEditClick}>
-            <Edit className="h-4 w-4" />
-          </Button>
         </div>
         <div className="text-center md:text-left">
           <h1 className="text-4xl font-bold">{user.displayName || 'Savora User'}</h1>
@@ -364,14 +292,6 @@ export default function DashboardPage() {
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
-              {userRole === 'admin' && (
-                <Button asChild>
-                    <Link href="/admin">
-                        <Shield className="mr-2 h-4 w-4" />
-                        Admin Panel
-                    </Link>
-                </Button>
-              )}
           </div>
         </div>
       </div>

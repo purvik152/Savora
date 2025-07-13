@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -10,20 +10,24 @@ import { Loader2, ShieldCheck, Users, BarChart, FilePlus, LogOut } from 'lucide-
 import Link from 'next/link';
 
 function AdminDashboard() {
-  const { user, userRole, loading, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
+  
+  // This is a simplified role check for the prototype.
+  // In a real app, this would be a secure check against a backend or custom claims.
+  const isAdmin = user?.email === 'admin@savora.com';
 
   useEffect(() => {
     if (!loading) {
       if (!user) {
         router.push('/login');
-      } else if (userRole !== 'admin') {
+      } else if (!isAdmin) {
         router.push('/dashboard'); // Redirect non-admins to the user dashboard
       }
     }
-  }, [user, userRole, loading, router]);
+  }, [user, isAdmin, loading, router]);
 
-  if (loading || !user || userRole !== 'admin') {
+  if (loading || !user || !isAdmin) {
     return (
       <div className="container mx-auto flex h-full flex-col items-center justify-center px-4 py-8 md:py-12">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
