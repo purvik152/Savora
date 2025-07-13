@@ -7,7 +7,8 @@ import {
   onAuthStateChanged,
   signOut,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
@@ -15,11 +16,12 @@ import {
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  loginWithGoogle: () => Promise<User | null>;
+  loginWithGoogle: () => Promise<void>;
   loginWithEmail: (email: string, pass: string) => Promise<User | null>;
   signupWithEmail: (email: string, pass: string, username: string) => Promise<User | null>;
   logout: () => void;
@@ -37,25 +39,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
     });
+    
+    // Check for redirect result
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          toast({
+            title: "Login Successful",
+            description: `Welcome back, ${result.user.displayName}!`
+          });
+          router.push('/dashboard');
+        }
+      })
+      .catch((error) => {
+        console.error("Redirect result error", error);
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: error.message || "An unexpected error occurred during redirect."
+        })
+      });
 
     return () => unsubscribe();
-  }, []);
+  }, [router, toast]);
 
-  const loginWithGoogle = async (): Promise<User | null> => {
+  const loginWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      return result.user;
-    } catch (error) {
-      console.error('Google sign-in error', error);
-      throw error;
-    }
+    await signInWithRedirect(auth, provider);
   };
 
   const loginWithEmail = async (email: string, pass: string): Promise<User | null> => {

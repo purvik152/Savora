@@ -81,14 +81,8 @@ export function LoginForm() {
   async function handleGoogleLogin() {
     setGoogleLoading(true);
     try {
-      const user = await loginWithGoogle();
-      if (user) {
-          toast({
-            title: 'Login Successful',
-            description: `Welcome, ${user.displayName}! Redirecting...`,
-          });
-          router.push('/dashboard');
-      }
+      await loginWithGoogle();
+      // No need to handle the result here, the AuthContext will do it.
     } catch (error: any) {
         console.error("Google login error:", error);
         toast({
@@ -96,7 +90,6 @@ export function LoginForm() {
             title: 'Google Login Failed',
             description: error.message || 'Could not sign in with Google. Please try again.',
         });
-    } finally {
         setGoogleLoading(false);
     }
   }
@@ -150,9 +143,8 @@ export function LoginForm() {
           {googleLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <GoogleIcon />
+            <><GoogleIcon /> <span className="ml-2">Sign in with Google</span></>
           )}
-          Sign in with Google
         </Button>
       </form>
     </Form>
