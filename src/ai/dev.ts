@@ -14,4 +14,5 @@ import '@/ai/flows/latest-food-news-flow.ts';
 import '@/ai/flows/suggest-by-ingredients-flow.ts';
 import '@/ai/flows/activity-based-suggestions-flow.ts';
 import '@/ai/flows/generate-meal-plan-flow.ts';
+import '@/ai/flows/import-recipe-from-url-flow.ts';
 
