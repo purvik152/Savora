@@ -332,7 +332,7 @@ export default function Home() {
             <CarouselContent>
               {featuredRecipes.map((recipe, index) => (
                 <CarouselItem key={index}>
-                  <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-secondary">
+                  <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
                     <Link href={recipe.href} className="block h-full w-full group">
                         <Image
                           src={recipe.image}
@@ -355,7 +355,7 @@ export default function Home() {
             </CarouselContent>
           </Carousel>
         ) : (
-          <Skeleton className="h-[450px] w-full rounded-lg" />
+          <Skeleton className="h-[550px] w-full rounded-sm" />
         )}
       </section>
 
