@@ -47,14 +47,26 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const { user, loading } = useAuth();
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 10);
+
+      // Hide header on scroll down, show on scroll up
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false); // Scrolling down
+      } else {
+        setIsHeaderVisible(true); // Scrolling up
+      }
+      setLastScrollY(currentScrollY);
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -68,7 +80,7 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('keydown', down);
     };
-  }, []);
+  }, [lastScrollY]);
   
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -76,7 +88,11 @@ export function Header() {
 
   return (
     <>
-      <header className={cn("sticky top-0 z-50 w-full transition-all duration-300", isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent")}>
+      <header className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300", 
+        isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent",
+        isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+      )}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className={cn("flex items-center justify-between transition-all duration-300", isScrolled ? "h-16" : "h-20")}>
             <Link href="/" className="flex items-center gap-2">
