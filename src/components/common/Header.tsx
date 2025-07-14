@@ -20,6 +20,7 @@ const navLinks = [
   { href: '/recipes', label: 'Recipes' },
   { href: '/community', label: 'Community' },
   { href: '/mood-kitchen', label: 'Mood Kitchen' },
+  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
 ];

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart, AlertTriangle } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart, AlertTriangle, WandSparkles, Bot } from "lucide-react";
 import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { InstructionStep } from '@/components/recipes/InstructionStep';
@@ -16,7 +16,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from '@/hooks/use-toast';
 import { adjustRecipe } from '@/ai/flows/adjust-recipe-flow';
 import { parseIngredientsForSearch } from '@/ai/flows/parse-ingredients-flow';
+import { adaptRecipe, AdaptRecipeOutput } from '@/ai/flows/adapt-recipe-flow';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   ChartContainer,
   ChartConfig,
@@ -83,19 +86,24 @@ function RecipePageSkeleton() {
 }
 
 
-function RecipeView({ recipe }: { recipe: Recipe }) {
+function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-
   const [hasMounted, setHasMounted] = useState(false);
-  
+
+  // State for the current recipe being displayed
+  const [recipe, setRecipe] = useState(initialRecipe);
+  const [isAdapted, setIsAdapted] = useState(false);
+
   const initialServings = parseInt(recipe.servings.match(/\d+/)?.[0] || '1', 10);
   const [servings, setServings] = useState(initialServings);
   const [displayedIngredients, setDisplayedIngredients] = useState(recipe.ingredients);
   const [displayedInstructions, setDisplayedInstructions] = useState(recipe.instructions);
   const [displayedPrepTime, setDisplayedPrepTime] = useState(recipe.prepTime);
   const [displayedCookTime, setDisplayedCookTime] = useState(recipe.cookTime);
+  const [displayedTitle, setDisplayedTitle] = useState(recipe.title);
+  
   const [isAdjusting, setIsAdjusting] = useState(false);
   const [language, setLanguage] = useState('english');
   const [isTranslating, setIsTranslating] = useState(false);
@@ -104,19 +112,33 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [isOrdering, setIsOrdering] = useState(false);
 
-  const isProcessing = isAdjusting || isTranslating;
+  // State for recipe adaptation
+  const [adaptRequest, setAdaptRequest] = useState('');
+  const [isAdapting, setIsAdapting] = useState(false);
+  const [adaptationSummary, setAdaptationSummary] = useState<string | null>(null);
+
+  const isProcessing = isAdjusting || isTranslating || isAdapting;
   
   const allergens = useMemo(() => recipe.allergens || [], [recipe.allergens]);
-
+  
+  // Effect to reset state when the underlying recipe changes (e.g., from adaptation)
   useEffect(() => {
-    setHasMounted(true);
+    setDisplayedIngredients(recipe.ingredients);
+    setDisplayedInstructions(recipe.instructions);
+    setDisplayedPrepTime(recipe.prepTime);
+    setDisplayedCookTime(recipe.cookTime);
+    setDisplayedTitle(recipe.title);
+    const newInitialServings = parseInt(recipe.servings.match(/\d+/)?.[0] || '1', 10);
+    setServings(newInitialServings);
     setCheckedIngredients(new Set());
     if (user) {
       setIsFavorite(isFavoriteRecipe(recipe.id.toString(), user.uid));
-    } else {
-      setIsFavorite(false);
     }
-  }, [recipe.id, displayedIngredients, user]);
+  }, [recipe, user]);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   
 
   const chartConfig = useMemo(() => ({
@@ -158,7 +180,6 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     
     setIsTranslating(true);
     setLanguage(newLanguage);
-    // Reset servings to original when changing language to avoid complexity
     setServings(initialServings);
     setDisplayedPrepTime(recipe.prepTime);
     setDisplayedCookTime(recipe.cookTime);
@@ -188,8 +209,8 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
             title: "Translation Failed",
             description: "Could not translate the recipe. Please try again.",
         });
-        setLanguage('english'); // Revert to English on failure
-        setDisplayedIngredients(recipe.ingredients); // Revert content
+        setLanguage('english'); 
+        setDisplayedIngredients(recipe.ingredients); 
         setDisplayedInstructions(recipe.instructions);
     } finally {
         setIsTranslating(false);
@@ -241,6 +262,48 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     }
   }, [isProcessing, initialServings, recipe, servings, toast]);
 
+  const handleAdaptRecipe = async () => {
+    if (!adaptRequest.trim() || isProcessing) return;
+    
+    setIsAdapting(true);
+    setAdaptationSummary(null);
+
+    try {
+        const result = await adaptRecipe({
+            request: adaptRequest,
+            originalTitle: recipe.title,
+            originalIngredients: recipe.ingredients,
+            originalInstructions: recipe.instructions,
+        });
+        if (result) {
+            setDisplayedTitle(result.adaptedTitle);
+            setDisplayedIngredients(result.adaptedIngredients);
+            setDisplayedInstructions(result.adaptedInstructions);
+            setAdaptationSummary(result.adaptationSummary);
+            setIsAdapted(true);
+            toast({
+                title: "Recipe Adapted!",
+                description: "The recipe has been updated with your changes.",
+            });
+        }
+    } catch (e) {
+        console.error(e);
+        toast({
+            variant: 'destructive',
+            title: 'Adaptation Failed',
+            description: 'Could not adapt the recipe. Please try again.',
+        });
+    } finally {
+        setIsAdapting(false);
+    }
+  };
+
+  const resetAdaptation = () => {
+    setRecipe(initialRecipe);
+    setIsAdapted(false);
+    setAdaptationSummary(null);
+    setAdaptRequest('');
+  };
 
   const handleScrollToVoiceAssistant = () => {
     voiceAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -305,6 +368,14 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
         });
         return;
     }
+    if (isAdapted) {
+        toast({
+            variant: "destructive",
+            title: "Cannot Favorite",
+            description: "Please save or reset the adapted recipe before favoriting.",
+        });
+        return;
+    }
     if (isFavorite) {
         removeFavoriteRecipe(recipe.id.toString(), user.uid);
         setIsFavorite(false);
@@ -317,13 +388,15 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
   };
 
   const handleStartCooking = () => {
-    if (user) {
+    if (user && !isAdapted) {
       addPastRecipe(recipe, user.uid);
     }
   };
 
   const ServingsControl = () => {
-    const isDisabled = language !== 'english' || isProcessing;
+    const isDisabled = language !== 'english' || isProcessing || isAdapted;
+    const tooltipText = isAdapted ? "Reset the recipe to adjust servings." : "Servings can only be adjusted in English.";
+
     const control = (
         <div className="flex items-center gap-2 mt-1">
             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleServingsChange(servings - 1)} disabled={isDisabled || servings <= 1}>
@@ -336,7 +409,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
         </div>
     );
 
-    if (language !== 'english') {
+    if (isDisabled && !isProcessing) {
         return (
             <TooltipProvider>
                 <Tooltip>
@@ -344,7 +417,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                         <span>{control}</span>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Servings can only be adjusted in English.</p>
+                        <p>{tooltipText}</p>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
@@ -366,7 +439,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
           <CardHeader className="p-0 relative h-64 md:h-96">
             <Image
               src={recipe.image}
-              alt={recipe.title}
+              alt={displayedTitle}
               fill
               className="object-cover"
               sizes="100vw"
@@ -376,7 +449,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
               <Badge variant="secondary" className="mb-2">{recipe.category}</Badge>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{recipe.title}</h1>
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{displayedTitle}</h1>
               <p className="mt-2 text-lg text-white/90 max-w-2xl drop-shadow-md">{recipe.description}</p>
             </div>
              <div className="absolute top-4 right-4 z-10">
@@ -405,12 +478,12 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10 rounded-lg">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         <span className="ml-2 font-semibold">
-                            {isAdjusting ? 'Adjusting recipe...' : 'Translating...'}
+                            {isAdapting ? 'Adapting recipe...' : isAdjusting ? 'Adjusting recipe...' : 'Translating...'}
                         </span>
                     </div>
                 )}
                 
-                {allergens.length > 0 && (
+                {allergens.length > 0 && !isAdapted && (
                   <div className="mb-8 p-4 bg-yellow-100 dark:bg-yellow-900/30 border-l-4 border-yellow-500 rounded-r-lg">
                     <div className="flex">
                       <div className="flex-shrink-0">
@@ -425,6 +498,20 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                   </div>
                 )}
                 
+                {isAdapted && adaptationSummary && (
+                    <Alert className="mb-8 border-primary">
+                        <Bot className="h-4 w-4"/>
+                        <AlertTitle>This Recipe has been Adapted!</AlertTitle>
+                        <AlertDescription className="flex justify-between items-center">
+                            <div>
+                                <p className="font-semibold italic">Savora's Suggestion: "{adaptationSummary}"</p>
+                                <p>This is a temporary version. You can reset to the original recipe.</p>
+                            </div>
+                            <Button variant="outline" size="sm" onClick={resetAdaptation}>Reset to Original</Button>
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 text-center">
                   <div className="relative group flex flex-col items-center justify-center p-4 bg-secondary/50 rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-secondary">
                     <Clock className="absolute -top-2 -left-2 h-16 w-16 text-primary/10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
@@ -458,7 +545,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                     <div className="relative z-10 flex flex-col items-center justify-center">
                         <Languages className="h-8 w-8 text-primary mb-2" />
                         <span className="font-bold">Language</span>
-                        <Select onValueChange={handleLanguageChange} defaultValue="english" disabled={isProcessing}>
+                        <Select onValueChange={handleLanguageChange} defaultValue="english" disabled={isProcessing || isAdapted}>
                             <SelectTrigger className="w-[120px] mt-1">
                                 <SelectValue placeholder="Language" />
                             </SelectTrigger>
@@ -605,6 +692,32 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                             </div>
                       </AccordionContent>
                     </AccordionItem>
+
+                    <AccordionItem value="adapt" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
+                        <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
+                            <div className="flex items-center gap-3">
+                            <WandSparkles className="h-6 w-6 text-primary" />
+                            Adapt Recipe
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 bg-background/50">
+                            <div className="pt-4 pb-4 border-t space-y-4">
+                                <p className="text-muted-foreground">Want to change things up? Ask Savora to adapt this recipe for you.</p>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <Input 
+                                        placeholder="e.g., 'make it vegan' or 'add a spicy kick'" 
+                                        value={adaptRequest}
+                                        onChange={(e) => setAdaptRequest(e.target.value)}
+                                        disabled={isProcessing}
+                                    />
+                                    <Button onClick={handleAdaptRecipe} disabled={isAdapting || !adaptRequest.trim()}>
+                                        {isAdapting ? <Loader2 className="h-4 w-4 animate-spin"/> : 'Adapt'}
+                                    </Button>
+                                </div>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+
                   </Accordion>
                 </div>
 
@@ -612,7 +725,7 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
                 {hasMounted && (
                   <div ref={voiceAssistantRef} className="pt-8 mt-8 border-t">
                     <VoiceAssistant
-                      recipeTitle={recipe.title}
+                      recipeTitle={displayedTitle}
                       instructions={displayedInstructions}
                       language={language}
                       onStartCooking={handleStartCooking}
