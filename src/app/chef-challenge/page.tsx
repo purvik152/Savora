@@ -1,12 +1,11 @@
 
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, WandSparkles, RefreshCw, Check } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { recipes } from '@/lib/recipes';
 import { inventRecipe, InventRecipeOutput } from '@/ai/flows/chef-challenge-flow';
 import { generateRecipeImage } from '@/ai/flows/generate-recipe-image-flow';
 import Image from 'next/image';
@@ -20,27 +19,12 @@ const ingredientPool = [
     'Bell Pepper', 'Onion', 'Garlic', 'Tomato'
 ];
 
-function RecipeDisplay({ recipe }: { recipe: InventRecipeOutput }) {
-    const [image, setImage] = useState<string | null>(null);
-    const [imageLoading, setImageLoading] = useState(true);
+interface InventedRecipeWithImage extends InventRecipeOutput {
+    imageDataUri?: string | null;
+}
 
-    const fetchImage = useCallback(async () => {
-        setImageLoading(true);
-        try {
-            const result = await generateRecipeImage({ title: recipe.imageGenerationPrompt });
-            setImage(result.imageDataUri);
-        } catch (e) {
-            console.error(e);
-            setImage('https://placehold.co/600x400.png'); // Fallback
-        } finally {
-            setImageLoading(false);
-        }
-    }, [recipe.imageGenerationPrompt]);
 
-    useState(() => {
-        fetchImage();
-    });
-
+function RecipeDisplay({ recipe, image, imageLoading }: { recipe: InventRecipeOutput, image: string | null, imageLoading: boolean }) {
     return (
         <Card className="mt-8 animate-fade-in-up">
             <CardHeader>
@@ -102,9 +86,10 @@ function RecipeDisplay({ recipe }: { recipe: InventRecipeOutput }) {
 
 export default function ChefChallengePage() {
     const [challengeIngredients, setChallengeIngredients] = useState<string[]>([]);
-    const [inventedRecipe, setInventedRecipe] = useState<InventRecipeOutput | null>(null);
+    const [inventedRecipe, setInventedRecipe] = useState<InventedRecipeWithImage | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [imageLoading, setImageLoading] = useState(false);
 
     const generateIngredients = useCallback(() => {
         const shuffled = [...ingredientPool].sort(() => 0.5 - Math.random());
@@ -123,11 +108,22 @@ export default function ChefChallengePage() {
         setLoading(true);
         setError(null);
         setInventedRecipe(null);
+        setImageLoading(true);
 
         try {
-            const result = await inventRecipe({ ingredients: challengeIngredients });
-            if (result) {
-                setInventedRecipe(result);
+            const recipeResult = await inventRecipe({ ingredients: challengeIngredients });
+            if (recipeResult) {
+                setInventedRecipe(recipeResult); // Set recipe first
+
+                // Now generate the image
+                try {
+                    const imageResult = await generateRecipeImage({ title: recipeResult.imageGenerationPrompt });
+                    setInventedRecipe(prev => prev ? { ...prev, imageDataUri: imageResult.imageDataUri } : null);
+                } catch (imgErr) {
+                    console.error("Image generation failed:", imgErr);
+                    // Still show the recipe, but with a placeholder image
+                    setInventedRecipe(prev => prev ? { ...prev, imageDataUri: 'https://placehold.co/600x400.png' } : null);
+                }
             } else {
                 setError("The AI chef is stumped! Please try a new set of ingredients.");
             }
@@ -136,6 +132,7 @@ export default function ChefChallengePage() {
             setError(e.message || "An AI error occurred. Please try again.");
         } finally {
             setLoading(false);
+            setImageLoading(false);
         }
     };
 
@@ -181,7 +178,7 @@ export default function ChefChallengePage() {
                 )}
 
                 {inventedRecipe && (
-                    <RecipeDisplay recipe={inventedRecipe} />
+                    <RecipeDisplay recipe={inventedRecipe} image={inventedRecipe.imageDataUri || null} imageLoading={imageLoading} />
                 )}
             </div>
         </div>
