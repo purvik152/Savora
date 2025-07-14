@@ -33,6 +33,7 @@ import {
 import {
     Tooltip,
     TooltipProvider,
+    TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
@@ -269,10 +270,11 @@ function RecipeView({ recipe }: { recipe: Recipe }) {
     
     try {
       const ingredientsToOrder = Array.from(checkedIngredients).map(index => displayedIngredients[index]);
+      const languageForAI = language.charAt(0).toUpperCase() + language.slice(1);
       
       const result = await parseIngredientsForSearch({ 
           ingredients: ingredientsToOrder,
-          language: language,
+          language: languageForAI,
       });
       
       if (!result.searchTerms || result.searchTerms.length === 0) {
