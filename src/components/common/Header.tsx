@@ -94,19 +94,35 @@ export function Header() {
         isHeaderVisible ? "translate-y-0" : "-translate-y-full"
       )}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={cn("flex items-center justify-between transition-all duration-300 h-16")}>
-            <Link href="/" className="flex items-center gap-2">
-              <SavoraLogo className="h-7 w-7 text-primary animate-animate-in" />
-              <span className="font-extrabold text-2xl -tracking-wider text-primary animate-animate-in" style={{ animationDelay: '100ms' }}>Savora</span>
-            </Link>
+          <div className={cn(
+              "flex items-center transition-all duration-300 h-16",
+              isScrolled ? 'justify-center' : 'justify-between'
+              )}>
+            
+            <div className={cn(
+              "absolute left-1/2 -translate-x-1/2 md:static md:left-0 md:translate-x-0 transition-all duration-500",
+               isScrolled && "md:absolute md:left-1/2 md:-translate-x-1/2"
+              )}>
+                <Link href="/" className="flex items-center gap-2">
+                  <SavoraLogo className="h-7 w-7 text-primary animate-animate-in" />
+                  <span className={cn(
+                    "font-extrabold text-2xl -tracking-wider text-primary animate-animate-in transition-all duration-300",
+                    isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
+                    )} style={{ animationDelay: '100ms' }}>Savora</span>
+                </Link>
+            </div>
 
-            <nav className="hidden md:flex items-center space-x-6">
+
+            <nav className={cn(
+              "hidden md:flex items-center space-x-6 transition-all duration-300",
+              isScrolled && "w-0 opacity-0"
+              )}>
               {finalNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary",
+                    "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
                     (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/60"
                   )}
                 >
@@ -115,7 +131,10 @@ export function Header() {
               ))}
             </nav>
 
-            <div className="flex items-center space-x-2">
+            <div className={cn(
+              "flex items-center space-x-2 transition-all duration-300",
+              isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
+              )}>
                <div className="hidden md:flex">
                  <DietToggle />
                </div>
