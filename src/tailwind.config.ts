@@ -143,6 +143,16 @@ export default {
           '0%, 100%': { transform: 'translateY(0) translateX(0) rotate(0deg)' },
           '50%': { transform: 'translateY(22px) translateX(25px) rotate(-10deg)' },
         },
+         "animate-in": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(-10px) scale(0.9)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)",
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -157,6 +167,7 @@ export default {
         'float-6': 'float-6 19s ease-in-out infinite',
         'float-7': 'float-7 20s ease-in-out infinite',
         'float-8': 'float-8 13s ease-in-out infinite',
+        'animate-in': 'animate-in 0.5s ease-out forwards var(--animation-delay, 0ms)',
       },
     },
   },
