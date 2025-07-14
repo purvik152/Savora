@@ -323,7 +323,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+      <section className="mb-16">
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -362,14 +362,13 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 animate-fade-in-up"
-        style={{ animationDelay: '300ms' }}
+        className="mb-16 [animation-timeline:view()]"
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesFirstRow.map((category) => (
-                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36">
+              {subCategoriesFirstRow.map((category, i) => (
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36 animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
                   <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -387,8 +386,8 @@ export default function Home() {
               ))}
             </div>
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesSecondRow.map((category) => (
-                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36">
+              {subCategoriesSecondRow.map((category, i) => (
+                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36 animate-fade-in-up" style={{ animationDelay: `${(i + subCategoriesFirstRow.length) * 100}ms` }}>
                   <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
                       src={category.image}
@@ -432,13 +431,12 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="animate-fade-in-up"
-        style={{ animationDelay: '450ms' }}
+        className="[animation-timeline:view()]"
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {mainCategories.map((category) => (
-                <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                {mainCategories.map((category, i) => (
+                <Link key={category.name} href={category.href} className="group relative block h-[450px] w-full overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 animate-fade-in-up" style={{ animationDelay: `${i * 150}ms` }}>
                     <Image
                       src={category.image}
                       alt={category.name}
@@ -468,8 +466,7 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      className="my-24 animate-fade-in-up"
-      style={{ animationDelay: '600ms' }}
+      className="my-24"
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -552,15 +549,13 @@ export default function Home() {
 
     {/* What's in your Kitchen Section */}
     <section 
-        className="my-24 animate-fade-in-up"
-        style={{ animationDelay: '750ms' }}
+        className="my-24"
     >
         <WhatsInYourKitchen />
     </section>
 
     {/* Community Section */}
-    <section className="my-24 animate-fade-in-up"
-        style={{ animationDelay: '900ms' }}
+    <section className="my-24"
     >
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
