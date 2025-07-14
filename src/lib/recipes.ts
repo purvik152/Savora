@@ -14,6 +14,7 @@ export interface Recipe {
   servings: string;
   ingredients: string[];
   instructions: string[];
+  videoUrl?: string;
   allergens?: ('nuts' | 'dairy' | 'gluten')[];
   nutrition: {
     calories: string;
@@ -550,6 +551,7 @@ export const recipes: Recipe[] = [
     prepTime: "10 mins",
     cookTime: "20 mins",
     servings: "4 people",
+    videoUrl: 'https://www.youtube.com/watch?v=11s3-HNBd4w',
     ingredients: [
       "1 lb (450g) rigatoni",
       "2 tbsp olive oil",
@@ -596,6 +598,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '1 hr 15 mins',
     servings: '4 people',
+    videoUrl: 'https://www.youtube.com/watch?v=r_9s3i2432s',
     ingredients: [
       '1 (3-4 lb) whole chicken',
       '1 lemon, halved',
@@ -933,6 +936,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '1 hr',
     servings: '6-8 people',
+    videoUrl: 'https://www.youtube.com/watch?v=sB6yv_G0_2s',
     ingredients: [
       '1 lb ground beef',
       '1 onion, chopped',
@@ -1662,7 +1666,7 @@ export const recipes: Recipe[] = [
       'Heat the pan: Heat 2 tbsp of olive oil in a large skillet over high heat. The pan should be very hot, and the oil should shimmer before you add the scallops.',
       'Sear the scallops: Carefully place the scallops in the hot skillet in a single layer, making sure they don’t touch each other. Sear for 1.5 to 2 minutes on one side without moving them, until a beautiful golden-brown crust forms.',
       'Flip and add butter/garlic: Flip the scallops. Immediately add 3 tbsp of unsalted butter to the pan. As it melts, add the minced garlic and swirl the pan to combine. Cook for another 1-2 minutes.',
-      'Create the sauce: Deglaze the pan by pouring in 1/4 cup of dry white wine or chicken broth. Let it bubble for 30 seconds, scraping up any browned bits from the bottom of the pan.',
+      'Create the sauce: Deglaze the pan by pouring in 1/4 cup of dry white wine or chicken broth. Let it bubble for 30 seconds, scraping up any delicious browned bits from the bottom of the pan.',
       'Finish and serve: Remove the skillet from the heat. Stir in the juice of half a lemon and 2 tbsp of chopped fresh parsley. Spoon the sauce over the scallops and serve immediately.',
     ],
     allergens: ['dairy'],

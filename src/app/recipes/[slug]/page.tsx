@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart, AlertTriangle, WandSparkles, Bot } from "lucide-react";
+import { Clock, Users, Flame, Mic, ShoppingCart, ExternalLink, Minus, Plus, Loader2, ClipboardList, HeartPulse, Check, ChefHat, Carrot, Apple, Leaf, Languages, Heart, AlertTriangle, WandSparkles, Bot, Video } from "lucide-react";
 import { getRecipeBySlug, Recipe } from '@/lib/recipes';
 import { VoiceAssistant } from '@/components/recipes/VoiceAssistant';
 import { InstructionStep } from '@/components/recipes/InstructionStep';
@@ -393,6 +393,26 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
     }
   };
 
+  const getYoutubeEmbedUrl = (url?: string): string | null => {
+    if (!url) return null;
+    let videoId: string | null = null;
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname === 'youtu.be') {
+        videoId = urlObj.pathname.slice(1);
+      } else if (urlObj.hostname.includes('youtube.com')) {
+        videoId = urlObj.searchParams.get('v');
+      }
+    } catch (e) {
+      console.error('Invalid URL for YouTube video');
+      return null;
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  };
+
+  const youtubeEmbedUrl = getYoutubeEmbedUrl(recipe.videoUrl);
+
   const ServingsControl = () => {
     const isDisabled = language !== 'english' || isProcessing || isAdapted;
     const tooltipText = isAdapted ? "Reset the recipe to adjust servings." : "Servings can only be adjusted in English.";
@@ -584,6 +604,28 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
                 
                 <div className="mt-12">
                   <Accordion type="multiple" className="w-full space-y-4">
+                    {youtubeEmbedUrl && (
+                      <AccordionItem value="video" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
+                        <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
+                          <div className="flex items-center gap-3">
+                            <Video className="h-6 w-6 text-primary" />
+                            Video Tutorial
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 bg-background/50">
+                          <div className="aspect-video pt-4 pb-4 border-t">
+                              <iframe
+                                  className="w-full h-full rounded-lg"
+                                  src={youtubeEmbedUrl}
+                                  title="YouTube video player"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                              ></iframe>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    )}
+
                     <AccordionItem value="ingredients" className="border-none rounded-lg bg-secondary/30 overflow-hidden">
                       <AccordionTrigger className="text-xl font-bold px-6 py-4 hover:no-underline">
                         <div className="flex items-center gap-3">
