@@ -110,15 +110,18 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
             startListening();
         }
     };
-    utterance.onerror = (event) => {
-        console.error("SpeechSynthesis Error", event);
+    utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
         setIsSpeaking(false);
         setIsPaused(false);
-        toast({
-            variant: "destructive",
-            title: "Voice Error",
-            description: "Sorry, I couldn't play the audio.",
-        });
+        // Only show a toast for actual errors, not for cancellations.
+        if (event.error !== 'canceled' && event.error !== 'interrupted') {
+            console.error("SpeechSynthesis Error", event);
+            toast({
+                variant: "destructive",
+                title: "Voice Error",
+                description: `Could not play audio. Error: ${event.error}`,
+            });
+        }
     };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
