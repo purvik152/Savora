@@ -94,7 +94,7 @@ export function Header() {
         isHeaderVisible ? "translate-y-0" : "-translate-y-full"
       )}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={cn("flex items-center justify-between transition-all duration-300", isScrolled ? "h-16" : "h-20")}>
+          <div className={cn("flex items-center justify-between transition-all duration-300 h-16")}>
             <Link href="/" className="flex items-center gap-2">
               <SavoraLogo className="h-7 w-7 text-primary animate-animate-in" />
               <span className="font-extrabold text-2xl -tracking-wider text-primary animate-animate-in" style={{ animationDelay: '100ms' }}>Savora</span>
