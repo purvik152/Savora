@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/mood-kitchen', label: 'Mood Kitchen' },
   { href: '/chef-challenge', label: 'Chef\'s Challenge' },
   { href: '/meal-planner', label: 'Meal Planner' },
+  { href: '/cooking-assistant', label: 'AI Assistant' },
   { href: '/news', label: 'News' },
 ];
 
@@ -51,13 +52,10 @@ export function Header() {
   const pathname = usePathname();
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 10);
-      lastScrollY.current = currentScrollY;
+      setIsScrolled(window.scrollY > 10);
     };
 
     const down = (e: KeyboardEvent) => {
@@ -67,7 +65,6 @@ export function Header() {
       }
     };
     
-    // Defer scroll listener attachment to client-side only
     window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('keydown', down);
 
