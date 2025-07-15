@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Search, Leaf, Drumstick } from 'lucide-react';
@@ -45,19 +45,20 @@ function DietToggle() {
 
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, loading } = useAuth();
   const pathname = usePathname();
 
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 10);
+      lastScrollY.current = currentScrollY;
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -65,6 +66,9 @@ export function Header() {
         setIsSearchOpen((open) => !open);
       }
     };
+    
+    // Defer scroll listener attachment to client-side only
+    window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('keydown', down);
 
     return () => {
@@ -94,11 +98,11 @@ export function Header() {
                isScrolled && "md:absolute md:left-1/2 md:-translate-x-1/2"
               )}>
                 <Link href="/" className="flex items-center gap-2">
-                  <SavoraLogo className="h-7 w-7 text-primary animate-animate-in" />
+                  <SavoraLogo className="h-7 w-7 text-primary" />
                   <span className={cn(
-                    "font-extrabold text-2xl -tracking-wider text-primary animate-animate-in transition-all duration-300",
+                    "font-extrabold text-2xl -tracking-wider text-primary transition-all duration-300",
                     isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
-                    )} style={{ animationDelay: '100ms' }}>Savora</span>
+                    )}>Savora</span>
                 </Link>
             </div>
 
