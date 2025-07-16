@@ -43,7 +43,7 @@ function DietToggle() {
 }
 
 
-export function Header() {
+export function ChatInterface() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, loading } = useAuth();
