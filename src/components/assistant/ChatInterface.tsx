@@ -1,136 +1,198 @@
+"use client";
 
-'use client';
-
-import { useState, useRef, useEffect } from 'react';
-import { Bot, Loader2, Send, User } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Menu, X, Search, Leaf, Drumstick } from 'lucide-react';
+import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { cookingAssistant } from '@/ai/flows/cooking-assistant-flow';
+import { ThemeToggle } from './ThemeToggle';
+import { SearchDialog } from '@/components/search/SearchDialog';
+import { useDiet } from '@/contexts/DietContext';
+import { Switch } from '@/components/ui/switch';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface Message {
-  role: 'user' | 'model';
-  content: string;
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/recipes', label: 'Recipes' },
+  { href: '/community', label: 'Community' },
+  { href: '/mood-kitchen', label: 'Mood Kitchen' },
+  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
+  { href: '/meal-planner', label: 'Meal Planner' },
+  { href: '/news', label: 'News' },
+];
+
+function DietToggle() {
+    const { diet, toggleDiet } = useDiet();
+    const isVeg = diet === 'veg';
+
+    return (
+        <div className="flex items-center space-x-2">
+            <Drumstick className={cn("h-5 w-5 transition-colors", !isVeg ? 'text-primary' : 'text-muted-foreground')} />
+            <Switch
+                id="diet-mode"
+                checked={isVeg}
+                onCheckedChange={toggleDiet}
+                aria-label="Toggle dietary preference"
+            />
+            <Leaf className={cn("h-5 w-5 transition-colors", isVeg ? 'text-primary' : 'text-muted-foreground')} />
+        </div>
+    );
 }
 
-const welcomeMessage: Message = {
-    role: 'model',
-    content: "Hello! I'm Savora, your AI cooking assistant. Ask me anything about recipes, ingredients, or cooking techniques!"
-}
 
-export function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([welcomeMessage]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+export function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { user, loading } = useAuth();
+  const pathname = usePathname();
 
-  const scrollToBottom = () => {
-    if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
-    }
-  };
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsSearchOpen((open) => !open);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('keydown', down);
 
-    const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setLoading(true);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('keydown', down);
+    };
+  }, []);
+  
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-    try {
-      const history = messages.slice(1); // Exclude the initial welcome message
-      const result = await cookingAssistant({
-        history,
-        message: input,
-      });
-
-      const modelMessage: Message = { role: 'model', content: result.response };
-      setMessages(prev => [...prev, modelMessage]);
-
-    } catch (error) {
-      console.error('AI Error:', error);
-      const errorMessage: Message = { role: 'model', content: "Sorry, I'm having a little trouble right now. Please try again in a moment." };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const finalNavLinks = user ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
 
   return (
-    <div className="container mx-auto h-[calc(100vh-8rem)] flex flex-col py-8">
-      <div className="text-center mb-8">
-        <Bot className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="text-4xl font-extrabold tracking-tight mt-2">AI Cooking Assistant</h1>
-        <p className="text-muted-foreground mt-2">Your culinary questions, answered instantly.</p>
-      </div>
-      <div className="flex-grow flex flex-col bg-card border rounded-lg shadow-lg overflow-hidden">
-        <ScrollArea className="flex-grow p-4" ref={scrollAreaRef as any}>
-          <div className="space-y-6">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn(
-                  'flex items-start gap-4',
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                )}
-              >
-                {message.role === 'model' && (
-                  <Avatar className="w-8 h-8 border-2 border-primary">
-                    <AvatarFallback>AI</AvatarFallback>
-                  </Avatar>
-                )}
-                <div
+    <>
+      <header className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300", 
+        isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent"
+      )}>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={cn(
+              "flex items-center transition-all duration-300 h-16",
+              isScrolled ? 'justify-center' : 'justify-between'
+              )}>
+            
+            <div className={cn(
+              "absolute left-1/2 -translate-x-1/2 md:static md:left-0 md:translate-x-0 transition-all duration-500",
+               isScrolled && "md:absolute md:left-1/2 md:-translate-x-1/2"
+              )}>
+                <Link href="/" className="flex items-center gap-2">
+                  <SavoraLogo className="h-7 w-7 text-primary" />
+                  <span className={cn(
+                    "font-extrabold text-2xl -tracking-wider text-primary transition-all duration-300",
+                    isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
+                    )}>Savora</span>
+                </Link>
+            </div>
+
+
+            <nav className={cn(
+              "hidden md:flex items-center space-x-6 transition-all duration-300",
+              isScrolled && "w-0 opacity-0"
+              )}>
+              {finalNavLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
                   className={cn(
-                    'max-w-md p-3 rounded-lg',
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary'
+                    "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
+                    (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/60"
                   )}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                </div>
-                {message.role === 'user' && (
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback><User /></AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
-            ))}
-             {loading && (
-                <div className="flex items-start gap-4 justify-start">
-                    <Avatar className="w-8 h-8 border-2 border-primary">
-                        <AvatarFallback>AI</AvatarFallback>
-                    </Avatar>
-                    <div className="max-w-md p-3 rounded-lg bg-secondary">
-                        <Loader2 className="h-5 w-5 animate-spin" />
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className={cn(
+              "flex items-center space-x-2 transition-all duration-300",
+              isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
+              )}>
+               <div className="hidden md:flex">
+                 <DietToggle />
+               </div>
+               <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(true)}
+              >
+                <Search className="h-5 w-5" />
+                <span className="sr-only">Search recipes</span>
+              </Button>
+              <ThemeToggle />
+              {!loading && !user && (
+                  <Button asChild>
+                      <Link href="/login">Login</Link>
+                  </Button>
+              )}
+              
+              <div className="md:hidden">
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                    <div className="p-4">
+                      <div className="flex justify-between items-center mb-8">
+                         <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
+                           <SavoraLogo className="h-7 w-7 text-primary" />
+                           <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
+                         </Link>
+                         <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
+                           <X className="h-6 w-6"/>
+                         </Button>
+                      </div>
+                      <nav className="flex flex-col space-y-4 mt-4">
+                        {finalNavLinks.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={closeMobileMenu}
+                            className={cn(
+                              "text-lg font-medium transition-colors hover:text-primary",
+                              pathname === link.href ? "text-primary" : "text-foreground"
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                        <div className="pt-4 border-t">
+                            <DietToggle />
+                        </div>
+                        {!loading && !user && (
+                           <Button asChild onClick={closeMobileMenu}>
+                              <Link href="/login">Login</Link>
+                           </Button>
+                        )}
+                      </nav>
                     </div>
-                </div>
-             )}
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </div>
           </div>
-        </ScrollArea>
-        <div className="p-4 border-t bg-background">
-          <form onSubmit={handleSubmit} className="flex items-center gap-4">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask for a recipe or cooking advice..."
-              className="h-12 text-base"
-              disabled={loading}
-            />
-            <Button type="submit" size="lg" disabled={loading}>
-              <Send className="h-5 w-5" />
-            </Button>
-          </form>
         </div>
-      </div>
-    </div>
+      </header>
+      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+    </>
   );
 }

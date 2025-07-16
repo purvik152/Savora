@@ -22,7 +22,6 @@ const navLinks = [
   { href: '/mood-kitchen', label: 'Mood Kitchen' },
   { href: '/chef-challenge', label: 'Chef\'s Challenge' },
   { href: '/meal-planner', label: 'Meal Planner' },
-  { href: '/cooking-assistant', label: 'AI Assistant' },
   { href: '/news', label: 'News' },
 ];
 
