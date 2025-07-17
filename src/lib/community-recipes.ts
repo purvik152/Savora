@@ -1,7 +1,7 @@
 
 'use client';
 
-import type { User } from 'firebase/auth';
+import type { User } from '@/lib/auth-data';
 
 export interface CommunityRecipe {
   id: number;
@@ -107,7 +107,7 @@ export function addCommunityRecipe(
         submitter: {
             uid: user.uid,
             name: user.displayName || 'Anonymous',
-            avatar: user.photoURL || 'https://placehold.co/128x128.png'
+            avatar: 'https://placehold.co/128x128.png'
         }
     };
 

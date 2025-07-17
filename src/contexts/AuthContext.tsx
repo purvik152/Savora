@@ -1,29 +1,18 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  onAuthStateChanged,
-  signOut,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  type User,
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getUser, removeUser, saveUser, type User } from '@/lib/auth-data';
+
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  loginWithGoogle: () => Promise<void>;
-  loginWithEmail: (email: string, pass: string) => Promise<User | null>;
-  signupWithEmail: (email: string, pass: string, username: string) => Promise<User | null>;
+  login: (email: string, pass: string) => Promise<boolean>;
+  signup: (username: string, email: string, pass: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -42,76 +31,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    
-    // Check for redirect result
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          toast({
-            title: "Login Successful",
-            description: `Welcome back, ${result.user.displayName}!`
-          });
-          router.push('/dashboard');
-        }
-      })
-      .catch((error) => {
-        console.error("Redirect result error", error);
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: error.message || "An unexpected error occurred during redirect."
-        })
-      });
+    // Check for a logged-in user in localStorage on initial load
+    const storedUser = getUser();
+    if (storedUser) {
+        setUser(storedUser);
+    }
+    setLoading(false);
+  }, []);
+  
+  const login = async (email: string, pass: string) => {
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass }),
+        });
 
-    return () => unsubscribe();
+        const data = await response.json();
+
+        if (data.success) {
+            setUser(data.user);
+            saveUser(data.user); // Save user to localStorage
+            return true;
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error("Login failed:", error);
+        throw error;
+    }
+  };
+
+  const signup = async (username: string, email: string, pass: string) => {
+    try {
+        const response = await fetch('/api/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password: pass }),
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            setUser(data.user);
+            saveUser(data.user);
+            return true;
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error("Signup failed:", error);
+        throw error;
+    }
+  };
+
+  const logout = useCallback(() => {
+    setUser(null);
+    removeUser(); // Clear user from localStorage
+    router.push('/login');
+    toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out."
+    })
   }, [router, toast]);
 
-  const loginWithGoogle = async (): Promise<void> => {
-    const provider = new GoogleAuthProvider();
-    await signInWithRedirect(auth, provider);
-  };
-
-  const loginWithEmail = async (email: string, pass: string): Promise<User | null> => {
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-        return userCredential.user;
-    } catch (error) {
-        console.error("Email/Password login error", error);
-        throw error;
-    }
-  };
-
-  const signupWithEmail = async (email: string, pass: string, username: string): Promise<User | null> => {
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        if(userCredential.user) {
-            await updateProfile(userCredential.user, { displayName: username });
-            // Manually update the user state as onAuthStateChanged might not fire immediately
-            setUser({ ...userCredential.user, displayName: username });
-        }
-        return userCredential.user;
-    } catch (error) {
-        console.error("Email/Password signup error", error);
-        throw error;
-    }
-  };
-
-  const logout = async () => {
-    setUser(null);
-    await signOut(auth);
-    router.push('/login');
-  };
 
   const value = {
     user,
     loading,
-    loginWithGoogle,
-    loginWithEmail,
-    signupWithEmail,
+    login,
+    signup,
     logout,
   };
 
