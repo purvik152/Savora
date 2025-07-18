@@ -43,7 +43,7 @@ import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { isFavoriteRecipe, addFavoriteRecipe, removeFavoriteRecipe, addPastRecipe } from '@/lib/user-data';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 
 function RecipePageSkeleton() {
@@ -89,7 +89,7 @@ function RecipePageSkeleton() {
 function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user } = useUser();
   const [hasMounted, setHasMounted] = useState(false);
 
   // State for the current recipe being displayed
@@ -132,7 +132,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
     setServings(newInitialServings);
     setCheckedIngredients(new Set());
     if (user) {
-      setIsFavorite(isFavoriteRecipe(recipe.id.toString(), user.uid));
+      setIsFavorite(isFavoriteRecipe(recipe.id.toString(), user.id));
     }
   }, [recipe, user]);
 
@@ -377,11 +377,11 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
         return;
     }
     if (isFavorite) {
-        removeFavoriteRecipe(recipe.id.toString(), user.uid);
+        removeFavoriteRecipe(recipe.id.toString(), user.id);
         setIsFavorite(false);
         toast({ title: "Removed from favorites" });
     } else {
-        addFavoriteRecipe(recipe, user.uid);
+        addFavoriteRecipe(recipe, user.id);
         setIsFavorite(true);
         toast({ title: "Added to favorites" });
     }
@@ -389,7 +389,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
 
   const handleStartCooking = () => {
     if (user && !isAdapted) {
-      addPastRecipe(recipe, user.uid);
+      addPastRecipe(recipe, user.id);
     }
   };
 

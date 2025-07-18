@@ -1,7 +1,7 @@
 
 'use client';
 
-import type { User } from '@/lib/auth-data';
+import type { User } from '@clerk/nextjs/server';
 
 export interface CommunityRecipe {
   id: number;
@@ -94,7 +94,7 @@ export function getCommunityRecipes(): CommunityRecipe[] {
 
 export function addCommunityRecipe(
     recipeData: Omit<CommunityRecipe, 'id' | 'slug' | 'submitter' | 'upvotes' | 'isTopContributor'>,
-    user: User
+    user: { id: string, fullName?: string | null, imageUrl: string }
 ): CommunityRecipe {
     const recipes = getCommunityRecipes();
     
@@ -105,9 +105,9 @@ export function addCommunityRecipe(
         upvotes: 1,
         isTopContributor: false, // This could be calculated based on user's total contributions
         submitter: {
-            uid: user.uid,
-            name: user.displayName || 'Anonymous',
-            avatar: 'https://placehold.co/128x128.png'
+            uid: user.id,
+            name: user.fullName || 'Anonymous Chef',
+            avatar: user.imageUrl || 'https://placehold.co/128x128.png'
         }
     };
 

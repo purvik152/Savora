@@ -2,15 +2,14 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit, Utensils, Loader2, Heart, LogOut, Shield, HeartPulse, Sparkles, Download } from "lucide-react";
 import Image from "next/image";
-import { getPastRecipes, getFavoriteRecipes, isRecipeAvailableOffline, saveRecipeForOffline } from "@/lib/user-data";
+import { getPastRecipes, getFavoriteRecipes, isRecipeAvailableOffline, saveRecipeForOffline } from '@/lib/user-data';
 import { recipes as allRecipes, type Recipe } from "@/lib/recipes";
 import { useToast } from "@/hooks/use-toast";
 import { useDiet } from "@/contexts/DietContext";
@@ -125,7 +124,7 @@ function ActivityTracker() {
 }
 
 function FavoritesList() {
-    const { user } = useAuth();
+    const { user } = useUser();
     const { toast } = useToast();
     const { diet } = useDiet();
     const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
@@ -134,11 +133,11 @@ function FavoritesList() {
     
     useEffect(() => {
         if (user) {
-            const favs = getFavoriteRecipes(user.uid);
+            const favs = getFavoriteRecipes(user.id);
             setFavoriteRecipes(favs);
             const status: Record<string, boolean> = {};
             favs.forEach(recipe => {
-                status[recipe.slug] = isRecipeAvailableOffline(recipe.slug, user.uid);
+                status[recipe.slug] = isRecipeAvailableOffline(recipe.slug, user.id);
             });
             setOfflineStatus(status);
         }
@@ -148,7 +147,7 @@ function FavoritesList() {
         if (!user) return;
         setDownloading(prev => ({ ...prev, [recipe.slug]: true }));
         try {
-            await saveRecipeForOffline(recipe, user.uid);
+            await saveRecipeForOffline(recipe, user.id);
             setOfflineStatus(prev => ({ ...prev, [recipe.slug]: true }));
             toast({
                 title: "Recipe Saved Offline",
@@ -220,23 +219,18 @@ function FavoritesList() {
 
 
 export default function DashboardPage() {
-  const { user, loading, logout } = useAuth();
-  const router = useRouter();
-  const { toast } = useToast();
+  const { isLoaded, isSignedIn, user } = useUser();
   const { diet } = useDiet();
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    if (!loading && !user) {
-        router.push('/login');
-    } else if (user) {
-        // User is logged in, fetch their data
-        setPastRecipes(getPastRecipes(user.uid));
-        setFavoriteRecipes(getFavoriteRecipes(user.uid));
+    if (isLoaded && isSignedIn && user) {
+        setPastRecipes(getPastRecipes(user.id));
+        setFavoriteRecipes(getFavoriteRecipes(user.id));
     }
-  }, [user, loading, router]);
+  }, [isLoaded, isSignedIn, user]);
 
 
   const filteredPastRecipes = useMemo(() => {
@@ -253,16 +247,16 @@ export default function DashboardPage() {
     return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: 'Logged Out',
-      description: 'You have been successfully logged out.',
-    });
-  };
-  
-  if (loading || !user) {
+  if (!isLoaded) {
     return <LoadingDashboard />;
+  }
+  
+  if (!isSignedIn) {
+      return (
+        <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
+            <p>You must be signed in to view this page.</p>
+        </div>
+      )
   }
 
   return (
@@ -270,13 +264,13 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={user.photoURL || `https://placehold.co/128x128.png`} alt={user.displayName || 'User'} data-ai-hint="avatar user" />
-            <AvatarFallback>{user.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'U'}</AvatarFallback>
+            <AvatarImage src={user.imageUrl} alt={user.fullName || 'User'} data-ai-hint="avatar user" />
+            <AvatarFallback>{user.fullName ? user.fullName.substring(0, 2).toUpperCase() : 'U'}</AvatarFallback>
           </Avatar>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{user.displayName || 'Savora User'}</h1>
-          <p className="text-muted-foreground mt-1">{user.email}</p>
+          <h1 className="text-4xl font-bold">{user.fullName || 'Savora User'}</h1>
+          <p className="text-muted-foreground mt-1">{user.primaryEmailAddress?.emailAddress}</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
               <p className="text-2xl font-bold text-foreground">{filteredPastRecipes.length}</p>
@@ -288,10 +282,9 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="mt-6 flex gap-4 justify-center md:justify-start">
-             <Button variant="outline" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
+             <Button asChild variant="outline">
+                <Link href="/user-profile"><Edit className="mr-2 h-4 w-4" /> Edit Profile</Link>
+             </Button>
           </div>
         </div>
       </div>

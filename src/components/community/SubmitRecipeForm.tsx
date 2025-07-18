@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useUser } from '@clerk/nextjs';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +20,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { generateRecipeTitle } from '@/ai/flows/generate-recipe-title-flow';
 import { generateRecipeImage } from '@/ai/flows/generate-recipe-image-flow';
 import { addCommunityRecipe } from '@/lib/community-recipes';
-import { useAuth } from '@/contexts/AuthContext';
 
 
 const formSchema = z.object({
@@ -42,7 +42,7 @@ export function SubmitRecipeForm() {
 
   const { toast } = useToast();
   const router = useRouter();
-  const { user } = useAuth();
+  const { isSignedIn, user } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,13 +129,13 @@ export function SubmitRecipeForm() {
   }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (!user) {
+    if (!isSignedIn || !user) {
       toast({
         variant: 'destructive',
         title: "Not Logged In",
         description: "You must be logged in to submit a recipe.",
       });
-      router.push('/login');
+      router.push('/sign-in');
       return;
     }
 

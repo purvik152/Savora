@@ -13,7 +13,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/contexts/AuthContext';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -47,7 +47,7 @@ function DietToggle() {
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { user, loading } = useAuth();
+  const { isLoaded, isSignedIn } = useUser();
   const pathname = usePathname();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -75,7 +75,7 @@ export function Header() {
   
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const finalNavLinks = user ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
+  const finalNavLinks = isSignedIn ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
 
   return (
     <>
@@ -137,11 +137,15 @@ export function Header() {
                 <span className="sr-only">Search recipes</span>
               </Button>
               <ThemeToggle />
-              {!loading && !user && (
-                  <Button asChild>
-                      <Link href="/login">Login</Link>
-                  </Button>
-              )}
+              
+              <SignedIn>
+                <UserButton afterSignOutUrl="/" />
+              </SignedIn>
+              <SignedOut>
+                <Button asChild>
+                  <Link href="/sign-in">Login</Link>
+                </Button>
+              </SignedOut>
               
               <div className="md:hidden">
                 <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -179,11 +183,11 @@ export function Header() {
                         <div className="pt-4 border-t">
                             <DietToggle />
                         </div>
-                        {!loading && !user && (
+                        <SignedOut>
                            <Button asChild onClick={closeMobileMenu}>
-                              <Link href="/login">Login</Link>
+                              <Link href="/sign-in">Login</Link>
                            </Button>
-                        )}
+                        </SignedOut>
                       </nav>
                     </div>
                   </SheetContent>

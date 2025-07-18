@@ -9,7 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -28,33 +28,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          'min-h-screen bg-background text-foreground font-body antialiased flex flex-col',
-          poppins.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <ClerkProvider>
+      <html lang="en" className="h-full" suppressHydrationWarning>
+        <head />
+        <body
+          className={cn(
+            'min-h-screen bg-background text-foreground font-body antialiased flex flex-col',
+            poppins.variable
+          )}
         >
-          <AuthProvider>
-            <DietProvider>
-              <div className="relative flex flex-col min-h-screen">
-                <FloatingDoodles />
-                <Header />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-              </div>
-              <Toaster />
-            </DietProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+              <DietProvider>
+                <div className="relative flex flex-col min-h-screen">
+                  <FloatingDoodles />
+                  <Header />
+                  <main className="flex-grow">{children}</main>
+                  <Footer />
+                </div>
+                <Toaster />
+              </DietProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
