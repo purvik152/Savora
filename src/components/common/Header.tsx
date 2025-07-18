@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search, Leaf, Drumstick } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick, X } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -43,35 +43,11 @@ function DietToggle() {
     );
 }
 
-
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { isLoaded, isSignedIn } = useUser();
+  const { isSignedIn } = useUser();
   const pathname = usePathname();
-
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setIsSearchOpen((open) => !open);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('keydown', down);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('keydown', down);
-    };
-  }, []);
   
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -79,122 +55,100 @@ export function Header() {
 
   return (
     <>
-      <header className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300", 
-        isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent"
-      )}>
+      <header className="w-full border-b bg-background/95">
+        {/* Top Tier: Logo, Search, Actions */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={cn(
-              "flex items-center transition-all duration-300 h-16",
-              isScrolled ? 'justify-center' : 'justify-between'
-              )}>
-            
-            <div className={cn(
-              "absolute left-1/2 -translate-x-1/2 md:static md:left-0 md:translate-x-0 transition-all duration-500",
-               isScrolled && "md:absolute md:left-1/2 md:-translate-x-1/2"
-              )}>
-                <Link href="/" className="flex items-center gap-2">
-                  <SavoraLogo className="h-7 w-7 text-primary" />
-                  <span className={cn(
-                    "font-extrabold text-2xl -tracking-wider text-primary transition-all duration-300",
-                    isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
-                    )}>Savora</span>
-                </Link>
-            </div>
+            <div className="relative flex h-24 items-center justify-between">
+                <div className="md:hidden">
+                    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Menu className="h-6 w-6" />
+                                <span className="sr-only">Open menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+                            <div className="p-4">
+                                <div className="flex justify-between items-center mb-8">
+                                    <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
+                                        <SavoraLogo className="h-7 w-7 text-primary" />
+                                        <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
+                                    </Link>
+                                    <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
+                                        <X className="h-6 w-6"/>
+                                    </Button>
+                                </div>
+                                <nav className="flex flex-col space-y-4">
+                                    {finalNavLinks.map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={closeMobileMenu}
+                                        className={cn(
+                                        "text-lg font-medium transition-colors hover:text-primary",
+                                        pathname === link.href ? "text-primary" : "text-foreground"
+                                        )}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                    ))}
+                                </nav>
+                                <div className="pt-6 mt-6 border-t">
+                                    <DietToggle />
+                                </div>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
+                
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <Link href="/" className="flex flex-col items-center gap-1">
+                        <SavoraLogo className="h-10 w-10 text-primary" />
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary">Savora</span>
+                    </Link>
+                </div>
 
-
-            <nav className={cn(
-              "hidden md:flex items-center space-x-6 transition-all duration-300",
-              isScrolled && "w-0 opacity-0"
-              )}>
-              {finalNavLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
-                    (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/60"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className={cn(
-              "flex items-center space-x-2 transition-all duration-300",
-              isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
-              )}>
-               <div className="hidden md:flex">
-                 <DietToggle />
-               </div>
-               <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSearchOpen(true)}
-              >
-                <Search className="h-5 w-5" />
-                <span className="sr-only">Search recipes</span>
-              </Button>
-              <ThemeToggle />
-              
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
-              <SignedOut>
-                <Button asChild>
-                  <Link href="/sign-in">Login</Link>
-                </Button>
-              </SignedOut>
-              
-              <div className="md:hidden">
-                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Menu className="h-6 w-6" />
-                      <span className="sr-only">Open menu</span>
+                <div className="flex items-center space-x-2">
+                   <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsSearchOpen(true)}
+                    >
+                        <Search className="h-5 w-5" />
+                        <span className="sr-only">Search recipes</span>
                     </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                    <div className="p-4">
-                      <div className="flex justify-between items-center mb-8">
-                         <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
-                           <SavoraLogo className="h-7 w-7 text-primary" />
-                           <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
-                         </Link>
-                         <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
-                           <X className="h-6 w-6"/>
-                         </Button>
-                      </div>
-                      <nav className="flex flex-col space-y-4 mt-4">
-                        {finalNavLinks.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={closeMobileMenu}
-                            className={cn(
-                              "text-lg font-medium transition-colors hover:text-primary",
-                              pathname === link.href ? "text-primary" : "text-foreground"
-                            )}
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
-                        <div className="pt-4 border-t">
-                            <DietToggle />
-                        </div>
-                        <SignedOut>
-                           <Button asChild onClick={closeMobileMenu}>
-                              <Link href="/sign-in">Login</Link>
-                           </Button>
-                        </SignedOut>
-                      </nav>
+                    <div className="hidden md:flex">
+                        <DietToggle />
                     </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
+                    <ThemeToggle />
+                    <SignedIn>
+                        <UserButton afterSignOutUrl="/" />
+                    </SignedIn>
+                    <SignedOut>
+                        <Button asChild>
+                        <Link href="/sign-in">Login</Link>
+                        </Button>
+                    </SignedOut>
+                </div>
             </div>
-          </div>
+        </div>
+
+        {/* Bottom Tier: Main Navigation */}
+        <div className="hidden md:flex h-12 items-center justify-center border-t bg-secondary/50">
+            <nav className="flex items-center space-x-8">
+                {finalNavLinks.map((link) => (
+                    <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                        "text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary",
+                        (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/70"
+                    )}
+                    >
+                    {link.label}
+                    </Link>
+                ))}
+            </nav>
         </div>
       </header>
       <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
