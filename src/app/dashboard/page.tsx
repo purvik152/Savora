@@ -187,7 +187,7 @@ function FavoritesList() {
                         <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
                       </Link>
                        <div className="flex-grow">
-                         <Link href={offlineStatus[recipe.slug] ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
+                         <Link href={offlineStatus[recipe.slug] && user ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
                            <h3 className="font-semibold hover:underline">{recipe.title}</h3>
                          </Link>
                          <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>

@@ -3,31 +3,31 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser, UserButton } from '@clerk/nextjs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, ShieldCheck, Users, BarChart, FilePlus, LogOut } from 'lucide-react';
+import { Loader2, ShieldCheck, Users, BarChart, FilePlus } from 'lucide-react';
 import Link from 'next/link';
 
 function AdminDashboard() {
-  const { user, loading, logout } = useAuth();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
   
   // This is a simplified role check for the prototype.
   // In a real app, this would be a secure check against a backend or custom claims.
-  const isAdmin = user?.email === 'admin@savora.com';
+  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'admin@savora.com';
 
   useEffect(() => {
-    if (!loading) {
+    if (isLoaded) {
       if (!user) {
-        router.push('/login');
+        router.push('/sign-in');
       } else if (!isAdmin) {
         router.push('/dashboard'); // Redirect non-admins to the user dashboard
       }
     }
-  }, [user, isAdmin, loading, router]);
+  }, [user, isAdmin, isLoaded, router]);
 
-  if (loading || !user || !isAdmin) {
+  if (!isLoaded || !user || !isAdmin) {
     return (
       <div className="container mx-auto flex h-full flex-col items-center justify-center px-4 py-8 md:py-12">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -41,12 +41,9 @@ function AdminDashboard() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12">
             <div className='text-center md:text-left'>
                 <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-                <p className="text-muted-foreground mt-1">Welcome, {user.displayName || user.email}.</p>
+                <p className="text-muted-foreground mt-1">Welcome, {user.fullName || user.primaryEmailAddress?.emailAddress}.</p>
             </div>
-            <Button variant="outline" onClick={logout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-            </Button>
+            <UserButton afterSignOutUrl="/" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -6,21 +6,21 @@ import { MealPlanner } from '@/components/meal-planner/MealPlanner';
 import { SmartPlannerForm } from '@/components/meal-planner/SmartPlannerForm';
 import { CalendarCheck, WandSparkles } from 'lucide-react';
 import type { MealPlan } from '@/lib/meal-planner-data';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 export default function MealPlannerPage() {
   // Add state to hold the AI-generated plan and pass it down
   const [generatedPlan, setGeneratedPlan] = useState<MealPlan | null>(null);
-  const { user, loading } = useAuth();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
+    if (isLoaded && !user) {
+      router.push('/sign-in');
     }
-  }, [user, loading, router]);
+  }, [user, isLoaded, router]);
 
 
   const handlePlanGenerated = (newPlan: MealPlan) => {
@@ -29,7 +29,7 @@ export default function MealPlannerPage() {
     setGeneratedPlan(newPlan);
   };
   
-  if (loading || !user) {
+  if (!isLoaded || !user) {
     return (
        <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />

@@ -6,11 +6,11 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Flame, Check, AlertCircle } from "lucide-react";
-import type { OfflineRecipe, Recipe } from '@/lib/user-data';
+import type { OfflineRecipe } from '@/lib/user-data';
 import { getOfflineRecipe } from '@/lib/user-data';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 
 function OfflineRecipePageSkeleton() {
@@ -152,12 +152,12 @@ function OfflineRecipeView({ recipe }: { recipe: OfflineRecipe }) {
 export default function OfflineRecipePage() {
   const [recipe, setRecipe] = useState<OfflineRecipe | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user } = useUser();
   const params = useParams<{ slug: string }>();
 
   useEffect(() => {
     if (user && params?.slug) {
-        const offlineRecipe = getOfflineRecipe(params.slug, user.uid);
+        const offlineRecipe = getOfflineRecipe(params.slug, user.id);
         if (offlineRecipe) {
             setRecipe(offlineRecipe);
         }

@@ -168,10 +168,14 @@ export default function Home() {
   const [communityRecipes, setCommunityRecipes] = useState<CommunityRecipe[]>([]);
 
   const fetchCommunityRecipes = useCallback(() => {
-    setCommunityRecipes(getCommunityRecipes());
+    // Only fetch if running on the client
+    if (typeof window !== 'undefined') {
+      setCommunityRecipes(getCommunityRecipes());
+    }
   }, []);
 
   useEffect(() => {
+    setHasMounted(true);
     fetchCommunityRecipes();
   }, [fetchCommunityRecipes]);
 
@@ -222,7 +226,7 @@ export default function Home() {
   };
   
   const handleRemoveCommunityRecipe = (recipeId: number, recipeTitle: string) => {
-    removeCommunityRecipe(recipeId);
+    removeCommunityRecipe(recipeId,);
     toast({
         title: "Recipe Removed",
         description: `"${recipeTitle}" has been removed from the community kitchen.`
@@ -251,11 +255,6 @@ export default function Home() {
     }
   }, [filteredRecipes]);
 
-  useEffect(() => {
-    setHasMounted(true);
-    setCommunityRecipes(getCommunityRecipes());
-  }, []);
-  
   useEffect(() => {
     if (!hasMounted) return;
 

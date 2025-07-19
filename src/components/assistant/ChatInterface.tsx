@@ -1,198 +1,129 @@
+
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X, Search, Leaf, Drumstick } from 'lucide-react';
-import { SavoraLogo } from '@/components/icons/SavoraLogo';
+import { useState, useEffect } from 'react';
+import { useFlow, type Message } from 'genkit/react';
+import { cookingAssistantFlow } from '@/ai/flows/cooking-assistant-flow';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Bot, Loader2, User, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ThemeToggle } from '@/components/common/ThemeToggle';
-import { SearchDialog } from '@/components/search/SearchDialog';
-import { useDiet } from '@/contexts/DietContext';
-import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/contexts/AuthContext';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/recipes', label: 'Recipes' },
-  { href: '/community', label: 'Community' },
-  { href: '/mood-kitchen', label: 'Mood Kitchen' },
-  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
-  { href: '/meal-planner', label: 'Meal Planner' },
-  { href: '/news', label: 'News' },
-];
-
-function DietToggle() {
-    const { diet, toggleDiet } = useDiet();
-    const isVeg = diet === 'veg';
-
-    return (
-        <div className="flex items-center space-x-2">
-            <Drumstick className={cn("h-5 w-5 transition-colors", !isVeg ? 'text-primary' : 'text-muted-foreground')} />
-            <Switch
-                id="diet-mode"
-                checked={isVeg}
-                onCheckedChange={toggleDiet}
-                aria-label="Toggle dietary preference"
-            />
-            <Leaf className={cn("h-5 w-5 transition-colors", isVeg ? 'text-primary' : 'text-muted-foreground')} />
-        </div>
-    );
-}
-
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useUser } from '@clerk/nextjs';
 
 export function ChatInterface() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { user, loading } = useAuth();
-  const pathname = usePathname();
+  const { user } = useUser();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const { run: runAssistant, loading } = useFlow(cookingAssistantFlow);
 
-  const [isScrolled, setIsScrolled] = useState(false);
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || loading) return;
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
 
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setIsSearchOpen((open) => !open);
+    try {
+      const response = await runAssistant({
+        history: messages,
+        message: input,
+      });
+
+      if (response?.response) {
+        const modelMessage: Message = { role: 'model', content: response.response };
+        setMessages(prev => [...prev, modelMessage]);
       }
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('keydown', down);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('keydown', down);
-    };
-  }, []);
-  
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  const finalNavLinks = user ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
+    } catch (error) {
+      console.error('Error calling cooking assistant flow:', error);
+      const errorMessage: Message = { role: 'model', content: 'Sorry, I ran into an error. Please try again.' };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+  };
 
   return (
-    <>
-      <header className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300", 
-        isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent"
-      )}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={cn(
-              "flex items-center transition-all duration-300 h-16",
-              isScrolled ? 'justify-center' : 'justify-between'
-              )}>
-            
-            <div className={cn(
-              "absolute left-1/2 -translate-x-1/2 md:static md:left-0 md:translate-x-0 transition-all duration-500",
-               isScrolled && "md:absolute md:left-1/2 md:-translate-x-1/2"
-              )}>
-                <Link href="/" className="flex items-center gap-2">
-                  <SavoraLogo className="h-7 w-7 text-primary" />
-                  <span className={cn(
-                    "font-extrabold text-2xl -tracking-wider text-primary transition-all duration-300",
-                    isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
-                    )}>Savora</span>
-                </Link>
-            </div>
-
-
-            <nav className={cn(
-              "hidden md:flex items-center space-x-6 transition-all duration-300",
-              isScrolled && "w-0 opacity-0"
-              )}>
-              {finalNavLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
-                    (pathname === link.href || (link.href.startsWith('/#') && pathname === '/')) ? "text-primary" : "text-foreground/60"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className={cn(
-              "flex items-center space-x-2 transition-all duration-300",
-              isScrolled && "md:w-0 md:opacity-0 md:overflow-hidden"
-              )}>
-               <div className="hidden md:flex">
-                 <DietToggle />
-               </div>
-               <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSearchOpen(true)}
-              >
-                <Search className="h-5 w-5" />
-                <span className="sr-only">Search recipes</span>
-              </Button>
-              <ThemeToggle />
-              {!loading && !user && (
-                  <Button asChild>
-                      <Link href="/login">Login</Link>
-                  </Button>
-              )}
-              
-              <div className="md:hidden">
-                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Menu className="h-6 w-6" />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                    <div className="p-4">
-                      <div className="flex justify-between items-center mb-8">
-                         <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
-                           <SavoraLogo className="h-7 w-7 text-primary" />
-                           <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
-                         </Link>
-                         <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
-                           <X className="h-6 w-6"/>
-                         </Button>
-                      </div>
-                      <nav className="flex flex-col space-y-4 mt-4">
-                        {finalNavLinks.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={closeMobileMenu}
-                            className={cn(
-                              "text-lg font-medium transition-colors hover:text-primary",
-                              pathname === link.href ? "text-primary" : "text-foreground"
-                            )}
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
-                        <div className="pt-4 border-t">
-                            <DietToggle />
-                        </div>
-                        {!loading && !user && (
-                           <Button asChild onClick={closeMobileMenu}>
-                              <Link href="/login">Login</Link>
-                           </Button>
-                        )}
-                      </nav>
+    <div className="container mx-auto px-4 py-8 md:py-16">
+      <div className="max-w-3xl mx-auto">
+        <Card className="h-[75vh] flex flex-col">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-3">
+              <Bot className="text-primary h-8 w-8" />
+              Savora AI Cooking Assistant
+            </CardTitle>
+            <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow p-0 overflow-hidden">
+            <ScrollArea className="h-full p-6">
+              <div className="space-y-6">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "flex items-start gap-4",
+                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                    )}
+                  >
+                    {message.role === 'model' && (
+                      <Avatar className="h-8 w-8 border-2 border-primary">
+                        <AvatarFallback>AI</AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div
+                      className={cn(
+                        "max-w-sm sm:max-w-md md:max-w-lg rounded-xl px-4 py-3 shadow-md",
+                        message.role === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-secondary text-secondary-foreground'
+                      )}
+                    >
+                      <p className="text-sm">{message.content}</p>
                     </div>
-                  </SheetContent>
-                </Sheet>
+                    {message.role === 'user' && (
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.imageUrl} />
+                        <AvatarFallback>
+                          {user?.firstName?.[0] || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                ))}
+                {loading && (
+                  <div className="flex items-start gap-4 justify-start">
+                    <Avatar className="h-8 w-8 border-2 border-primary">
+                      <AvatarFallback>AI</AvatarFallback>
+                    </Avatar>
+                    <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
+                      <div className="flex items-center gap-2">
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                         <span>Savora is typing...</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            </ScrollArea>
+          </CardContent>
+          <div className="p-4 border-t">
+            <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="e.g., How can I substitute eggs in this recipe?"
+                className="flex-grow"
+                disabled={loading}
+              />
+              <Button type="submit" disabled={loading || !input.trim()}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                <span className="sr-only">Send message</span>
+              </Button>
+            </form>
           </div>
-        </div>
-      </header>
-      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
-    </>
+        </Card>
+      </div>
+    </div>
   );
 }

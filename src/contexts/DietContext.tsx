@@ -15,31 +15,41 @@ const DietContext = createContext<DietContextType | undefined>(undefined);
 
 export function DietProvider({ children }: { children: ReactNode }) {
   const [diet, setDietState] = useState<Diet>('non-veg');
-
-  const applyTheme = (theme: Diet) => {
-    if (theme === 'veg') {
-      document.documentElement.classList.add('theme-veg');
-    } else {
-      document.documentElement.classList.remove('theme-veg');
-    }
-  };
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    // On initial load, check localStorage for a saved preference
-    const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
-    if (savedDiet) {
-      setDietState(savedDiet);
-      applyTheme(savedDiet);
-    } else {
-      applyTheme('non-veg'); // ensure default is applied
+    setHasMounted(true);
+  }, []);
+
+  const applyTheme = useCallback((theme: Diet) => {
+    if (typeof window !== 'undefined') {
+      if (theme === 'veg') {
+        document.documentElement.classList.add('theme-veg');
+      } else {
+        document.documentElement.classList.remove('theme-veg');
+      }
     }
   }, []);
 
+  useEffect(() => {
+    if (hasMounted) {
+      const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
+      if (savedDiet) {
+        setDietState(savedDiet);
+        applyTheme(savedDiet);
+      } else {
+        applyTheme('non-veg');
+      }
+    }
+  }, [hasMounted, applyTheme]);
+
   const setDiet = useCallback((newDiet: Diet) => {
-    setDietState(newDiet);
-    localStorage.setItem('savora-diet', newDiet);
-    applyTheme(newDiet);
-  }, []);
+    if (hasMounted) {
+      setDietState(newDiet);
+      localStorage.setItem('savora-diet', newDiet);
+      applyTheme(newDiet);
+    }
+  }, [hasMounted, applyTheme]);
   
   const toggleDiet = useCallback(() => {
     setDiet(diet === 'veg' ? 'non-veg' : 'veg');

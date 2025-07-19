@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -39,7 +39,7 @@ interface MealPlannerProps {
 }
 
 export function MealPlanner({ initialPlan }: MealPlannerProps) {
-  const { user, loading } = useAuth();
+  const { user, isLoaded } = useUser();
   const [mealPlan, setMealPlan] = useState<MealPlan>(initialMealPlan);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ day: string; meal: MealSlot } | null>(null);
@@ -47,9 +47,9 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!loading) {
+    if (isLoaded) {
       if (!user) {
-        router.push('/login');
+        router.push('/sign-in');
         return;
       }
       
@@ -57,10 +57,10 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
       if (initialPlan) {
         // If an AI plan is passed, use it and save it
         planToLoad = initialPlan;
-        saveMealPlan(initialPlan, user.uid);
+        saveMealPlan(initialPlan, user.id);
       } else {
         // Otherwise, load from storage
-        planToLoad = getMealPlan(user.uid);
+        planToLoad = getMealPlan(user.id);
       }
       
       if (planToLoad) {
@@ -68,13 +68,13 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
         setMealPlan(fullPlan);
       }
     }
-  }, [user, loading, router, initialPlan]);
+  }, [user, isLoaded, router, initialPlan]);
 
 
   const updateMealPlan = (newPlan: MealPlan) => {
     if (!user) return;
     setMealPlan(newPlan);
-    saveMealPlan(newPlan, user.uid);
+    saveMealPlan(newPlan, user.id);
   };
 
   const handleOpenDialog = (day: string, meal: MealSlot) => {
@@ -124,7 +124,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
     }));
   }, [dailyTotals]);
 
-  if (loading || !user) {
+  if (!isLoaded || !user) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />

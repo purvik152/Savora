@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -5,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDiet } from '@/contexts/DietContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/hooks/use-toast';
 import { recipes as allRecipes, Recipe } from '@/lib/recipes';
 import { generateMealPlan, GenerateMealPlanInput, GenerateMealPlanOutput } from '@/ai/flows/generate-meal-plan-flow';
@@ -34,7 +35,7 @@ export function SmartPlannerForm({ onPlanGenerated }: SmartPlannerFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { diet } = useDiet();
-  const { user } = useAuth();
+  const { user } = useUser();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({

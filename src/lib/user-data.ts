@@ -134,12 +134,14 @@ export async function saveRecipeForOffline(recipe: Recipe, userId: string): Prom
 }
 
 export function isRecipeAvailableOffline(slug: string, userId: string): boolean {
+    if (typeof window === 'undefined') return false;
     if (!userId) return false;
     const offlineRecipes = getOfflineRecipes(userId);
     return offlineRecipes.some(r => r.slug === slug);
 }
 
 export function getOfflineRecipe(slug: string, userId: string): OfflineRecipe | undefined {
+    if (typeof window === 'undefined') return undefined;
     if (!userId) return undefined;
     const offlineRecipes = getOfflineRecipes(userId);
     return offlineRecipes.find(r => r.slug === slug);
