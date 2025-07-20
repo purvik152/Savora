@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick, ChevronDown } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -12,29 +12,16 @@ import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const mainNavLinks = [
   { href: '/', label: 'Home' },
   { href: '/recipes', label: 'Recipes' },
   { href: '/community', label: 'Community' },
-];
-
-const menuLinks = [
-  { href: '/mood-kitchen', label: 'Mood Kitchen' },
-  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
-];
-
-const secondaryNavLinks = [
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
-]
+];
 
 function DietToggle() {
     const { diet, toggleDiet } = useDiet();
@@ -56,6 +43,7 @@ function DietToggle() {
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   return (
@@ -65,28 +53,48 @@ export function Header() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex h-24 items-center">
 
-                {/* Left side items (Menu) */}
-                <div className="flex items-center">
-                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Menu className="h-6 w-6" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      {menuLinks.map((link) => (
-                        <DropdownMenuItem key={link.href} asChild>
-                          <Link href={link.href}>{link.label}</Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                {/* Left side items (Mobile Menu) */}
+                 <div className="flex items-center md:hidden">
+                    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Menu className="h-6 w-6" />
+                                <span className="sr-only">Open menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left">
+                            <div className="p-6">
+                                <Link href="/" className="flex items-center gap-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <SavoraLogo className="h-7 w-7 text-primary" />
+                                    <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
+                                </Link>
+                                <nav className="flex flex-col space-y-4">
+                                    {mainNavLinks.map((link) => (
+                                        <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            "text-lg font-semibold transition-colors hover:text-primary",
+                                            (pathname === link.href) ? "text-primary" : "text-foreground/70"
+                                        )}
+                                        >
+                                        {link.label}
+                                        </Link>
+                                    ))}
+                                </nav>
+                                <div className="mt-8 pt-6 border-t">
+                                    <DietToggle />
+                                </div>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
                 </div>
 
+
                 {/* Centered Logo */}
-                <div className="flex-1 flex justify-center">
-                    <Link href="/" className="flex flex-col items-center gap-1">
+                <div className="flex-1 flex justify-center md:justify-start">
+                    <Link href="/" className="flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
                         <SavoraLogo className="h-10 w-10 text-primary" />
                         <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline">Savora</span>
                     </Link>
@@ -102,9 +110,6 @@ export function Header() {
                         <Search className="h-5 w-5" />
                         <span className="sr-only">Search recipes</span>
                     </Button>
-                    <div className="hidden md:flex">
-                        <DietToggle />
-                    </div>
                     <ThemeToggle />
                     <Button asChild>
                       <Link href="/sign-in">Login</Link>
@@ -128,18 +133,7 @@ export function Header() {
                     {link.label}
                     </Link>
                 ))}
-                {secondaryNavLinks.map((link) => (
-                    <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                        "text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary",
-                        (pathname === link.href) ? "text-primary" : "text-foreground/70"
-                    )}
-                    >
-                    {link.label}
-                    </Link>
-                ))}
+                 <DietToggle />
             </nav>
         </div>
       </header>
