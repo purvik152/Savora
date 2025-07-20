@@ -362,7 +362,7 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 [animation-timeline:view()] animate-fade-in-up"
+        className="mb-16 animate-fade-in-up"
         style={{ animationDelay: '200ms' }}
       >
         {hasMounted ? (
@@ -432,7 +432,7 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="[animation-timeline:view()] animate-fade-in-up"
+        className="animate-fade-in-up"
         style={{ animationDelay: '400ms' }}
       >
         {hasMounted ? (
