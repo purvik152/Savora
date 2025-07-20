@@ -107,8 +107,8 @@ export function Header() {
                 {/* Centered Logo */}
                 <div className="flex-1 flex justify-center items-center">
                      <Link href="/" className="flex flex-col items-center gap-1">
-                        <SavoraLogo className="h-10 w-10 text-primary animate-float-1" />
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-float-2">Savora</span>
+                        <SavoraLogo className="h-10 w-10 text-primary animate-float-3" />
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-float-4">Savora</span>
                     </Link>
                 </div>
 
