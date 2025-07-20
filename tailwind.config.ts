@@ -167,6 +167,10 @@ export default {
           '50%': { transform: 'scale(0.98, 1.02) translateY(0)', opacity: '1' },
           '75%': { transform: 'scale(1.03, 0.97) translateY(-0.5px)', opacity: '0.9' },
         },
+        'loading-bar': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -185,6 +189,7 @@ export default {
         'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
         'chef-wobble': 'chef-wobble 2s ease-in-out infinite',
         'flame-flicker': 'flame-flicker 1.5s ease-in-out infinite',
+        'loading-bar': 'loading-bar 1.5s ease-in-out infinite',
       },
     },
   },

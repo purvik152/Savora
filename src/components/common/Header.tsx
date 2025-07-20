@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { AnimatedHamburgerIcon } from './AnimatedHamburgerIcon';
+import { PageLoader } from './PageLoader';
 
 
 const mainNavLinks = [
@@ -62,6 +63,7 @@ export function Header() {
   return (
     <>
       <header className="w-full border-b bg-background/95 sticky top-0 z-50">
+        <PageLoader />
         {/* Top Tier: Logo, Search, Actions */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex h-24 items-center">
