@@ -13,7 +13,6 @@ import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
-import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -23,6 +22,7 @@ const navLinks = [
   { href: '/chef-challenge', label: 'Chef\'s Challenge' },
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
+  { href: '/dashboard', label: 'Dashboard' },
 ];
 
 function DietToggle() {
@@ -46,12 +46,11 @@ function DietToggle() {
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { isSignedIn } = useUser();
   const pathname = usePathname();
   
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const finalNavLinks = isSignedIn ? [...navLinks, { href: '/dashboard', label: 'Dashboard' }] : navLinks;
+  const finalNavLinks = navLinks;
 
   return (
     <>
@@ -121,14 +120,9 @@ export function Header() {
                         <DietToggle />
                     </div>
                     <ThemeToggle />
-                    <SignedIn>
-                        <UserButton afterSignOutUrl="/" />
-                    </SignedIn>
-                    <SignedOut>
-                        <Button asChild>
-                        <Link href="/sign-in">Login</Link>
-                        </Button>
-                    </SignedOut>
+                    <Button asChild>
+                      <Link href="/sign-in">Login</Link>
+                    </Button>
                 </div>
             </div>
         </div>

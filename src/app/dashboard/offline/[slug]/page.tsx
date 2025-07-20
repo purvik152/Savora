@@ -10,7 +10,6 @@ import type { OfflineRecipe } from '@/lib/user-data';
 import { getOfflineRecipe } from '@/lib/user-data';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useUser } from '@clerk/nextjs';
 
 
 function OfflineRecipePageSkeleton() {
@@ -152,18 +151,18 @@ function OfflineRecipeView({ recipe }: { recipe: OfflineRecipe }) {
 export default function OfflineRecipePage() {
   const [recipe, setRecipe] = useState<OfflineRecipe | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
   const params = useParams<{ slug: string }>();
+  const MOCK_USER_ID = 'mock-user-id'; // Mock user ID
 
   useEffect(() => {
-    if (user && params?.slug) {
-        const offlineRecipe = getOfflineRecipe(params.slug, user.id);
+    if (params?.slug) {
+        const offlineRecipe = getOfflineRecipe(params.slug, MOCK_USER_ID);
         if (offlineRecipe) {
             setRecipe(offlineRecipe);
         }
     }
     setLoading(false);
-  }, [params?.slug, user]);
+  }, [params?.slug]);
 
   if (loading) {
     return <OfflineRecipePageSkeleton />;

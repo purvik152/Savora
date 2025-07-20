@@ -43,7 +43,6 @@ import { translateRecipe } from '@/ai/flows/translate-recipe-flow';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { isFavoriteRecipe, addFavoriteRecipe, removeFavoriteRecipe, addPastRecipe } from '@/lib/user-data';
-import { useUser } from '@clerk/nextjs';
 
 
 function RecipePageSkeleton() {
@@ -89,7 +88,7 @@ function RecipePageSkeleton() {
 function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
   const voiceAssistantRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useUser();
+  const MOCK_USER_ID = 'mock-user-id'; // Mock user ID for non-logged-in features
   const [hasMounted, setHasMounted] = useState(false);
 
   // State for the current recipe being displayed
@@ -131,10 +130,8 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
     const newInitialServings = parseInt(recipe.servings.match(/\d+/)?.[0] || '1', 10);
     setServings(newInitialServings);
     setCheckedIngredients(new Set());
-    if (user) {
-      setIsFavorite(isFavoriteRecipe(recipe.id.toString(), user.id));
-    }
-  }, [recipe, user]);
+    setIsFavorite(isFavoriteRecipe(recipe.id.toString(), MOCK_USER_ID));
+  }, [recipe]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -360,14 +357,6 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
   };
 
   const handleFavoriteToggle = () => {
-    if (!user) {
-        toast({
-            variant: "destructive",
-            title: "Please log in",
-            description: "You need to be logged in to favorite recipes.",
-        });
-        return;
-    }
     if (isAdapted) {
         toast({
             variant: "destructive",
@@ -377,19 +366,19 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
         return;
     }
     if (isFavorite) {
-        removeFavoriteRecipe(recipe.id.toString(), user.id);
+        removeFavoriteRecipe(recipe.id.toString(), MOCK_USER_ID);
         setIsFavorite(false);
         toast({ title: "Removed from favorites" });
     } else {
-        addFavoriteRecipe(recipe, user.id);
+        addFavoriteRecipe(recipe, MOCK_USER_ID);
         setIsFavorite(true);
         toast({ title: "Added to favorites" });
     }
   };
 
   const handleStartCooking = () => {
-    if (user && !isAdapted) {
-      addPastRecipe(recipe, user.id);
+    if (!isAdapted) {
+      addPastRecipe(recipe, MOCK_USER_ID);
     }
   };
 

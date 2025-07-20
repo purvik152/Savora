@@ -1,27 +1,15 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MealPlanner } from '@/components/meal-planner/MealPlanner';
 import { SmartPlannerForm } from '@/components/meal-planner/SmartPlannerForm';
 import { CalendarCheck, WandSparkles } from 'lucide-react';
 import type { MealPlan } from '@/lib/meal-planner-data';
-import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
 
 export default function MealPlannerPage() {
   // Add state to hold the AI-generated plan and pass it down
   const [generatedPlan, setGeneratedPlan] = useState<MealPlan | null>(null);
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.push('/sign-in');
-    }
-  }, [user, isLoaded, router]);
-
 
   const handlePlanGenerated = (newPlan: MealPlan) => {
     // This key forces the MealPlanner component to re-mount and re-fetch its state
@@ -29,15 +17,6 @@ export default function MealPlannerPage() {
     setGeneratedPlan(newPlan);
   };
   
-  if (!isLoaded || !user) {
-    return (
-       <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
-        <Loader2 className="h-16 w-16 animate-spin text-primary" />
-        <p className="mt-4 text-muted-foreground">Loading planner...</p>
-      </div>
-    )
-  }
-
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="max-w-5xl mx-auto text-center mb-12">

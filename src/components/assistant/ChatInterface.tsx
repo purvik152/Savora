@@ -11,10 +11,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, Loader2, User, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useUser } from '@clerk/nextjs';
 
 export function ChatInterface() {
-  const { user } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const { run: runAssistant, loading } = useFlow(cookingAssistantFlow);
@@ -83,10 +81,8 @@ export function ChatInterface() {
                     </div>
                     {message.role === 'user' && (
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.imageUrl} />
-                        <AvatarFallback>
-                          {user?.firstName?.[0] || 'U'}
-                        </AvatarFallback>
+                        <AvatarImage src="https://placehold.co/128x128.png" />
+                        <AvatarFallback>U</AvatarFallback>
                       </Avatar>
                     )}
                   </div>

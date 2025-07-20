@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useUser } from '@clerk/nextjs';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,7 +41,13 @@ export function SubmitRecipeForm() {
 
   const { toast } = useToast();
   const router = useRouter();
-  const { isSignedIn, user } = useUser();
+  
+  // Mock user for demo purposes
+  const user = {
+    id: 'mock-user-id',
+    fullName: 'Savora Chef',
+    imageUrl: 'https://placehold.co/128x128.png',
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,16 +134,6 @@ export function SubmitRecipeForm() {
   }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (!isSignedIn || !user) {
-      toast({
-        variant: 'destructive',
-        title: "Not Logged In",
-        description: "You must be logged in to submit a recipe.",
-      });
-      router.push('/sign-in');
-      return;
-    }
-
     const imageFile = values.image?.[0];
 
     if (!imageFile && !generatedImageDataUri) {

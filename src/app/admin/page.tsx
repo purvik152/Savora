@@ -1,49 +1,20 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUser, UserButton } from '@clerk/nextjs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, ShieldCheck, Users, BarChart, FilePlus } from 'lucide-react';
+import { ShieldCheck, Users, BarChart, FilePlus } from 'lucide-react';
 import Link from 'next/link';
 
 function AdminDashboard() {
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
-  
-  // This is a simplified role check for the prototype.
-  // In a real app, this would be a secure check against a backend or custom claims.
-  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'admin@savora.com';
-
-  useEffect(() => {
-    if (isLoaded) {
-      if (!user) {
-        router.push('/sign-in');
-      } else if (!isAdmin) {
-        router.push('/dashboard'); // Redirect non-admins to the user dashboard
-      }
-    }
-  }, [user, isAdmin, isLoaded, router]);
-
-  if (!isLoaded || !user || !isAdmin) {
-    return (
-      <div className="container mx-auto flex h-full flex-col items-center justify-center px-4 py-8 md:py-12">
-        <Loader2 className="h-16 w-16 animate-spin text-primary" />
-        <p className="mt-4 text-muted-foreground">Verifying admin access...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12">
             <div className='text-center md:text-left'>
                 <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-                <p className="text-muted-foreground mt-1">Welcome, {user.fullName || user.primaryEmailAddress?.emailAddress}.</p>
+                <p className="text-muted-foreground mt-1">Welcome, Admin.</p>
             </div>
-            <UserButton afterSignOutUrl="/" />
+             <Button variant="outline">Logout</Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

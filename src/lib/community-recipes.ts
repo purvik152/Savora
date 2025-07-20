@@ -1,8 +1,6 @@
 
 'use client';
 
-import type { User } from '@clerk/nextjs/server';
-
 export interface CommunityRecipe {
   id: number;
   slug: string;

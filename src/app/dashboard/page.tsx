@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from 'next/link';
-import { useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -124,30 +123,27 @@ function ActivityTracker() {
 }
 
 function FavoritesList() {
-    const { user } = useUser();
     const { toast } = useToast();
     const { diet } = useDiet();
     const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
     const [offlineStatus, setOfflineStatus] = useState<Record<string, boolean>>({});
     const [downloading, setDownloading] = useState<Record<string, boolean>>({});
+    const MOCK_USER_ID = 'mock-user-id'; // Mock user ID
     
     useEffect(() => {
-        if (user) {
-            const favs = getFavoriteRecipes(user.id);
-            setFavoriteRecipes(favs);
-            const status: Record<string, boolean> = {};
-            favs.forEach(recipe => {
-                status[recipe.slug] = isRecipeAvailableOffline(recipe.slug, user.id);
-            });
-            setOfflineStatus(status);
-        }
-    }, [user]);
+        const favs = getFavoriteRecipes(MOCK_USER_ID);
+        setFavoriteRecipes(favs);
+        const status: Record<string, boolean> = {};
+        favs.forEach(recipe => {
+            status[recipe.slug] = isRecipeAvailableOffline(recipe.slug, MOCK_USER_ID);
+        });
+        setOfflineStatus(status);
+    }, []);
 
     const handleDownload = async (recipe: Recipe) => {
-        if (!user) return;
         setDownloading(prev => ({ ...prev, [recipe.slug]: true }));
         try {
-            await saveRecipeForOffline(recipe, user.id);
+            await saveRecipeForOffline(recipe, MOCK_USER_ID);
             setOfflineStatus(prev => ({ ...prev, [recipe.slug]: true }));
             toast({
                 title: "Recipe Saved Offline",
@@ -187,7 +183,7 @@ function FavoritesList() {
                         <Image src={recipe.image} alt={recipe.title} width={64} height={64} className="rounded-lg object-cover" data-ai-hint={recipe.imageHint} />
                       </Link>
                        <div className="flex-grow">
-                         <Link href={offlineStatus[recipe.slug] && user ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
+                         <Link href={offlineStatus[recipe.slug] ? `/dashboard/offline/${recipe.slug}` : `/recipes/${recipe.slug}`}>
                            <h3 className="font-semibold hover:underline">{recipe.title}</h3>
                          </Link>
                          <p className="text-sm text-muted-foreground">{recipe.cuisine}</p>
@@ -219,18 +215,16 @@ function FavoritesList() {
 
 
 export default function DashboardPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
   const { diet } = useDiet();
+  const MOCK_USER_ID = 'mock-user-id'; // Mock user ID
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    if (isLoaded && isSignedIn && user) {
-        setPastRecipes(getPastRecipes(user.id));
-        setFavoriteRecipes(getFavoriteRecipes(user.id));
-    }
-  }, [isLoaded, isSignedIn, user]);
+    setPastRecipes(getPastRecipes(MOCK_USER_ID));
+    setFavoriteRecipes(getFavoriteRecipes(MOCK_USER_ID));
+  }, []);
 
 
   const filteredPastRecipes = useMemo(() => {
@@ -247,30 +241,18 @@ export default function DashboardPage() {
     return favoriteRecipes.filter(r => r.diet === 'non-veg');
   }, [diet, favoriteRecipes]);
 
-  if (!isLoaded) {
-    return <LoadingDashboard />;
-  }
-  
-  if (!isSignedIn) {
-      return (
-        <div className="container mx-auto flex h-[calc(100vh-10rem)] flex-col items-center justify-center px-4 py-8 md:py-12">
-            <p>You must be signed in to view this page.</p>
-        </div>
-      )
-  }
-
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
-            <AvatarImage src={user.imageUrl} alt={user.fullName || 'User'} data-ai-hint="avatar user" />
-            <AvatarFallback>{user.fullName ? user.fullName.substring(0, 2).toUpperCase() : 'U'}</AvatarFallback>
+            <AvatarImage src="https://placehold.co/128x128.png" alt="User" data-ai-hint="avatar user" />
+            <AvatarFallback>U</AvatarFallback>
           </Avatar>
         </div>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{user.fullName || 'Savora User'}</h1>
-          <p className="text-muted-foreground mt-1">{user.primaryEmailAddress?.emailAddress}</p>
+          <h1 className="text-4xl font-bold">Savora User</h1>
+          <p className="text-muted-foreground mt-1">user@savora.com</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
               <p className="text-2xl font-bold text-foreground">{filteredPastRecipes.length}</p>

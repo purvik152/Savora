@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import { MealPlan, getMealPlan, saveMealPlan, MealSlot } from '@/lib/meal-planner-data';
 import type { Recipe } from '@/lib/recipes';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +17,6 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
-import { useUser } from '@clerk/nextjs';
 
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -39,42 +37,36 @@ interface MealPlannerProps {
 }
 
 export function MealPlanner({ initialPlan }: MealPlannerProps) {
-  const { user, isLoaded } = useUser();
+  const MOCK_USER_ID = 'mock-user-id'; // Mock user ID
   const [mealPlan, setMealPlan] = useState<MealPlan>(initialMealPlan);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ day: string; meal: MealSlot } | null>(null);
-  const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!user) {
-        router.push('/sign-in');
-        return;
-      }
-      
-      let planToLoad: MealPlan | null;
-      if (initialPlan) {
-        // If an AI plan is passed, use it and save it
-        planToLoad = initialPlan;
-        saveMealPlan(initialPlan, user.id);
-      } else {
-        // Otherwise, load from storage
-        planToLoad = getMealPlan(user.id);
-      }
-      
-      if (planToLoad) {
-        const fullPlan = { ...initialMealPlan, ...planToLoad };
-        setMealPlan(fullPlan);
-      }
+    setLoading(true);
+    let planToLoad: MealPlan | null;
+    if (initialPlan) {
+      // If an AI plan is passed, use it and save it
+      planToLoad = initialPlan;
+      saveMealPlan(initialPlan, MOCK_USER_ID);
+    } else {
+      // Otherwise, load from storage
+      planToLoad = getMealPlan(MOCK_USER_ID);
     }
-  }, [user, isLoaded, router, initialPlan]);
+    
+    if (planToLoad) {
+      const fullPlan = { ...initialMealPlan, ...planToLoad };
+      setMealPlan(fullPlan);
+    }
+    setLoading(false);
+  }, [initialPlan]);
 
 
   const updateMealPlan = (newPlan: MealPlan) => {
-    if (!user) return;
     setMealPlan(newPlan);
-    saveMealPlan(newPlan, user.id);
+    saveMealPlan(newPlan, MOCK_USER_ID);
   };
 
   const handleOpenDialog = (day: string, meal: MealSlot) => {
@@ -124,7 +116,7 @@ export function MealPlanner({ initialPlan }: MealPlannerProps) {
     }));
   }, [dailyTotals]);
 
-  if (!isLoaded || !user) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
