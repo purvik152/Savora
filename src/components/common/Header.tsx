@@ -27,9 +27,12 @@ const mainNavLinks = [
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/mood-kitchen', label: 'Mood Kitchen' },
-  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
 ];
+
+const menuLinks = [
+    { href: '/mood-kitchen', label: 'Mood Kitchen' },
+    { href: '/chef-challenge', label: 'Chef\'s Challenge' },
+]
 
 
 function DietToggle() {
@@ -78,7 +81,7 @@ export function Header() {
                                     <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
                                 </Link>
                                 <nav className="flex flex-col space-y-4">
-                                    {mainNavLinks.map((link) => (
+                                    {[...mainNavLinks, ...menuLinks].map((link) => (
                                         <Link
                                         key={link.href}
                                         href={link.href}
@@ -102,10 +105,10 @@ export function Header() {
 
 
                 {/* Centered Logo */}
-                <div className="flex-1 flex justify-center">
-                     <Link href="/" className="flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+                <div className="flex-1 flex justify-center items-center">
+                     <Link href="/" className="flex flex-col items-center gap-1">
                         <SavoraLogo className="h-10 w-10 text-primary animate-float-1" />
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline">Savora</span>
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-float-2">Savora</span>
                     </Link>
                 </div>
 
@@ -139,7 +142,7 @@ export function Header() {
                 >
                 Home
                 </Link>
-                {mainNavLinks.slice(0, 5).map((link) => (
+                {mainNavLinks.map((link) => (
                     <Link
                     key={link.href}
                     href={link.href}
@@ -153,17 +156,16 @@ export function Header() {
                 ))}
                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent">
-                      Menu
+                    <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+                      More
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem asChild>
-                        <Link href="/mood-kitchen">Mood Kitchen</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/chef-challenge">Chef's Challenge</Link>
-                    </DropdownMenuItem>
+                    {menuLinks.map(link => (
+                        <DropdownMenuItem key={link.href} asChild>
+                            <Link href={link.href}>{link.label}</Link>
+                        </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
                  <DietToggle />
