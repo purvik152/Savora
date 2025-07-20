@@ -97,10 +97,10 @@ export function Header() {
         <PageLoader />
         {/* Top Tier: Logo, Search, Actions */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative flex h-24 items-center">
+            <div className="relative grid grid-cols-3 h-24 items-center">
 
                 {/* Left side items (Mobile Menu) */}
-                 <div className="flex items-center md:hidden">
+                 <div className="flex items-center justify-start md:hidden">
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon">
@@ -146,10 +146,11 @@ export function Header() {
                         </SheetContent>
                     </Sheet>
                 </div>
+                <div className="hidden md:block"></div>
 
 
                 {/* Centered Logo */}
-                <div className="flex-1 flex justify-center items-center">
+                <div className="flex justify-center items-center">
                      <Link href="/" className="flex flex-col items-center gap-1 group">
                         <div className="flex items-center gap-2">
                              <SavoraLogo className="h-10 w-10 text-primary animate-flame-flicker" />
@@ -159,7 +160,7 @@ export function Header() {
                 </div>
 
                 {/* Right side items */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-end space-x-2">
                    <Button
                     variant="ghost"
                     size="icon"
