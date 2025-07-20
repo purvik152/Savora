@@ -58,10 +58,10 @@ export function Header() {
         {/* Top Tier: Logo, Search, Actions */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex h-24 items-center justify-between">
-                <div className="md:hidden">
+                <div className="flex items-center">
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" className="md:hidden mr-4">
                                 <Menu className="h-6 w-6" />
                                 <span className="sr-only">Open menu</span>
                             </Button>
@@ -98,12 +98,9 @@ export function Header() {
                             </div>
                         </SheetContent>
                     </Sheet>
-                </div>
-                
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     <Link href="/" className="flex flex-col items-center gap-1">
                         <SavoraLogo className="h-10 w-10 text-primary" />
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary">Savora</span>
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline">Savora</span>
                     </Link>
                 </div>
 
