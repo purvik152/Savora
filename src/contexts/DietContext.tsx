@@ -57,6 +57,12 @@ export function DietProvider({ children }: { children: ReactNode }) {
 
   const value = { diet, toggleDiet, setDiet };
 
+  // To prevent hydration mismatch, we can return null or a skeleton on the server 
+  // and first client render until the component has mounted.
+  // Or, more simply, we can just render the children and let the theme apply on mount.
+  // The key is to not have state that causes different renders on server vs client initially.
+  // The current logic with hasMounted solves this.
+
   return (
     <DietContext.Provider value={value}>
       {children}
