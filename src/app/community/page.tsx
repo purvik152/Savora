@@ -63,7 +63,7 @@ export default function CommunityPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="max-w-4xl mx-auto text-center mb-12">
+      <div className="max-w-4xl mx-auto text-center mb-12 animate-fade-in-up">
         <Users className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">The Community Kitchen</h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -78,18 +78,19 @@ export default function CommunityPage() {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredRecipes.map((recipe) => (
-          <CommunityRecipeCard 
-            key={recipe.id} 
-            recipe={recipe} 
-            onUpvote={handleUpvote}
-            onRemove={handleRemove}
-          />
+        {filteredRecipes.map((recipe, index) => (
+          <div key={recipe.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+            <CommunityRecipeCard 
+              recipe={recipe} 
+              onUpvote={handleUpvote}
+              onRemove={handleRemove}
+            />
+          </div>
         ))}
       </div>
 
       {filteredRecipes.length === 0 && (
-        <div className="text-center col-span-full py-16">
+        <div className="text-center col-span-full py-16 animate-fade-in-up">
           <p className="text-muted-foreground">
             No community recipes found for the '{diet}' view yet.
           </p>

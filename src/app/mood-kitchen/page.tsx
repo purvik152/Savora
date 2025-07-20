@@ -51,7 +51,7 @@ export default function MoodKitchenPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="max-w-4xl mx-auto text-center mb-12">
+      <div className="max-w-4xl mx-auto text-center mb-12 animate-fade-in-up">
         <WandSparkles className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">The Mood Kitchen</h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -59,11 +59,13 @@ export default function MoodKitchenPage() {
         </p>
       </div>
 
-      <MoodSelector onSelectMood={handleSelectMood} disabled={loading} selectedMood={selectedMood} />
+      <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <MoodSelector onSelectMood={handleSelectMood} disabled={loading} selectedMood={selectedMood} />
+      </div>
 
       <div className="mt-16">
         {loading && (
-          <div className="flex flex-col items-center justify-center text-center gap-4">
+          <div className="flex flex-col items-center justify-center text-center gap-4 animate-fade-in-up">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <p className="text-muted-foreground font-semibold">Savora is thinking...</p>
             <p className="text-sm text-muted-foreground">Finding the perfect recipes for a '{selectedMood?.toLowerCase()}' mood.</p>
@@ -71,7 +73,7 @@ export default function MoodKitchenPage() {
         )}
 
         {error && (
-            <Alert variant="destructive" className="max-w-2xl mx-auto">
+            <Alert variant="destructive" className="max-w-2xl mx-auto animate-fade-in-up">
                 <Bot className="h-4 w-4" />
                 <AlertTitle>Suggestion Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
@@ -79,11 +81,15 @@ export default function MoodKitchenPage() {
         )}
 
         {suggestions.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in-up">
-            {suggestions.map(({ slug, reason }) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {suggestions.map(({ slug, reason }, index) => {
               const recipe = allRecipes.find(r => r.slug === slug);
               if (!recipe) return null;
-              return <SuggestionCard key={slug} recipe={recipe} reason={reason} />;
+              return (
+                <div key={slug} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <SuggestionCard recipe={recipe} reason={reason} />
+                </div>
+              );
             })}
           </div>
         )}

@@ -19,7 +19,7 @@ export default function MealPlannerPage() {
   
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="max-w-5xl mx-auto text-center mb-12">
+      <div className="max-w-5xl mx-auto text-center mb-12 animate-fade-in-up">
         <CalendarCheck className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Your Weekly Meal Planner</h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -28,7 +28,7 @@ export default function MealPlannerPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <div className="sticky top-24">
                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                     <WandSparkles className="text-primary" />
@@ -37,7 +37,7 @@ export default function MealPlannerPage() {
                 <SmartPlannerForm onPlanGenerated={handlePlanGenerated} />
             </div>
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
            <MealPlanner key={JSON.stringify(generatedPlan)} initialPlan={generatedPlan}/>
         </div>
       </div>

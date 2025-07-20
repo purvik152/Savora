@@ -71,7 +71,7 @@ export default function NewsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="max-w-5xl mx-auto text-center mb-12">
+      <div className="max-w-5xl mx-auto text-center mb-12 animate-fade-in-up">
         <Newspaper className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Food & Health News</h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -80,10 +80,10 @@ export default function NewsPage() {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 animate-fade-in-up" style={{animationDelay: '200ms'}}>
           <NewsFeedForm />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 animate-fade-in-up" style={{animationDelay: '400ms'}}>
             <h2 className="text-3xl font-bold mb-6">Latest Headlines</h2>
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -101,7 +101,9 @@ export default function NewsPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {latestNews.map((article, index) => (
-                        <NewsArticleCard key={index} article={article} />
+                       <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                         <NewsArticleCard article={article} />
+                       </div>
                     ))}
                 </div>
             )}

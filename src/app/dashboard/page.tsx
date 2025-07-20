@@ -62,7 +62,7 @@ function FavoritesList() {
     }, [diet, favoriteRecipes]);
 
     return (
-        <Card>
+        <Card className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Heart /> Favorites</CardTitle>
               <CardDescription>Your all-time favorite recipes.</CardDescription>
@@ -136,7 +136,7 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12 animate-fade-in-up">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-primary">
             <AvatarImage src="https://placehold.co/128x128.png" alt="User" data-ai-hint="avatar user" />
@@ -166,7 +166,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <Card>
+          <Card className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Utensils /> Past Recipes</CardTitle>
               <CardDescription>A log of all the delicious meals you've cooked.</CardDescription>

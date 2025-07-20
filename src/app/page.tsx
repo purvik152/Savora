@@ -323,7 +323,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       
       {/* Hero Carousel Section */}
-      <section className="mb-16">
+      <section className="mb-16 animate-fade-in-up">
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             plugins={[plugin.current]}
@@ -362,7 +362,8 @@ export default function Home() {
       {/* Sub-Categories Section */}
       {subCategories.length > 0 && (
       <section
-        className="mb-16 [animation-timeline:view()]"
+        className="mb-16 [animation-timeline:view()] animate-fade-in-up"
+        style={{ animationDelay: '200ms' }}
       >
         {hasMounted ? (
           <div className="flex flex-col items-center gap-y-12">
@@ -431,7 +432,8 @@ export default function Home() {
       {/* Main Categories Section */}
       {mainCategories.length > 0 && (
       <section
-        className="[animation-timeline:view()]"
+        className="[animation-timeline:view()] animate-fade-in-up"
+        style={{ animationDelay: '400ms' }}
       >
         {hasMounted ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -466,7 +468,8 @@ export default function Home() {
 
     {/* Search Section */}
     <section
-      className="my-24"
+      className="my-24 animate-fade-in-up"
+      style={{ animationDelay: '600ms' }}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
@@ -549,14 +552,14 @@ export default function Home() {
 
     {/* What's in your Kitchen Section */}
     <section 
-        className="my-24"
+        className="my-24 animate-fade-in-up"
+        style={{ animationDelay: '700ms' }}
     >
         <WhatsInYourKitchen />
     </section>
 
     {/* Community Section */}
-    <section className="my-24"
-    >
+    <section className="my-24 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">From Our Community Kitchen</h2>
             <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>

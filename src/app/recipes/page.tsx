@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 import { useDiet } from "@/contexts/DietContext";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const RecipeCard = ({ recipe }: { recipe: Recipe }) => (
-    <Link href={`/recipes/${recipe.slug}`} className="block h-full">
+const RecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay?: string }) => (
+    <Link href={`/recipes/${recipe.slug}`} className="block h-full animate-fade-in-up" style={{ animationDelay }}>
         <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
         <div className="relative w-full h-48">
             <Image
@@ -78,7 +78,7 @@ function RecipesContent() {
   if (query) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Search Results</h1>
             <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
               {filteredRecipes.length > 0
@@ -88,8 +88,8 @@ function RecipesContent() {
         </div>
         {filteredRecipes.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+            {filteredRecipes.map((recipe, index) => (
+              <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${index * 100}ms`} />
             ))}
           </div>
         )}
@@ -105,14 +105,14 @@ function RecipesContent() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="text-center mb-12">
+      <div className="text-center mb-12 animate-fade-in-up">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Explore Our Recipes</h1>
         <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick bites to family feasts, find your next favorite meal here.</p>
       </div>
 
       <section id="cuisines" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">Explore by Cuisine</h2>
-        {cuisines.map((cuisine) => {
+        <h2 className="text-3xl font-bold mb-8 text-center animate-fade-in-up" style={{animationDelay: '100ms'}}>Explore by Cuisine</h2>
+        {cuisines.map((cuisine, cuisineIndex) => {
           const cuisineRecipes = activeRecipes
             .filter((r) => r.cuisine === cuisine)
             .slice(0, 3);
@@ -121,15 +121,15 @@ function RecipesContent() {
           const flagClass = cuisineToFlagClass[cuisine] || 'flag-asian';
 
           return (
-            <div key={cuisine} className="mb-12">
+            <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
               <h3 className="cuisine-title mb-6">
                 <span className={cn('cuisine-title-gradient', flagClass)}>
                   {cuisine}
                 </span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cuisineRecipes.map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
+                {cuisineRecipes.map((recipe, recipeIndex) => (
+                  <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${recipeIndex * 100}ms`}/>
                 ))}
               </div>
             </div>
@@ -139,7 +139,7 @@ function RecipesContent() {
 
       <Separator className="my-16" />
 
-      <section id="meal-types">
+      <section id="meal-types" className="animate-fade-in-up" style={{animationDelay: '400ms'}}>
          <h2 className="text-3xl font-bold mb-8 text-center">Or Browse by Meal Type</h2>
         <Tabs defaultValue="breakfast" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
