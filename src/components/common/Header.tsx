@@ -19,7 +19,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuGroup,
-  DropdownMenuLabel
+  DropdownMenuLabel,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu"
 import { AnimatedHamburgerIcon } from './AnimatedHamburgerIcon';
 import { PageLoader } from './PageLoader';
@@ -37,6 +38,24 @@ const menuLinks = [
     { href: '/mood-kitchen', label: 'Mood Kitchen' },
     { href: '/chef-challenge', label: 'Chef\'s Challenge' },
 ]
+
+const countryToFlagClass: Record<string, string> = {
+  'USA': 'flag-usa',
+  'Italy': 'flag-italy',
+  'France': 'flag-france',
+  'Mexico': 'flag-mexico',
+  'India': 'flag-india',
+  'Greece': 'flag-greece',
+  'Thailand': 'flag-thailand',
+  'Spain': 'flag-spain',
+  'China': 'flag-china',
+  'UK': 'flag-uk',
+  'Turkey': 'flag-turkey',
+  'Japan': 'flag-japan',
+  'Lebanon': 'flag-lebanon',
+  'Egypt': 'flag-egypt',
+  'Vietnam': 'flag-vietnam',
+};
 
 
 function DietToggle() {
@@ -171,22 +190,24 @@ export function Header() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:text-primary data-[state=open]:bg-transparent">
+                     <Button variant="ghost" className={cn("text-sm font-semibold uppercase tracking-wider hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:text-primary data-[state=open]:bg-transparent", pathname.startsWith('/recipes') ? "text-primary" : "text-foreground/70")}>
                       Recipes
                       <ChevronDown className="relative top-[1px] ml-1 h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuItem asChild>
+                         <Link href="/recipes">All Recipes</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>By Country</DropdownMenuLabel>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem asChild>
-                             <Link href="/recipes">All Recipes</Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuGroup>
-                      <DropdownMenuLabel>By Country</DropdownMenuLabel>
                         {availableCountries.map(country => (
                             <DropdownMenuItem key={country} asChild>
-                                <Link href={`/recipes?country=${encodeURIComponent(country)}`}>{country}</Link>
+                                <Link href={`/recipes?country=${encodeURIComponent(country)}`} className="flex items-center gap-3">
+                                   <div className={cn("h-4 w-6 rounded-sm", countryToFlagClass[country] || 'bg-muted')}></div>
+                                   <span>{country}</span>
+                                </Link>
                             </DropdownMenuItem>
                         ))}
                     </DropdownMenuGroup>
@@ -207,7 +228,7 @@ export function Header() {
                 ))}
                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+                    <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:bg-transparent">
                       More
                     </Button>
                   </DropdownMenuTrigger>

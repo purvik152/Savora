@@ -64,12 +64,10 @@ function RecipesContent() {
     if (diet === 'veg') {
       return allRecipes.filter(r => r.diet === 'veg');
     }
-    // In non-veg mode, show only non-veg recipes
     return allRecipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
 
   useEffect(() => {
-    // If there are no recipes for the selected country in the current diet, reset the selection
     const countriesForDiet = [...new Set(activeRecipes.map(r => r.country))];
     if (selectedCountry && !countriesForDiet.includes(selectedCountry)) {
         setSelectedCountry('');
@@ -77,35 +75,30 @@ function RecipesContent() {
   }, [diet, selectedCountry, activeRecipes]);
   
   const filteredRecipes = useMemo(() => {
-    let recipesToFilter = activeRecipes;
-    
     if (query) {
-        const lowerCaseQuery = query.toLowerCase();
-        return recipesToFilter.filter(
-            (recipe) =>
-              recipe.title.toLowerCase().includes(lowerCaseQuery) ||
-              recipe.description.toLowerCase().includes(lowerCaseQuery) ||
-              recipe.cuisine.toLowerCase().includes(lowerCaseQuery) ||
-              recipe.category.toLowerCase().includes(lowerCaseQuery)
-          );
+      const lowerCaseQuery = query.toLowerCase();
+      return activeRecipes.filter(
+        (recipe) =>
+          recipe.title.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.description.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.cuisine.toLowerCase().includes(lowerCaseQuery) ||
+          recipe.category.toLowerCase().includes(lowerCaseQuery)
+      );
     }
-    
     if (selectedCountry) {
-        return recipesToFilter.filter(r => r.country === selectedCountry);
+      return activeRecipes.filter(r => r.country === selectedCountry);
     }
-
-    return [];
+    return activeRecipes;
   }, [query, activeRecipes, selectedCountry]);
 
   const countries = useMemo(() => [...new Set(activeRecipes.map(r => r.country))].sort(), [activeRecipes]);
 
   const recipesByCuisine = useMemo(() => {
-    if (!selectedCountry) return {};
     return filteredRecipes.reduce((acc, recipe) => {
         (acc[recipe.cuisine] = acc[recipe.cuisine] || []).push(recipe);
         return acc;
     }, {} as Record<string, Recipe[]>);
-  }, [selectedCountry, filteredRecipes]);
+  }, [filteredRecipes]);
 
   if (query) {
     return (
@@ -129,7 +122,6 @@ function RecipesContent() {
     );
   }
 
-  // Original page content for when there's no search query
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="text-center mb-12 animate-fade-in-up">
@@ -141,7 +133,7 @@ function RecipesContent() {
         <Select onValueChange={setSelectedCountry} value={selectedCountry}>
             <SelectTrigger className="h-12 text-lg">
                 <Globe className="mr-3 h-5 w-5 text-muted-foreground" />
-                <SelectValue placeholder="Select a Country to Explore..." />
+                <SelectValue placeholder="Explore by Country..." />
             </SelectTrigger>
             <SelectContent>
                 {countries.map(country => (
@@ -156,20 +148,22 @@ function RecipesContent() {
         </Select>
       </div>
 
-      <section id="recipes-by-country">
-        {selectedCountry ? (
-            Object.entries(recipesByCuisine).map(([cuisine, recipes], cuisineIndex) => (
-                <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
-                    <h2 className="text-3xl font-bold mb-6">{cuisine}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {recipes.map((recipe, recipeIndex) => (
-                            <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${recipeIndex * 100}ms`}/>
-                        ))}
-                    </div>
+      <section id="recipes-by-cuisine">
+        {Object.entries(recipesByCuisine).map(([cuisine, recipes], cuisineIndex) => (
+            <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
+                <div className="flex items-center gap-4 mb-6">
+                    {selectedCountry && <div className={cn("h-6 w-8 rounded-md shadow-md", countryToFlagClass[selectedCountry] || 'bg-muted')}></div>}
+                    <h2 className="text-3xl font-bold">{cuisine}</h2>
                 </div>
-            ))
-        ) : (
-            <div className="text-center text-muted-foreground py-16 animate-fade-in-up">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {recipes.map((recipe, recipeIndex) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${recipeIndex * 100}ms`}/>
+                    ))}
+                </div>
+            </div>
+        ))}
+        {Object.keys(recipesByCuisine).length === 0 && (
+             <div className="text-center text-muted-foreground py-16 animate-fade-in-up">
                 <p>Please select a country to see the delicious recipes it has to offer.</p>
             </div>
         )}
