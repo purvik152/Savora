@@ -42,7 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
             <DietProvider>
-              <div className="relative flex flex-col min-h-screen">
+              <div className="relative flex flex-col min-h-screen border-t-4 border-primary">
                 <FloatingDoodles />
                 <Header />
                 <main className="flex-grow animate-fade-in-up">{children}</main>
