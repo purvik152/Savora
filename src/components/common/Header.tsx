@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick, Flame } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { AnimatedHamburgerIcon } from './AnimatedHamburgerIcon';
 
 
 const mainNavLinks = [
@@ -70,7 +71,7 @@ export function Header() {
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon">
-                                <Menu className="h-6 w-6" />
+                                <AnimatedHamburgerIcon open={isMobileMenuOpen} />
                                 <span className="sr-only">Open menu</span>
                             </Button>
                         </SheetTrigger>
@@ -106,8 +107,11 @@ export function Header() {
 
                 {/* Centered Logo */}
                 <div className="flex-1 flex justify-center items-center">
-                     <Link href="/" className="flex flex-col items-center gap-1">
-                        <SavoraLogo className="h-10 w-10 text-primary animate-chef-wobble" />
+                     <Link href="/" className="flex flex-col items-center gap-1 group">
+                        <div className="flex items-center gap-2">
+                             <SavoraLogo className="h-10 w-10 text-primary animate-chef-wobble" />
+                             <Flame className="h-8 w-8 text-orange-500 animate-pulse-slow" />
+                        </div>
                         <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-chef-wobble">Savora</span>
                     </Link>
                 </div>
