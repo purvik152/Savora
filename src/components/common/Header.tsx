@@ -37,6 +37,7 @@ const mainNavLinks = [
 const menuLinks = [
     { href: '/mood-kitchen', label: 'Mood Kitchen' },
     { href: '/chef-challenge', label: 'Chef\'s Challenge' },
+    { href: '/diorama', label: 'Foodie Diorama' }
 ]
 
 const countryToFlagClass: Record<string, string> = {
@@ -85,7 +86,7 @@ export function Header() {
   const availableCountries = useMemo(() => {
     const recipesToFilter = diet === 'veg' 
       ? allRecipes.filter(r => r.diet === 'veg') 
-      : allRecipes.filter(r => r.diet !== 'veg');
+      : allRecipes;
     
     return [...new Set(recipesToFilter.map(r => r.country))].sort();
   }, [diet]);
