@@ -3,15 +3,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, Suspense } from 'react';
+import { useMemo, Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { recipes, Recipe } from "@/lib/recipes";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import { recipes as allRecipes, Recipe } from "@/lib/recipes";
 import { cn } from "@/lib/utils";
 import { useDiet } from "@/contexts/DietContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Globe } from "lucide-react";
 
 const RecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay?: string }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full animate-fade-in-up" style={{ animationDelay }}>
@@ -38,42 +38,54 @@ function RecipesContent() {
   const { diet } = useDiet();
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
 
   const activeRecipes = useMemo(() => {
     if (diet === 'veg') {
-      return recipes.filter(r => r.diet === 'veg');
+      return allRecipes.filter(r => r.diet === 'veg');
     }
     // In non-veg mode, show only non-veg recipes
-    return recipes.filter(r => r.diet === 'non-veg');
+    return allRecipes.filter(r => r.diet === 'non-veg');
   }, [diet]);
+
+  useEffect(() => {
+    // If there are no recipes for the selected country in the current diet, reset the selection
+    const countriesForDiet = [...new Set(activeRecipes.map(r => r.country))];
+    if (selectedCountry && !countriesForDiet.includes(selectedCountry)) {
+        setSelectedCountry('');
+    }
+  }, [diet, selectedCountry, activeRecipes]);
   
   const filteredRecipes = useMemo(() => {
-    if (!query) {
-      return [];
+    let recipesToFilter = activeRecipes;
+    
+    if (query) {
+        const lowerCaseQuery = query.toLowerCase();
+        return recipesToFilter.filter(
+            (recipe) =>
+              recipe.title.toLowerCase().includes(lowerCaseQuery) ||
+              recipe.description.toLowerCase().includes(lowerCaseQuery) ||
+              recipe.cuisine.toLowerCase().includes(lowerCaseQuery) ||
+              recipe.category.toLowerCase().includes(lowerCaseQuery)
+          );
     }
-    const lowerCaseQuery = query.toLowerCase();
-    return activeRecipes.filter(
-        (recipe) =>
-          recipe.title.toLowerCase().includes(lowerCaseQuery) ||
-          recipe.description.toLowerCase().includes(lowerCaseQuery) ||
-          recipe.cuisine.toLowerCase().includes(lowerCaseQuery) ||
-          recipe.category.toLowerCase().includes(lowerCaseQuery)
-      );
-  }, [query, activeRecipes]);
+    
+    if (selectedCountry) {
+        return recipesToFilter.filter(r => r.country === selectedCountry);
+    }
 
-  const cuisineToFlagClass: { [key: string]: string } = {
-    American: 'flag-american',
-    Italian: 'flag-italian',
-    French: 'flag-french',
-    Mexican: 'flag-mexican',
-    Indian: 'flag-indian',
-    Greek: 'flag-greek',
-    Thai: 'flag-thai',
-    Spanish: 'flag-spanish',
-    Asian: 'flag-asian',
-    Mediterranean: 'flag-mediterranean',
-    'Middle Eastern': 'flag-middle-eastern',
-  };
+    return [];
+  }, [query, activeRecipes, selectedCountry]);
+
+  const countries = useMemo(() => [...new Set(activeRecipes.map(r => r.country))].sort(), [activeRecipes]);
+
+  const recipesByCuisine = useMemo(() => {
+    if (!selectedCountry) return {};
+    return filteredRecipes.reduce((acc, recipe) => {
+        (acc[recipe.cuisine] = acc[recipe.cuisine] || []).push(recipe);
+        return acc;
+    }, {} as Record<string, Recipe[]>);
+  }, [selectedCountry, filteredRecipes]);
 
   if (query) {
     return (
@@ -98,81 +110,48 @@ function RecipesContent() {
   }
 
   // Original page content for when there's no search query
-  const cuisines = [...new Set(activeRecipes.map((r) => r.cuisine))];
-  const breakfastRecipes = activeRecipes.filter(r => r.category === 'Breakfast');
-  const lunchRecipes = activeRecipes.filter(r => r.category === 'Lunch');
-  const dinnerRecipes = activeRecipes.filter(r => r.category === 'Dinner');
-
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="text-center mb-12 animate-fade-in-up">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Explore Our Recipes</h1>
         <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick bites to family feasts, find your next favorite meal here.</p>
       </div>
-
-      <section id="cuisines" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 text-center animate-fade-in-up" style={{animationDelay: '100ms'}}>Explore by Cuisine</h2>
-        {cuisines.map((cuisine, cuisineIndex) => {
-          const cuisineRecipes = activeRecipes
-            .filter((r) => r.cuisine === cuisine)
-            .slice(0, 3);
-          if (cuisineRecipes.length === 0) return null;
-
-          const flagClass = cuisineToFlagClass[cuisine] || 'flag-asian';
-
-          return (
-            <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
-              <h3 className="cuisine-title mb-6">
-                <span className={cn('cuisine-title-gradient', flagClass)}>
-                  {cuisine}
-                </span>
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cuisineRecipes.map((recipe, recipeIndex) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${recipeIndex * 100}ms`}/>
+      
+      <div className="max-w-md mx-auto mb-12 animate-fade-in-up" style={{animationDelay: '100ms'}}>
+        <Select onValueChange={setSelectedCountry} value={selectedCountry}>
+            <SelectTrigger className="h-12 text-lg">
+                <Globe className="mr-3 h-5 w-5 text-muted-foreground" />
+                <SelectValue placeholder="Select a Country to Explore..." />
+            </SelectTrigger>
+            <SelectContent>
+                {countries.map(country => (
+                    <SelectItem key={country} value={country}>
+                        {country}
+                    </SelectItem>
                 ))}
-              </div>
+            </SelectContent>
+        </Select>
+      </div>
+
+      <section id="recipes-by-country">
+        {selectedCountry ? (
+            Object.entries(recipesByCuisine).map(([cuisine, recipes], cuisineIndex) => (
+                <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
+                    <h2 className="text-3xl font-bold mb-6">{cuisine}</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {recipes.map((recipe, recipeIndex) => (
+                            <RecipeCard key={recipe.id} recipe={recipe} animationDelay={`${recipeIndex * 100}ms`}/>
+                        ))}
+                    </div>
+                </div>
+            ))
+        ) : (
+            <div className="text-center text-muted-foreground py-16 animate-fade-in-up">
+                <p>Please select a country to see the delicious recipes it has to offer.</p>
             </div>
-          );
-        })}
+        )}
       </section>
 
-      <Separator className="my-16" />
-
-      <section id="meal-types" className="animate-fade-in-up" style={{animationDelay: '400ms'}}>
-         <h2 className="text-3xl font-bold mb-8 text-center">Or Browse by Meal Type</h2>
-        <Tabs defaultValue="breakfast" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="breakfast" disabled={breakfastRecipes.length === 0}>
-               Breakfast
-            </TabsTrigger>
-            <TabsTrigger value="lunch" disabled={lunchRecipes.length === 0}>
-               Lunch
-            </TabsTrigger>
-            <TabsTrigger value="dinner" disabled={dinnerRecipes.length === 0}>
-               Dinner
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="breakfast">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {breakfastRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="lunch">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {lunchRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="dinner">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {dinnerRecipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </section>
     </div>
   );
 }
