@@ -34,11 +34,31 @@ const RecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay
     </Link>
 );
 
+const countryToFlagClass: Record<string, string> = {
+  'USA': 'flag-usa',
+  'Italy': 'flag-italy',
+  'France': 'flag-france',
+  'Mexico': 'flag-mexico',
+  'India': 'flag-india',
+  'Greece': 'flag-greece',
+  'Thailand': 'flag-thailand',
+  'Spain': 'flag-spain',
+  'China': 'flag-china',
+  'UK': 'flag-uk',
+  'Turkey': 'flag-turkey',
+  'Japan': 'flag-japan',
+  'Lebanon': 'flag-lebanon',
+  'Egypt': 'flag-egypt',
+  'Vietnam': 'flag-vietnam',
+};
+
+
 function RecipesContent() {
   const { diet } = useDiet();
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const countryParam = searchParams.get('country');
+  const [selectedCountry, setSelectedCountry] = useState<string>(countryParam || '');
 
   const activeRecipes = useMemo(() => {
     if (diet === 'veg') {
@@ -126,7 +146,10 @@ function RecipesContent() {
             <SelectContent>
                 {countries.map(country => (
                     <SelectItem key={country} value={country}>
-                        {country}
+                      <div className="flex items-center gap-3">
+                        <div className={cn("h-4 w-6 rounded-sm", countryToFlagClass[country] || 'bg-muted')}></div>
+                        <span>{country}</span>
+                      </div>
                     </SelectItem>
                 ))}
             </SelectContent>

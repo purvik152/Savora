@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick, ChevronDown } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -18,13 +18,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuLabel
 } from "@/components/ui/dropdown-menu"
 import { AnimatedHamburgerIcon } from './AnimatedHamburgerIcon';
 import { PageLoader } from './PageLoader';
+import { recipes as allRecipes } from '@/lib/recipes';
 
 
 const mainNavLinks = [
-  { href: '/recipes', label: 'Recipes' },
   { href: '/community', label: 'Community' },
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
@@ -59,6 +61,15 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { diet } = useDiet();
+
+  const availableCountries = useMemo(() => {
+    const recipesToFilter = diet === 'veg' 
+      ? allRecipes.filter(r => r.diet === 'veg') 
+      : allRecipes.filter(r => r.diet !== 'veg');
+    
+    return [...new Set(recipesToFilter.map(r => r.country))].sort();
+  }, [diet]);
 
   return (
     <>
@@ -84,6 +95,16 @@ export function Header() {
                                     <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
                                 </Link>
                                 <nav className="flex flex-col space-y-4">
+                                     <Link
+                                        href="/recipes"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            "text-lg font-semibold transition-colors hover:text-primary",
+                                            (pathname === '/recipes') ? "text-primary" : "text-foreground/70"
+                                        )}
+                                        >
+                                        Recipes
+                                    </Link>
                                     {[...mainNavLinks, ...menuLinks].map((link) => (
                                         <Link
                                         key={link.href}
@@ -147,6 +168,31 @@ export function Header() {
                 >
                 Home
                 </Link>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                     <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:text-primary data-[state=open]:bg-transparent">
+                      Recipes
+                      <ChevronDown className="relative top-[1px] ml-1 h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
+                             <Link href="/recipes">All Recipes</Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>By Country</DropdownMenuLabel>
+                        {availableCountries.map(country => (
+                            <DropdownMenuItem key={country} asChild>
+                                <Link href={`/recipes?country=${encodeURIComponent(country)}`}>{country}</Link>
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
                 {mainNavLinks.map((link) => (
                     <Link
                     key={link.href}
