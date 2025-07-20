@@ -102,10 +102,10 @@ export function Header() {
 
 
                 {/* Centered Logo */}
-                <div className="flex-1 flex justify-center md:justify-start">
-                     <Link href="/" className="group flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
-                        <SavoraLogo className="h-10 w-10 text-primary transition-transform duration-300 ease-in-out group-hover:rotate-[-15deg] group-hover:scale-110" />
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline transition-transform duration-300 ease-in-out group-hover:-translate-y-1">Savora</span>
+                <div className="flex-1 flex justify-center">
+                     <Link href="/" className="flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+                        <SavoraLogo className="h-10 w-10 text-primary animate-float-1" />
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline">Savora</span>
                     </Link>
                 </div>
 
