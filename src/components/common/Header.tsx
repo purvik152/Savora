@@ -13,15 +13,24 @@ import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 const mainNavLinks = [
-  { href: '/', label: 'Home' },
   { href: '/recipes', label: 'Recipes' },
   { href: '/community', label: 'Community' },
   { href: '/meal-planner', label: 'Meal Planner' },
   { href: '/news', label: 'News' },
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/mood-kitchen', label: 'Mood Kitchen' },
+  { href: '/chef-challenge', label: 'Chef\'s Challenge' },
 ];
+
 
 function DietToggle() {
     const { diet, toggleDiet } = useDiet();
@@ -94,9 +103,9 @@ export function Header() {
 
                 {/* Centered Logo */}
                 <div className="flex-1 flex justify-center md:justify-start">
-                    <Link href="/" className="flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
-                        <SavoraLogo className="h-10 w-10 text-primary" />
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline">Savora</span>
+                     <Link href="/" className="group flex flex-col items-center gap-1 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+                        <SavoraLogo className="h-10 w-10 text-primary transition-transform duration-300 ease-in-out group-hover:rotate-[-15deg] group-hover:scale-110" />
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline transition-transform duration-300 ease-in-out group-hover:-translate-y-1">Savora</span>
                     </Link>
                 </div>
 
@@ -121,18 +130,42 @@ export function Header() {
         {/* Bottom Tier: Main Navigation */}
         <div className="hidden md:flex h-12 items-center justify-center border-t bg-secondary/50">
             <nav className="flex items-center space-x-8">
-                {mainNavLinks.map((link) => (
+                <Link
+                href="/"
+                className={cn(
+                    "text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary",
+                    (pathname === "/") ? "text-primary" : "text-foreground/70"
+                )}
+                >
+                Home
+                </Link>
+                {mainNavLinks.slice(0, 5).map((link) => (
                     <Link
                     key={link.href}
                     href={link.href}
                     className={cn(
                         "text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary",
-                        (pathname === link.href) ? "text-primary" : "text-foreground/70"
+                        (pathname.startsWith(link.href) && link.href !== '/') ? "text-primary" : "text-foreground/70"
                     )}
                     >
                     {link.label}
                     </Link>
                 ))}
+                 <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider text-foreground/70 hover:text-primary hover:bg-transparent">
+                      Menu
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                        <Link href="/mood-kitchen">Mood Kitchen</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/chef-challenge">Chef's Challenge</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                  <DietToggle />
             </nav>
         </div>
