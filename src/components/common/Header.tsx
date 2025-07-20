@@ -4,10 +4,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick, X, ChevronDown } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick, ChevronDown } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
@@ -56,13 +55,8 @@ function DietToggle() {
 }
 
 export function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
-  
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  const allNavLinks = [...mainNavLinks, ...menuLinks, ...secondaryNavLinks];
 
   return (
     <>
@@ -71,47 +65,23 @@ export function Header() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex h-24 items-center">
 
-                {/* Left side items (Mobile Menu) */}
-                <div className="flex items-center md:hidden">
-                    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <Menu className="h-6 w-6" />
-                                <span className="sr-only">Open menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
-                            <div className="p-4">
-                                <div className="flex justify-between items-center mb-8">
-                                    <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-2">
-                                        <SavoraLogo className="h-7 w-7 text-primary" />
-                                        <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
-                                    </Link>
-                                    <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
-                                        <X className="h-6 w-6"/>
-                                    </Button>
-                                </div>
-                                <nav className="flex flex-col space-y-4">
-                                    {allNavLinks.map((link) => (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={closeMobileMenu}
-                                        className={cn(
-                                        "text-lg font-medium transition-colors hover:text-primary",
-                                        pathname === link.href ? "text-primary" : "text-foreground"
-                                        )}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                    ))}
-                                </nav>
-                                <div className="pt-6 mt-6 border-t">
-                                    <DietToggle />
-                                </div>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+                {/* Left side items (Menu) */}
+                <div className="flex items-center">
+                   <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Menu className="h-6 w-6" />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {menuLinks.map((link) => (
+                        <DropdownMenuItem key={link.href} asChild>
+                          <Link href={link.href}>{link.label}</Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {/* Centered Logo */}
@@ -158,21 +128,6 @@ export function Header() {
                     {link.label}
                     </Link>
                 ))}
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary data-[state=open]:text-primary text-foreground/70 p-0 hover:bg-transparent">
-                            Menu
-                            <ChevronDown className="h-4 w-4 ml-1" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        {menuLinks.map((link) => (
-                            <DropdownMenuItem key={link.href} asChild>
-                                <Link href={link.href}>{link.label}</Link>
-                            </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuContent>
-                </DropdownMenu>
                 {secondaryNavLinks.map((link) => (
                     <Link
                     key={link.href}
