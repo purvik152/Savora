@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick, Flame } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -109,10 +109,9 @@ export function Header() {
                 <div className="flex-1 flex justify-center items-center">
                      <Link href="/" className="flex flex-col items-center gap-1 group">
                         <div className="flex items-center gap-2">
-                             <SavoraLogo className="h-10 w-10 text-primary animate-chef-wobble" />
-                             <Flame className="h-8 w-8 text-orange-500 animate-pulse-slow" />
+                             <SavoraLogo className="h-10 w-10 text-primary animate-flame-flicker" />
                         </div>
-                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-chef-wobble">Savora</span>
+                        <span className="font-extrabold text-3xl -tracking-wider text-primary hidden sm:inline animate-flame-flicker" style={{animationDelay: '0.1s'}}>Savora</span>
                     </Link>
                 </div>
 

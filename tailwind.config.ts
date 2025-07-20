@@ -161,6 +161,12 @@ export default {
           '0%, 100%': { transform: 'rotate(-2deg) translateY(0px)' },
           '50%': { transform: 'rotate(2deg) translateY(-2px)' },
         },
+        'flame-flicker': {
+          '0%, 100%': { transform: 'scale(1, 1) translateY(0)', opacity: '1' },
+          '25%': { transform: 'scale(1.02, 0.98) translateY(-1px)', opacity: '0.95' },
+          '50%': { transform: 'scale(0.98, 1.02) translateY(0)', opacity: '1' },
+          '75%': { transform: 'scale(1.03, 0.97) translateY(-0.5px)', opacity: '0.9' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -178,6 +184,7 @@ export default {
         'animate-in': 'animate-in 500ms ease-out forwards var(--animation-delay, 0ms)',
         'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
         'chef-wobble': 'chef-wobble 2s ease-in-out infinite',
+        'flame-flicker': 'flame-flicker 1.5s ease-in-out infinite',
       },
     },
   },
