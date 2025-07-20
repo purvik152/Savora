@@ -153,6 +153,10 @@ export default {
             transform: "translateY(0)",
           },
         },
+        'pulse-slow': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -168,6 +172,7 @@ export default {
         'float-7': 'float-7 20s ease-in-out infinite',
         'float-8': 'float-8 13s ease-in-out infinite',
         'animate-in': 'animate-in 500ms ease-out forwards var(--animation-delay, 0ms)',
+        'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
       },
     },
   },
