@@ -157,6 +157,10 @@ export default {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.05)' },
         },
+        'chef-wobble': {
+          '0%, 100%': { transform: 'rotate(-2deg) translateY(0px)' },
+          '50%': { transform: 'rotate(2deg) translateY(-2px)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -173,6 +177,7 @@ export default {
         'float-8': 'float-8 13s ease-in-out infinite',
         'animate-in': 'animate-in 500ms ease-out forwards var(--animation-delay, 0ms)',
         'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
+        'chef-wobble': 'chef-wobble 2s ease-in-out infinite',
       },
     },
   },
