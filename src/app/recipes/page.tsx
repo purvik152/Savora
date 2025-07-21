@@ -50,7 +50,8 @@ function RecipesContent() {
 
   const activeRecipes = useMemo(() => {
     if (!mounted) {
-      // On the server and initial client render, use all recipes to avoid mismatch
+      // On the server and initial client render, default to non-veg to avoid mismatch.
+      // The diet context will update this on the client after mount.
       return allRecipes.filter(r => r.diet === 'non-veg');
     }
     if (diet === 'veg') {
@@ -93,6 +94,10 @@ function RecipesContent() {
         return acc;
     }, {} as Record<string, Recipe[]>);
   }, [filteredRecipes]);
+
+  if (!mounted) {
+    return <RecipesPageLoadingSkeleton />;
+  }
 
   if (query) {
     return (
