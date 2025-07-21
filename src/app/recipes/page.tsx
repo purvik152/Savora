@@ -12,6 +12,7 @@ import { useDiet } from "@/contexts/DietContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe } from "lucide-react";
+import { Flag } from "@/components/icons/Flag";
 
 const RecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay?: string }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full animate-fade-in-up" style={{ animationDelay }}>
@@ -33,24 +34,6 @@ const RecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay
         </Card>
     </Link>
 );
-
-const countryToFlagClass: Record<string, string> = {
-  'USA': 'flag-usa',
-  'Italy': 'flag-italy',
-  'France': 'flag-france',
-  'Mexico': 'flag-mexico',
-  'India': 'flag-india',
-  'Greece': 'flag-greece',
-  'Thailand': 'flag-thailand',
-  'Spain': 'flag-spain',
-  'China': 'flag-china',
-  'UK': 'flag-uk',
-  'Turkey': 'flag-turkey',
-  'Japan': 'flag-japan',
-  'Lebanon': 'flag-lebanon',
-  'Egypt': 'flag-egypt',
-  'Vietnam': 'flag-vietnam',
-};
 
 
 function RecipesContent() {
@@ -139,7 +122,7 @@ function RecipesContent() {
                 {countries.map(country => (
                     <SelectItem key={country} value={country}>
                       <div className="flex items-center gap-3">
-                        <div className={cn("h-4 w-6 rounded-sm", countryToFlagClass[country] || 'bg-muted')}></div>
+                        <Flag country={country} />
                         <span>{country}</span>
                       </div>
                     </SelectItem>
@@ -152,7 +135,7 @@ function RecipesContent() {
         {Object.entries(recipesByCuisine).map(([cuisine, recipes], cuisineIndex) => (
             <div key={cuisine} className="mb-12 animate-fade-in-up" style={{animationDelay: `${(cuisineIndex + 2) * 100}ms`}}>
                 <div className="flex items-center gap-4 mb-6">
-                    {selectedCountry && <div className={cn("h-6 w-8 rounded-md shadow-md", countryToFlagClass[selectedCountry] || 'bg-muted')}></div>}
+                    {selectedCountry && <Flag country={selectedCountry} className="h-6 w-8 rounded-md shadow-md" />}
                     <h2 className="text-3xl font-bold">{cuisine}</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

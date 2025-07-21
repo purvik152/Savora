@@ -25,6 +25,7 @@ import {
 import { AnimatedHamburgerIcon } from './AnimatedHamburgerIcon';
 import { PageLoader } from './PageLoader';
 import { recipes as allRecipes } from '@/lib/recipes';
+import { Flag } from '../icons/Flag';
 
 
 const mainNavLinks = [
@@ -39,25 +40,6 @@ const menuLinks = [
     { href: '/chef-challenge', label: 'Chef\'s Challenge' },
     { href: '/diorama', label: 'Foodie Diorama' }
 ]
-
-const countryToFlagClass: Record<string, string> = {
-  'USA': 'flag-usa',
-  'Italy': 'flag-italy',
-  'France': 'flag-france',
-  'Mexico': 'flag-mexico',
-  'India': 'flag-india',
-  'Greece': 'flag-greece',
-  'Thailand': 'flag-thailand',
-  'Spain': 'flag-spain',
-  'China': 'flag-china',
-  'UK': 'flag-uk',
-  'Turkey': 'flag-turkey',
-  'Japan': 'flag-japan',
-  'Lebanon': 'flag-lebanon',
-  'Egypt': 'flag-egypt',
-  'Vietnam': 'flag-vietnam',
-};
-
 
 function DietToggle() {
     const { diet, toggleDiet } = useDiet();
@@ -207,7 +189,7 @@ export function Header() {
                         {availableCountries.map(country => (
                             <DropdownMenuItem key={country} asChild>
                                 <Link href={`/recipes?country=${encodeURIComponent(country)}`} className="flex items-center gap-3">
-                                   <div className={cn("h-4 w-6 rounded-sm", countryToFlagClass[country] || 'bg-muted')}></div>
+                                   <Flag country={country} />
                                    <span>{country}</span>
                                 </Link>
                             </DropdownMenuItem>
