@@ -12,7 +12,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { useDiet } from '@/contexts/DietContext';
 import { Switch } from '@/components/ui/switch';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,8 +90,11 @@ export function Header() {
                                 <span className="sr-only">Open menu</span>
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left">
-                            <div className="p-6">
+                        <SheetContent side="left" className="p-0">
+                            <SheetHeader className="p-6">
+                                <SheetTitle className="sr-only">Main Menu</SheetTitle>
+                            </SheetHeader>
+                            <div className="p-6 pt-0">
                                 <Link href="/" className="flex items-center gap-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
                                     <SavoraLogo className="h-7 w-7 text-primary" />
                                     <span className="font-extrabold text-2xl -tracking-wider text-primary">Savora</span>
