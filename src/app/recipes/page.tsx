@@ -42,20 +42,31 @@ function RecipesContent() {
   const query = searchParams.get('q');
   const countryParam = searchParams.get('country');
   const [selectedCountry, setSelectedCountry] = useState<string>(countryParam || '');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const activeRecipes = useMemo(() => {
+    if (!mounted) {
+      // On the server and initial client render, use all recipes to avoid mismatch
+      return allRecipes.filter(r => r.diet === 'non-veg');
+    }
     if (diet === 'veg') {
       return allRecipes.filter(r => r.diet === 'veg');
     }
     return allRecipes.filter(r => r.diet === 'non-veg');
-  }, [diet]);
+  }, [diet, mounted]);
 
   useEffect(() => {
-    const countriesForDiet = [...new Set(activeRecipes.map(r => r.country))];
-    if (selectedCountry && !countriesForDiet.includes(selectedCountry)) {
-        setSelectedCountry('');
+    if (mounted) {
+      const countriesForDiet = [...new Set(activeRecipes.map(r => r.country))];
+      if (selectedCountry && !countriesForDiet.includes(selectedCountry)) {
+          setSelectedCountry('');
+      }
     }
-  }, [diet, selectedCountry, activeRecipes]);
+  }, [diet, selectedCountry, activeRecipes, mounted]);
   
   const filteredRecipes = useMemo(() => {
     if (query) {
