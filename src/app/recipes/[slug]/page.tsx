@@ -116,6 +116,9 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
   const [isAdapting, setIsAdapting] = useState(false);
   const [adaptationSummary, setAdaptationSummary] = useState<string | null>(null);
 
+  // State for voice guidance highlighting
+  const [highlightedStep, setHighlightedStep] = useState<number | null>(null);
+
   const isProcessing = isAdjusting || isTranslating || isAdapting;
   
   const allergens = useMemo(() => recipe.allergens || [], [recipe.allergens]);
@@ -586,7 +589,12 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
                   </div>
                   <ol className="space-y-4">
                     {displayedInstructions.map((step, index) => (
-                      <InstructionStep key={index} step={step} index={index} />
+                      <InstructionStep 
+                        key={index} 
+                        step={step} 
+                        index={index} 
+                        isHighlighted={index === highlightedStep}
+                      />
                     ))}
                   </ol>
                 </div>
@@ -760,6 +768,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
                       instructions={displayedInstructions}
                       language={language}
                       onStartCooking={handleStartCooking}
+                      onStepChange={setHighlightedStep}
                     />
                   </div>
                 )}

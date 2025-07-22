@@ -11,12 +11,13 @@ import { useToast } from '@/hooks/use-toast';
 interface InstructionStepProps {
   step: string;
   index: number;
+  isHighlighted?: boolean;
 }
 
 // Regex to find time mentions like "10 mins", "1 hour", "5-7 minutes"
 const timeRegex = /(\d+)(?:-(\d+))?\s*(min|minute|minutes|hr|hour|hours)/i;
 
-export function InstructionStep({ step, index }: InstructionStepProps) {
+export function InstructionStep({ step, index, isHighlighted = false }: InstructionStepProps) {
   const { toast } = useToast();
   const [duration, setDuration] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
@@ -130,10 +131,14 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
     }
   };
 
+  const baseClasses = "flex items-start gap-4 p-4 rounded-lg transition-all duration-300";
+  const highlightClasses = "bg-primary/10 border-primary shadow-lg";
+  const defaultClasses = "bg-secondary/30 border-transparent";
+  
   // If no time is found in the instruction, render a simple list item
   if (!duration) {
     return (
-      <li className="flex items-start gap-4">
+      <li className={cn(baseClasses, isHighlighted ? highlightClasses : '')}>
         <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
         <p className="flex-1 text-base text-foreground/90">{step}</p>
       </li>
@@ -149,7 +154,7 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
   const progress = duration > 0 ? ((duration - timeLeft) / duration) * 100 : 0;
 
   return (
-    <li className="flex items-start gap-4 p-4 rounded-lg bg-secondary/30 border border-transparent has-[:focus]:border-primary has-[:focus-within]:border-primary transition-colors">
+    <li className={cn(baseClasses, "has-[:focus]:border-primary has-[:focus-within]:border-primary", isHighlighted ? highlightClasses : defaultClasses)}>
       <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
       <div className="flex-1 space-y-3">
         <p className="text-base text-foreground/90">{step}</p>

@@ -14,6 +14,7 @@ interface VoiceAssistantProps {
   instructions: string[];
   language: string;
   onStartCooking?: () => void;
+  onStepChange?: (step: number | null) => void;
 }
 
 const languageToCode: { [key: string]: string } = {
@@ -25,7 +26,7 @@ const languageToCode: { [key: string]: string } = {
     bengali: 'bn-IN',
 };
 
-export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking }: VoiceAssistantProps) {
+export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking, onStepChange }: VoiceAssistantProps) {
   const { toast } = useToast();
   
   const [hasMounted, setHasMounted] = useState(false);
@@ -172,8 +173,10 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
       if (isFinal) {
         setSessionActive(false);
         setCurrentStep(0);
+        onStepChange?.(null);
       } else {
         setCurrentStep(assistantResult.nextStep);
+        onStepChange?.(assistantResult.nextStep);
       }
       
       const lowerResponse = assistantResult.responseText.toLowerCase();
@@ -199,7 +202,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
       setAssistantResponse('An error occurred. Please try again.');
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, recipeTitle, toast, stopAudio, playAudio, language]);
+  }, [currentStep, instructions, recipeTitle, toast, stopAudio, playAudio, language, onStepChange]);
 
   // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
@@ -284,7 +287,8 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     setIsProcessing(false);
     setCurrentStep(0);
     setAssistantResponse('Press Start to begin your guided recipe.');
-  }, [stopAudio, isListening]);
+    onStepChange?.(null);
+  }, [stopAudio, isListening, onStepChange]);
   
   const handleMicClick = () => {
     if (isListening) {
