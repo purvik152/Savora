@@ -26,6 +26,8 @@ const languageToCode: { [key: string]: string } = {
     bengali: 'bn-IN',
 };
 
+const AUTO_ADVANCE_DELAY = 7000; // 7 seconds
+
 export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking, onStepChange }: VoiceAssistantProps) {
   const { toast } = useToast();
   
@@ -49,6 +51,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   const finalTranscriptRef = useRef('');
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const sessionActiveRef = useRef(sessionActive);
+  const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     sessionActiveRef.current = sessionActive;
@@ -59,30 +62,47 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     // Cleanup synthesis on component unmount
     return () => {
         window.speechSynthesis.cancel();
+        if (autoAdvanceTimeoutRef.current) {
+            clearTimeout(autoAdvanceTimeoutRef.current);
+        }
+    }
+  }, []);
+
+  const clearAutoAdvance = useCallback(() => {
+    if (autoAdvanceTimeoutRef.current) {
+        clearTimeout(autoAdvanceTimeoutRef.current);
+        autoAdvanceTimeoutRef.current = null;
     }
   }, []);
 
   const stopAudio = useCallback(() => {
+    clearAutoAdvance();
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
     setIsPaused(false);
-  }, []);
+  }, [clearAutoAdvance]);
   
   const startListening = useCallback(() => {
     if (recognitionRef.current) {
       try {
-        // Always stop any lingering speech before listening.
         stopAudio();
-        // The start() method will throw an error if recognition is already active.
-        // The catch block will handle this gracefully.
         recognitionRef.current.start();
       } catch (e) {
-        // This error is expected if the mic is already on (e.g., user clicks button twice).
-        // It's safe to ignore in this context.
         console.log("Recognition could not be started, likely already active.", e);
       }
     }
   }, [stopAudio]);
+
+  // This is defined before handleUserQuery because it's a dependency.
+  const advanceToNextStep = useCallback(() => {
+      // Use a function that can be called by the timeout
+      if (sessionActiveRef.current) {
+        // The handleUserQuery function is defined below, so we need to declare this function here
+        // and it will get the proper reference when called.
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        handleUserQuery("next");
+      }
+  }, []);
 
   // --- Audio Controls using Web Speech API ---
   const playAudio = useCallback((text: string, options: { isFinal?: boolean; autoListen?: boolean } = {}) => {
@@ -94,7 +114,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         setAssistantResponse("Sorry, your browser doesn't support voice output.");
         return;
     }
-    window.speechSynthesis.cancel(); // Stop any previous speech
+    stopAudio(); // Stop any previous speech and clear timers
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = langCode;
@@ -106,15 +126,17 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     utterance.onend = () => {
         setIsSpeaking(false);
         setIsPaused(false);
-        // Automatically start listening for the next command if the session is active
-        if (sessionActiveRef.current && !isFinal && autoListen) {
-            startListening();
+        if (sessionActiveRef.current && !isFinal) {
+            if (autoListen) {
+                // Set a timer to automatically go to the next step
+                autoAdvanceTimeoutRef.current = setTimeout(advanceToNextStep, AUTO_ADVANCE_DELAY);
+                startListening();
+            }
         }
     };
     utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
         setIsSpeaking(false);
         setIsPaused(false);
-        // Only show a toast for actual errors, not for cancellations.
         if (event.error !== 'canceled' && event.error !== 'interrupted') {
             console.error("SpeechSynthesis Error", event);
             toast({
@@ -126,16 +148,17 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [toast, startListening, language]);
+  }, [toast, startListening, language, stopAudio, advanceToNextStep]);
 
   const pauseAudio = useCallback(() => {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      clearAutoAdvance();
       window.speechSynthesis.pause();
       setIsSpeaking(false);
       setIsPaused(true);
       setAssistantResponse('Paused.');
     }
-  }, []);
+  }, [clearAutoAdvance]);
 
   const resumeAudio = useCallback(() => {
     if (window.speechSynthesis.paused) {
@@ -187,7 +210,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         return;
       }
 
-      // For 'wait' commands, speak the response but don't auto-listen afterwards.
+      // For 'wait' commands, speak the response but don't auto-listen or auto-advance afterwards.
       const shouldAutoListen = !lowerResponse.includes("i'll wait");
 
       playAudio(assistantResult.responseText, { isFinal, autoListen: shouldAutoListen });
@@ -221,6 +244,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     recognition.lang = languageToCode[language] || 'en-US';
     
     recognition.onstart = () => {
+      clearAutoAdvance();
       finalTranscriptRef.current = '';
       setTranscript('');
       setIsListening(true);
@@ -228,8 +252,6 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     
     recognition.onend = () => {
       setIsListening(false);
-      // We only want to process the query if there's a final transcript.
-      // Otherwise, the mic just turned off.
       if (finalTranscriptRef.current) {
         handleUserQuery(finalTranscriptRef.current);
       }
@@ -270,7 +292,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         recognitionRef.current.abort();
       }
     }
-  }, [hasMounted, handleUserQuery, toast, language]);
+  }, [hasMounted, handleUserQuery, toast, language, clearAutoAdvance]);
   
   // --- User Actions ---
   const startSession = () => {
@@ -291,6 +313,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   }, [stopAudio, isListening, onStepChange]);
   
   const handleMicClick = () => {
+    clearAutoAdvance();
     if (isListening) {
       recognitionRef.current?.stop();
     } else {
