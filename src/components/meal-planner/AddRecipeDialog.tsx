@@ -1,107 +1,93 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { recipes as allRecipes, Recipe } from '@/lib/recipes';
-import Image from 'next/image';
-import { Search } from 'lucide-react';
-import { useDiet } from '@/contexts/DietContext';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Check, Flame, Utensils, Zap, HeartPulse } from 'lucide-react';
+import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-flow';
 
-interface AddRecipeDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAddRecipe: (recipe: Recipe) => void;
+interface RecipeResultDisplayProps {
+  recipe: GenerateRecipeByGoalOutput | null;
 }
 
-export function AddRecipeDialog({ open, onOpenChange, onAddRecipe }: AddRecipeDialogProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { diet } = useDiet();
-
-  const availableRecipes = useMemo(() => {
-    if (diet === 'veg') {
-      return allRecipes.filter(recipe => recipe.diet === 'veg');
-    }
-    // In non-veg mode, show only non-veg recipes
-    return allRecipes.filter(recipe => recipe.diet === 'non-veg');
-  }, [diet]);
-
-  const filteredRecipes = useMemo(() => {
-    if (!searchQuery) {
-      return availableRecipes;
-    }
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    return availableRecipes.filter(
-      recipe =>
-        recipe.title.toLowerCase().includes(lowerCaseQuery) ||
-        recipe.cuisine.toLowerCase().includes(lowerCaseQuery)
+export function RecipeResultDisplay({ recipe }: RecipeResultDisplayProps) {
+  if (!recipe) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Custom Recipe Will Appear Here</CardTitle>
+          <CardDescription>Fill out the form to the left to get started.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-48 w-full" />
+          <div className="space-y-4 mt-6">
+            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </CardContent>
+      </Card>
     );
-  }, [searchQuery, availableRecipes]);
-  
-  // Reset search when dialog opens
-  useEffect(() => {
-    if (open) {
-      setSearchQuery('');
-    }
-  }, [open]);
+  }
 
-  const handleRecipeSelect = (recipe: Recipe) => {
-    onAddRecipe(recipe);
-    onOpenChange(false);
-  };
+  const { recipeName, description, ingredients, instructions, nutrition } = recipe;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 gap-0 w-full max-w-2xl h-auto max-h-[75vh] top-1/2 -translate-y-1/2 sm:top-16 sm:-translate-y-0 rounded-lg overflow-hidden flex flex-col">
-        <DialogHeader className="p-4 border-b">
-          <DialogTitle>Add a Recipe to Your Plan</DialogTitle>
-          <DialogDescription>Select a recipe from the list below to add it to your meal slot.</DialogDescription>
-        </DialogHeader>
-        <div className="flex items-center border-b px-4">
-          <Search className="h-5 w-5 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search for recipes..."
-            className="h-12 w-full border-0 shadow-none focus-visible:ring-0 text-base"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+    <Card className="animate-fade-in-up">
+      <CardHeader>
+        <CardTitle className="text-3xl">{recipeName}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-8">
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <HeartPulse className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Calories</span>
+                <span className="text-muted-foreground block">{nutrition.calories}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Flame className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Protein</span>
+                <span className="text-muted-foreground block">{nutrition.protein}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Utensils className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Carbs</span>
+                <span className="text-muted-foreground block">{nutrition.carbs}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Zap className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Fat</span>
+                <span className="text-muted-foreground block">{nutrition.fat}</span>
+            </div>
         </div>
-        <ScrollArea className="flex-grow">
-          <div className="p-4">
-            {filteredRecipes.length > 0 ? (
-              <ul className="space-y-2">
-                {filteredRecipes.map((recipe) => (
-                  <li key={recipe.id}>
-                    <button
-                      onClick={() => handleRecipeSelect(recipe)}
-                      className="w-full text-left flex items-center gap-4 p-2 rounded-md hover:bg-accent transition-colors"
-                    >
-                      <Image
-                        src={recipe.image}
-                        alt={recipe.title}
-                        width={64}
-                        height={64}
-                        className="rounded-lg object-cover w-16 h-16"
-                        data-ai-hint={recipe.imageHint}
-                      />
-                      <div className="flex-grow">
-                        <p className="font-semibold">{recipe.title}</p>
-                        <p className="text-sm text-muted-foreground">{recipe.cuisine} - {recipe.category}</p>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No recipes found for "{searchQuery}"</p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1">
+                <h3 className="text-xl font-bold mb-4">Ingredients</h3>
+                <ul className="space-y-3">
+                    {ingredients.map((ing, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                            <Check className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                            <span>{ing}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="md:col-span-2">
+                <h3 className="text-xl font-bold mb-4">Instructions</h3>
+                <ol className="space-y-4">
+                    {instructions.map((step, index) => (
+                        <li key={index} className="flex items-start gap-4">
+                            <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
+                            <p className="flex-1 text-base text-foreground/90">{step}</p>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+
+      </CardContent>
+    </Card>
   );
 }

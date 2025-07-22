@@ -1,205 +1,92 @@
-
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useDiet } from '@/contexts/DietContext';
-import { useToast } from '@/hooks/use-toast';
-import { recipes as allRecipes, Recipe } from '@/lib/recipes';
-import { generateMealPlan, GenerateMealPlanInput, GenerateMealPlanOutput } from '@/ai/flows/generate-meal-plan-flow';
-import type { MealPlan } from '@/lib/meal-planner-data';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Check, Flame, Utensils, Zap, HeartPulse } from 'lucide-react';
+import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-flow';
 
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Loader2, Sparkles } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-
-const formSchema = z.object({
-  targetCalories: z.number().min(1000).max(4000),
-  allergies: z.string().optional(),
-  maxPrepTime: z.number().min(5).max(120),
-});
-
-interface SmartPlannerFormProps {
-  onPlanGenerated: (plan: MealPlan) => void;
+interface RecipeResultDisplayProps {
+  recipe: GenerateRecipeByGoalOutput | null;
 }
 
-export function SmartPlannerForm({ onPlanGenerated }: SmartPlannerFormProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { diet } = useDiet();
-  const { toast } = useToast();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      targetCalories: 2000,
-      allergies: '',
-      maxPrepTime: 45,
-    },
-  });
-  
-  const formValues = form.watch();
-
-  const availableRecipes = useMemo(() => {
-    return allRecipes
-      .filter(recipe => {
-        if (diet === 'veg') return recipe.diet === 'veg';
-        if (diet === 'non-veg') return recipe.diet === 'non-veg';
-        return true;
-      })
-      .map(({ slug, title, category, nutrition, prepTime, allergens }) => ({
-        slug,
-        title,
-        category,
-        calories: nutrition.calories,
-        prepTime,
-        allergens,
-      }));
-  }, [diet]);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    setError(null);
-
-    const input: GenerateMealPlanInput = {
-      diet,
-      targetCalories: values.targetCalories,
-      allergies: values.allergies ? values.allergies.split(',').map(a => a.trim().toLowerCase()) : [],
-      maxPrepTime: values.maxPrepTime,
-      recipes: availableRecipes,
-    };
-    
-    try {
-        const result = await generateMealPlan(input);
-        
-        if (!result) {
-            throw new Error("The AI returned an empty plan. Please adjust your criteria.");
-        }
-
-        // Convert the AI output (recipe slugs) into a full MealPlan object
-        const newMealPlan: MealPlan = Object.entries(result).reduce((acc, [day, meals]) => {
-            const dayPlan: { Breakfast: Recipe | null, Lunch: Recipe | null, Dinner: Recipe | null } = {
-                Breakfast: null,
-                Lunch: null,
-                Dinner: null
-            };
-            if (meals.Breakfast) {
-                dayPlan.Breakfast = allRecipes.find(r => r.slug === meals.Breakfast) || null;
-            }
-            if (meals.Lunch) {
-                dayPlan.Lunch = allRecipes.find(r => r.slug === meals.Lunch) || null;
-            }
-            if (meals.Dinner) {
-                dayPlan.Dinner = allRecipes.find(r => r.slug === meals.Dinner) || null;
-            }
-            acc[day] = dayPlan;
-            return acc;
-        }, {} as MealPlan);
-        
-        onPlanGenerated(newMealPlan);
-        toast({
-            title: "Meal Plan Generated!",
-            description: "Your new weekly meal plan is ready.",
-        });
-
-    } catch (e: any) {
-        console.error(e);
-        setError(e.message || "An AI error occurred. Please try again in a moment.");
-    } finally {
-        setLoading(false);
-    }
+export function RecipeResultDisplay({ recipe }: RecipeResultDisplayProps) {
+  if (!recipe) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Custom Recipe Will Appear Here</CardTitle>
+          <CardDescription>Fill out the form to the left to get started.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-48 w-full" />
+          <div className="space-y-4 mt-6">
+            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
-  return (
-    <Card>
-      <CardContent className="p-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="targetCalories"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel>Target Daily Calories</FormLabel>
-                    <span className="text-sm font-medium text-primary">{formValues.targetCalories} kcal</span>
-                  </div>
-                  <FormControl>
-                    <Slider
-                      min={1000}
-                      max={4000}
-                      step={100}
-                      value={[field.value]}
-                      onValueChange={(value) => field.onChange(value[0])}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="maxPrepTime"
-              render={({ field }) => (
-                <FormItem>
-                   <div className="flex justify-between items-center">
-                        <FormLabel>Max Prep Time per Meal</FormLabel>
-                        <span className="text-sm font-medium text-primary">{formValues.maxPrepTime} mins</span>
-                   </div>
-                  <FormControl>
-                    <Slider
-                      min={5}
-                      max={120}
-                      step={5}
-                      value={[field.value]}
-                      onValueChange={(value) => field.onChange(value[0])}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="allergies"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Allergies to Avoid</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., nuts, dairy, gluten" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+  const { recipeName, description, ingredients, instructions, nutrition } = recipe;
 
-            {error && (
-                <Alert variant="destructive">
-                    <AlertTitle>Generation Failed</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
-            
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="mr-2 h-4 w-4" /> Generate My Plan
-                </>
-              )}
-            </Button>
-          </form>
-        </Form>
+  return (
+    <Card className="animate-fade-in-up">
+      <CardHeader>
+        <CardTitle className="text-3xl">{recipeName}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-8">
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <HeartPulse className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Calories</span>
+                <span className="text-muted-foreground block">{nutrition.calories}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Flame className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Protein</span>
+                <span className="text-muted-foreground block">{nutrition.protein}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Utensils className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Carbs</span>
+                <span className="text-muted-foreground block">{nutrition.carbs}</span>
+            </div>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <Zap className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <span className="font-bold">Fat</span>
+                <span className="text-muted-foreground block">{nutrition.fat}</span>
+            </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1">
+                <h3 className="text-xl font-bold mb-4">Ingredients</h3>
+                <ul className="space-y-3">
+                    {ingredients.map((ing, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                            <Check className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                            <span>{ing}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="md:col-span-2">
+                <h3 className="text-xl font-bold mb-4">Instructions</h3>
+                <ol className="space-y-4">
+                    {instructions.map((step, index) => (
+                        <li key={index} className="flex items-start gap-4">
+                            <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
+                            <p className="flex-1 text-base text-foreground/90">{step}</p>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+
       </CardContent>
     </Card>
   );
