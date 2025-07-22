@@ -23,6 +23,33 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  const playNotificationSound = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    const audioContext = audioContextRef.current;
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+    
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // A5 note
+    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  }, []);
 
   const speak = useCallback((text: string) => {
     // Ensure this only runs on the client
@@ -73,6 +100,7 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
             clearInterval(intervalRef.current!);
             setIsActive(false);
             setIsFinished(true);
+            playNotificationSound();
             speak(`Timer for step ${index + 1} is complete.`);
             return 0;
           }
@@ -83,7 +111,7 @@ export function InstructionStep({ step, index }: InstructionStepProps) {
       clearInterval(intervalRef.current!);
     }
     return () => clearInterval(intervalRef.current!);
-  }, [isActive, isFinished, index, speak]);
+  }, [isActive, isFinished, index, speak, playNotificationSound]);
 
   const toggleTimer = () => {
     if (isFinished) return;
