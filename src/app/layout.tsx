@@ -45,7 +45,7 @@ export default function RootLayout({
               <div className="relative flex flex-col min-h-screen border-t-4 border-primary">
                 <FloatingDoodles />
                 <Header />
-                <main className="flex-grow flex flex-col animate-fade-in-up">{children}</main>
+                <main className="flex-grow">{children}</main>
                 <Footer />
               </div>
               <Toaster />
