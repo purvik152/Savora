@@ -45,7 +45,7 @@ export default function RootLayout({
               <div className="relative flex flex-col min-h-screen border-t-4 border-primary">
                 <FloatingDoodles />
                 <Header />
-                <main className="flex-grow">{children}</main>
+                <main className="flex-grow flex-1 flex flex-col">{children}</main>
                 <Footer />
               </div>
               <Toaster />
