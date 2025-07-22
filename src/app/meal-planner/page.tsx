@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useState } from 'react';
 import { ChefHat } from 'lucide-react';
 import { GoalBasedGeneratorForm } from '@/components/meal-planner/GoalBasedGeneratorForm';
 import { RecipeResultDisplay } from '@/components/meal-planner/RecipeResultDisplay';
-import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-flow';
+import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-types';
 
 
 export default function MealPlannerPage() {

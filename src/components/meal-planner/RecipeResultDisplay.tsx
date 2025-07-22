@@ -1,9 +1,12 @@
+
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Check, Flame, Utensils, Zap, HeartPulse } from 'lucide-react';
+import { Check, Flame, Utensils, Zap, HeartPulse, Eye } from 'lucide-react';
 import type { GenerateRecipeByGoalOutput, SingleRecipe } from '@/ai/flows/generate-recipe-by-goal-types';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 interface RecipeResultDisplayProps {
   result: GenerateRecipeByGoalOutput | null;
@@ -12,13 +15,18 @@ interface RecipeResultDisplayProps {
 function SingleRecipeCard({ recipe }: { recipe: SingleRecipe }) {
   const { recipeName, description, ingredients, instructions, nutrition } = recipe;
 
+  const handleViewRecipe = () => {
+    // Store recipe in sessionStorage to pass to the next page
+    sessionStorage.setItem('generatedRecipe', JSON.stringify(recipe));
+  };
+
   return (
-    <Card>
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle className="text-2xl">{recipeName}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6">
             <div className="p-3 bg-secondary/50 rounded-lg">
                 <HeartPulse className="h-6 w-6 text-primary mb-1 mx-auto" />
@@ -66,8 +74,15 @@ function SingleRecipeCard({ recipe }: { recipe: SingleRecipe }) {
                 </ol>
             </div>
         </div>
-
       </CardContent>
+      <CardFooter>
+        <Button asChild className="w-full" onClick={handleViewRecipe}>
+          <Link href="/meal-planner/recipe">
+            <Eye className="mr-2 h-4 w-4" />
+            View Full Recipe
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
