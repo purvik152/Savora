@@ -18,7 +18,7 @@ export const GenerateRecipeByGoalInputSchema = z.object({
 });
 export type GenerateRecipeByGoalInput = z.infer<typeof GenerateRecipeByGoalInputSchema>;
 
-export const GenerateRecipeByGoalOutputSchema = z.object({
+const SingleRecipeSchema = z.object({
     recipeName: z.string().describe('The name of the generated recipe.'),
     description: z.string().describe('A short, enticing description of the recipe.'),
     ingredients: z.array(z.string()).describe('A list of ingredients with quantities.'),
@@ -30,4 +30,10 @@ export const GenerateRecipeByGoalOutputSchema = z.object({
         fat: z.string().describe('The estimated grams of fat (e.g., "26g").'),
     }).describe('The estimated nutritional information for the recipe.'),
 });
+
+export const GenerateRecipeByGoalOutputSchema = z.object({
+    recipes: z.array(SingleRecipeSchema).describe('A list of 3 distinct recipes that match the user\'s goals.'),
+});
 export type GenerateRecipeByGoalOutput = z.infer<typeof GenerateRecipeByGoalOutputSchema>;
+
+export type SingleRecipe = z.infer<typeof SingleRecipeSchema>;

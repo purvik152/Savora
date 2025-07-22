@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
@@ -61,14 +61,14 @@ export function GoalBasedGeneratorForm({ onRecipeGenerated }: GoalBasedGenerator
 
     try {
       const result = await generateRecipeByGoal(input);
-      if (result) {
+      if (result && result.recipes.length > 0) {
         onRecipeGenerated(result);
         toast({
-          title: "Recipe Generated!",
-          description: "Your custom recipe is ready.",
+          title: "Recipes Generated!",
+          description: "Your custom recipe suggestions are ready.",
         });
       } else {
-        throw new Error("The AI chef couldn't come up with a recipe. Please adjust your criteria.");
+        throw new Error("The AI chef couldn't come up with any recipes. Please adjust your criteria.");
       }
     } catch (e: any) {
       console.error(e);
@@ -85,7 +85,7 @@ export function GoalBasedGeneratorForm({ onRecipeGenerated }: GoalBasedGenerator
           <WandSparkles className="text-primary" />
           AI Recipe Generator
         </CardTitle>
-        <CardDescription>Define your goals and let our AI create a recipe for you.</CardDescription>
+        <CardDescription>Define your goals and let our AI create recipes for you.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -195,7 +195,7 @@ export function GoalBasedGeneratorForm({ onRecipeGenerated }: GoalBasedGenerator
               {loading ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</>
               ) : (
-                <><WandSparkles className="mr-2 h-4 w-4" /> Generate Recipe</>
+                <><WandSparkles className="mr-2 h-4 w-4" /> Generate Recipes</>
               )}
             </Button>
           </form>
