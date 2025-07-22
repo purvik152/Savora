@@ -5,7 +5,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { generateRecipeByGoal, GenerateRecipeByGoalInput, GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-flow';
+import { generateRecipeByGoal } from '@/ai/flows/generate-recipe-by-goal-flow';
+import type { GenerateRecipeByGoalInput, GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-types';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

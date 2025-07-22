@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Check, Flame, Utensils, Zap, HeartPulse } from 'lucide-react';
-import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-flow';
+import type { GenerateRecipeByGoalOutput } from '@/ai/flows/generate-recipe-by-goal-types';
 
 interface RecipeResultDisplayProps {
   recipe: GenerateRecipeByGoalOutput | null;
