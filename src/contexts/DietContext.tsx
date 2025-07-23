@@ -23,11 +23,9 @@ export function DietProvider({ children }: { children: ReactNode }) {
 
   const applyTheme = useCallback((theme: Diet) => {
     if (typeof window !== 'undefined') {
-      if (theme === 'veg') {
-        document.documentElement.classList.add('theme-veg');
-      } else {
-        document.documentElement.classList.remove('theme-veg');
-      }
+      // Veg theme has been removed, so this function is simpler.
+      // If you wanted to re-add it, the logic would go here.
+      // e.g. document.documentElement.classList.toggle('theme-veg', theme === 'veg');
     }
   }, []);
 
@@ -60,7 +58,6 @@ export function DietProvider({ children }: { children: ReactNode }) {
   // To prevent hydration mismatch, we can return null or a skeleton on the server 
   // and first client render until the component has mounted.
   // Or, more simply, we can just render the children and let the theme apply on mount.
-  // The key is to not have state that causes different renders on server vs client initially.
   // The current logic with hasMounted solves this.
 
   return (

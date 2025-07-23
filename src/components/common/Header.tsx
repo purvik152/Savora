@@ -47,14 +47,14 @@ function DietToggle() {
 
     return (
         <div className="flex items-center space-x-2">
-            <Drumstick className={cn("h-5 w-5 transition-colors", !isVeg ? 'text-primary' : 'text-muted-foreground')} />
+            <span className={cn("font-semibold text-sm", !isVeg ? 'text-primary' : 'text-muted-foreground')}>Non-Veg</span>
             <Switch
                 id="diet-mode"
                 checked={isVeg}
                 onCheckedChange={toggleDiet}
                 aria-label="Toggle dietary preference"
             />
-            <Leaf className={cn("h-5 w-5 transition-colors", isVeg ? 'text-primary' : 'text-muted-foreground')} />
+            <span className={cn("font-semibold text-sm", isVeg ? 'text-primary' : 'text-muted-foreground')}>Veg</span>
         </div>
     );
 }
