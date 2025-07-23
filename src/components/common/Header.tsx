@@ -60,7 +60,7 @@ function DietToggle() {
             </div>
             <div className={cn(
                 "px-3 py-1 text-sm font-semibold rounded-full transition-all duration-300 ease-in-out",
-                isVeg ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'
+                isVeg ? 'bg-background shadow-sm border border-green-500 text-green-600 dark:text-green-500' : 'text-muted-foreground'
             )}>
                 Veg
             </div>

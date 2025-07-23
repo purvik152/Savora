@@ -25,7 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const allFeaturedRecipes = [
   {
     name: 'Plan Your Week with AI',
-    image: '/images/features/meal-planning.jpg',
+    image: '/images/recipes/meal-planning.jpg',
     hint: 'meal prep containers',
     description: 'Let our intelligent AI create a personalized weekly meal plan based on your diet, goals, and allergies.',
     href: '/meal-planner',
