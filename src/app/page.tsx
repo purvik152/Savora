@@ -18,6 +18,8 @@ import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard'
 import { getCommunityRecipes, removeCommunityRecipe, CommunityRecipe } from '@/lib/community-recipes';
 import { WhatsInYourKitchen } from '@/components/home/WhatsInYourKitchen';
 import { SearchDialog } from '@/components/search/SearchDialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const allFeaturedRecipes = [
@@ -126,6 +128,30 @@ const nonVegMainCategories = [
     image: '/images/recipes/greek-lemon-chicken-potatoes.jpg',
     hint: 'lemon chicken',
   },
+];
+
+const testimonials = [
+  {
+    quote: "Savora has completely transformed how I approach weeknight dinners. The AI suggestions are genius and have gotten me out of my cooking rut!",
+    name: "Jessica L.",
+    title: "Busy Mom & Home Cook",
+    avatar: "https://placehold.co/128x128.png",
+    avatarHint: "woman portrait"
+  },
+  {
+    quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
+    name: "David Chen",
+    title: "Tech Enthusiast & Foodie",
+    avatar: "https://placehold.co/128x128.png",
+    avatarHint: "man portrait"
+  },
+  {
+    quote: "As a vegetarian, I love how easy it is to switch to a 'veg' view and discover new, exciting recipes. The Mood Kitchen is such a fun and unique feature!",
+    name: "Priya Patel",
+    title: "Food Blogger",
+    avatar: "https://placehold.co/128x128.png",
+    avatarHint: "woman smiling"
+  }
 ];
 
 
@@ -413,6 +439,31 @@ export default function Home() {
                     Explore All Community Recipes
                 </Button>
             </Link>
+        </div>
+    </section>
+
+    {/* Testimonials Section */}
+    <section className="my-24 animate-fade-in-up" style={{ animationDelay: '900ms' }}>
+        <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold">What Our Users Say</h2>
+            <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">
+                Hear from home cooks who have found joy and inspiration with Savora.
+            </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+                <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50">
+                    <Avatar className="w-20 h-20 mb-4 border-4 border-background">
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.avatarHint} />
+                        <AvatarFallback>{testimonial.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <CardContent className="p-0">
+                        <p className="text-foreground/90 italic mb-4">"{testimonial.quote}"</p>
+                        <p className="font-bold text-primary">{testimonial.name}</p>
+                        <p className="text-sm text-muted-foreground">{testimonial.title}</p>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     </section>
     
