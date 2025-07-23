@@ -1,4 +1,5 @@
 
+
 import { z } from 'zod';
 
 // Input schema for generating the diet plan
@@ -33,14 +34,18 @@ const DayPlanSchema = z.object({
 });
 export type DayPlan = z.infer<typeof DayPlanSchema>;
 
+
+export const DaysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const;
+export type Day = (typeof DaysOfWeek)[number];
+
 // Output schema for the entire weekly plan
 export const WeeklyPlanSchema = z.object({
-  Monday: DayPlanSchema,
-  Tuesday: DayPlanSchema,
-  Wednesday: DayPlanSchema,
-  Thursday: DayPlanSchema,
-  Friday: DayPlanSchema,
-  Saturday: DayPlanSchema,
-  Sunday: DayPlanSchema,
+  Monday: DayPlanSchema.optional(),
+  Tuesday: DayPlanSchema.optional(),
+  Wednesday: DayPlanSchema.optional(),
+  Thursday: DayPlanSchema.optional(),
+  Friday: DayPlanSchema.optional(),
+  Saturday: DayPlanSchema.optional(),
+  Sunday: DayPlanSchema.optional(),
 });
 export type WeeklyPlan = z.infer<typeof WeeklyPlanSchema>;
