@@ -16,6 +16,10 @@ export default function MealPlannerPage() {
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
   const [isPlanLoading, setIsPlanLoading] = useState(false);
 
+  const handlePlanChange = (newPlan: WeeklyPlan) => {
+    setWeeklyPlan(newPlan);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="max-w-4xl mx-auto text-center mb-12 animate-fade-in-up">
@@ -54,7 +58,11 @@ export default function MealPlannerPage() {
                   <DietPlanForm onPlanGenerated={setWeeklyPlan} setLoading={setIsPlanLoading}/>
               </div>
               <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-                  <WeeklyPlanDisplay plan={weeklyPlan} loading={isPlanLoading} />
+                  <WeeklyPlanDisplay 
+                    plan={weeklyPlan} 
+                    loading={isPlanLoading}
+                    onPlanChange={handlePlanChange}
+                   />
               </div>
           </div>
         </TabsContent>

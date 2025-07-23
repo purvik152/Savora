@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,6 +17,7 @@ import { recipes as allRecipes, type Recipe } from '@/lib/recipes';
 interface WeeklyPlanDisplayProps {
   plan: WeeklyPlan | null;
   loading: boolean;
+  onPlanChange: (plan: WeeklyPlan) => void;
 }
 
 const daysOfWeek: Day[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -89,15 +90,10 @@ const EmptyMealCard = ({ slot, onAdd }: { slot: string, onAdd: () => void }) => 
 );
 
 
-export function WeeklyPlanDisplay({ plan: initialPlan, loading }: WeeklyPlanDisplayProps) {
+export function WeeklyPlanDisplay({ plan, loading, onPlanChange }: WeeklyPlanDisplayProps) {
   const { toast } = useToast();
-  const [plan, setPlan] = useState<WeeklyPlan | null>(initialPlan);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{day: Day, slot: keyof DayPlan} | null>(null);
-
-  useState(() => {
-    setPlan(initialPlan);
-  });
 
   const handleSave = () => {
     toast({
@@ -139,7 +135,7 @@ export function WeeklyPlanDisplay({ plan: initialPlan, loading }: WeeklyPlanDisp
         [slot]: newMeal
       }
     };
-    setPlan(newPlan);
+    onPlanChange(newPlan);
   };
 
   const handleRemoveMeal = (day: Day, slot: keyof DayPlan) => {
@@ -151,7 +147,7 @@ export function WeeklyPlanDisplay({ plan: initialPlan, loading }: WeeklyPlanDisp
         [slot]: undefined,
       }
     };
-    setPlan(newPlan);
+    onPlanChange(newPlan);
   };
 
   if (loading) {
