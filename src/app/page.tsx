@@ -33,7 +33,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Cook with a Voice Assistant',
-    image: '/images/recipes/voice-assistant.jpg',
+    image: '/images/recipes/voice.jpg',
     hint: 'kitchen cooking voice',
     description: 'Navigate recipes hands-free. Just tell Savora to start, stop, or go to the next step.',
     href: '/recipes/creamy-tomato-pasta',
@@ -41,7 +41,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Discover Recipes by Mood',
-    image: '/images/recipes/mood-kitchen.jpg',
+    image: '/images/recipes/mood-kitchenn.jpg',
     hint: 'comfort food cozy',
     description: 'Feeling cozy, energetic, or stressed? Our Mood Kitchen suggests the perfect dish for how you feel.',
     href: '/mood-kitchen',
@@ -57,7 +57,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Take the Chefs Challenge',
-    image: '/images/recipes/chef-challenge.jpg',
+    image: '/images/recipes/chef-challengee.jpg',
     hint: 'mystery box ingredients',
     description: 'Challenge our AI chef to invent a brand new recipe from a random set of ingredients.',
     href: '/chef-challenge',
@@ -141,7 +141,7 @@ const testimonials = [
 
 export default function Home() {
   const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true })
+    Autoplay({ delay: 4000, stopOnInteraction: false })
   );
   const router = useRouter();
   const { toast } = useToast();
