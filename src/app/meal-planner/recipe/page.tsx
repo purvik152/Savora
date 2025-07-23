@@ -1,11 +1,12 @@
 
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { Suspense } from 'react';
+import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Flame, Check, HeartPulse, Utensils, Zap } from "lucide-react";
+import { Check, Flame, Utensils, Zap, HeartPulse } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
 import type { SingleRecipe } from '@/ai/flows/generate-recipe-by-goal-types';
@@ -88,8 +89,7 @@ function MealDetailsView({ meal }: { meal: SingleRecipe }) {
   );
 }
 
-
-export default function MealPlannerRecipePage() {
+function MealPlannerRecipeContent() {
   const [meal, setMeal] = useState<SingleRecipe | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -99,7 +99,12 @@ export default function MealPlannerRecipePage() {
     const mealJson = sessionStorage.getItem('generatedRecipe');
 
     if (mealJson) {
-      setMeal(JSON.parse(mealJson));
+      try {
+        setMeal(JSON.parse(mealJson));
+      } catch (error) {
+        console.error("Failed to parse recipe data from sessionStorage", error);
+        router.push('/meal-planner');
+      }
     } else {
       // If there's no recipe data, redirect back to the planner
       router.push('/meal-planner');
@@ -112,9 +117,19 @@ export default function MealPlannerRecipePage() {
   }
   
   if (!meal) {
-    // This will be brief as the redirect will happen quickly
+    // This will be brief as the redirect will happen quickly, or notFound() will be called
+    notFound();
     return null;
   }
 
   return <MealDetailsView meal={meal} />;
 }
+
+export default function MealPlannerRecipePage() {
+  return (
+    <Suspense fallback={<Skeleton className="h-screen w-full" />}>
+      <MealPlannerRecipeContent />
+    </Suspense>
+  );
+}
+

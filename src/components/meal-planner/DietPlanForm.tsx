@@ -6,12 +6,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { generateWeeklyDietPlan, GenerateWeeklyDietPlanInput, WeeklyPlan } from '@/ai/flows/generate-weekly-diet-plan-flow';
+import { generateWeeklyDietPlan } from '@/ai/flows/generate-weekly-diet-plan-flow';
+import type { GenerateWeeklyDietPlanInput, WeeklyPlan } from '@/ai/flows/generate-weekly-diet-plan-types';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';

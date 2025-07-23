@@ -2,12 +2,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Save, RefreshCw, Eye } from 'lucide-react';
-import type { WeeklyPlan, DayPlan, Meal } from '@/ai/flows/generate-weekly-diet-plan-flow';
+import type { WeeklyPlan, DayPlan, Meal } from '@/ai/flows/generate-weekly-diet-plan-types';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
@@ -19,20 +20,23 @@ interface WeeklyPlanDisplayProps {
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const mealSlots: (keyof DayPlan)[] = ["Breakfast", "Lunch", "Dinner", "Snacks"];
 
-function MealCard({ meal }: { meal: Meal }) {
+function MealCard({ meal, day, slot }: { meal: Meal, day: string, slot: string }) {
   const router = useRouter();
 
   const handleViewMeal = () => {
-    // A simplified object for display purposes on the detail page
-    const mealDetails = {
-      title: meal.title,
-      image: meal.image || 'https://placehold.co/300x200.png',
-      prepTime: meal.prepTime,
-      calories: meal.calories,
-      ingredients: meal.ingredients,
-      instructions: meal.instructions
+    const recipeData = {
+        recipeName: meal.title,
+        description: `A delicious ${meal.title} for ${slot} on ${day}.`,
+        ingredients: meal.ingredients,
+        instructions: meal.instructions,
+        nutrition: {
+            calories: meal.calories,
+            protein: 'N/A', // Mock data, enhance if available
+            carbs: 'N/A',
+            fat: 'N/A'
+        }
     };
-    sessionStorage.setItem('mealDetails', JSON.stringify(mealDetails));
+    sessionStorage.setItem('generatedRecipe', JSON.stringify(recipeData));
     router.push('/meal-planner/recipe');
   };
 
@@ -44,7 +48,7 @@ function MealCard({ meal }: { meal: Meal }) {
                 alt={meal.title}
                 fill
                 className="object-cover"
-                data-ai-hint="meal food"
+                data-ai-hint={meal.imageHint || "meal food"}
                 sizes="(max-width: 768px) 100vw, 33vw"
              />
              <div className="absolute inset-0 bg-black/20" />
@@ -55,8 +59,10 @@ function MealCard({ meal }: { meal: Meal }) {
                 <p>{meal.calories}</p>
                 <p>{meal.prepTime}</p>
             </div>
-            <Button variant="ghost" size="sm" className="w-full justify-start p-1 h-auto mt-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity" onClick={handleViewMeal}>
-              <Eye className="h-3 w-3 mr-1" /> View Details
+            <Button asChild variant="ghost" size="sm" className="w-full justify-start p-1 h-auto mt-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link href={`/meal-planner/recipe?day=${day}&slot=${slot}`} onClick={handleViewMeal}>
+                 <Eye className="h-3 w-3 mr-1" /> View Details
+              </Link>
             </Button>
         </CardContent>
     </Card>
@@ -140,7 +146,7 @@ export function WeeklyPlanDisplay({ plan, loading }: WeeklyPlanDisplayProps) {
                 {mealSlots.map(mealSlot => {
                   const meal = plan[day as keyof WeeklyPlan]?.[mealSlot];
                   return meal ? (
-                     <MealCard key={`${day}-${mealSlot}`} meal={meal} />
+                     <MealCard key={`${day}-${mealSlot}`} meal={meal} day={day} slot={mealSlot} />
                   ) : (
                     <div key={`${day}-${mealSlot}`} className="h-32 border-dashed border-2 rounded-lg flex items-center justify-center">
                         <span className="text-xs text-muted-foreground">{mealSlot}</span>
