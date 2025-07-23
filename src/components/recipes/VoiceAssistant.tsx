@@ -120,12 +120,16 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     };
     utterance.onend = () => {
         setIsSpeaking(false);
+        // A small delay before listening again can prevent the mic from picking up the end of the TTS audio
+        setTimeout(() => {
+            if (sessionActiveRef.current && !isFinal) {
+                startListening();
+            }
+        }, 100);
+
         if (sessionActiveRef.current && !isFinal && isInstruction) {
             // If it was an instruction, set a timer to auto-advance
             autoAdvanceTimeoutRef.current = setTimeout(advanceToNextStep, AUTO_ADVANCE_DELAY);
-        }
-        if (sessionActiveRef.current && !isFinal) {
-            startListening();
         }
     };
     utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
@@ -229,7 +233,8 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     
     recognition.onend = () => {
       setIsListening(false);
-      if (finalTranscriptRef.current) {
+      // Ensure we only process a command if the session is active and we're not already processing something.
+      if (finalTranscriptRef.current && sessionActiveRef.current && !isProcessing) {
         handleUserQuery(finalTranscriptRef.current);
       }
     };
@@ -269,7 +274,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         recognitionRef.current.abort();
       }
     }
-  }, [hasMounted, handleUserQuery, toast, language, clearAutoAdvance]);
+  }, [hasMounted, handleUserQuery, toast, language, clearAutoAdvance, isProcessing]);
   
   // --- User Actions ---
   const startSession = () => {
