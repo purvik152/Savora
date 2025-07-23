@@ -100,86 +100,88 @@ export function DietPlanForm({ onPlanGenerated, setLoading }: DietPlanFormProps)
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            
-            <FormField
-              control={form.control}
-              name="dietType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Diet Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="non-vegetarian">Non-Vegetarian</SelectItem>
-                      <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                      <SelectItem value="vegan">Vegan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <FormField
+                  control={form.control}
+                  name="dietType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diet Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="non-vegetarian">Non-Vegetarian</SelectItem>
+                          <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                          <SelectItem value="vegan">Vegan</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="dietGoal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diet Goal</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="weight-loss">Weight Loss</SelectItem>
+                          <SelectItem value="muscle-gain">Muscle Gain</SelectItem>
+                          <SelectItem value="maintenance">Maintenance</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="dailyCalories"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel>Daily Calorie Goal</FormLabel>
-                    <span className="text-sm font-medium text-primary">{formValues.dailyCalories} kcal</span>
-                  </div>
-                  <FormControl>
-                    <Slider
-                      min={1200} max={4000} step={50}
-                      value={[field.value]}
-                      onValueChange={(value) => field.onChange(value[0])}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="maxCookingTime"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel>Max Cook Time</FormLabel>
-                    <span className="text-sm font-medium text-primary">{formValues.maxCookingTime} mins</span>
-                  </div>
-                  <FormControl>
-                    <Slider
-                      min={15} max={60} step={5}
-                      value={[field.value || 30]}
-                      onValueChange={(value) => field.onChange(value[0])}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dietGoal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Diet Goal</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="weight-loss">Weight Loss</SelectItem>
-                      <SelectItem value="muscle-gain">Muscle Gain</SelectItem>
-                      <SelectItem value="maintenance">Maintenance</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="dailyCalories"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex justify-between items-center">
+                        <FormLabel>Daily Calorie Goal</FormLabel>
+                        <span className="text-sm font-medium text-primary">{formValues.dailyCalories} kcal</span>
+                      </div>
+                      <FormControl>
+                        <Slider
+                          min={1200} max={4000} step={50}
+                          value={[field.value]}
+                          onValueChange={(value) => field.onChange(value[0])}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="maxCookingTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex justify-between items-center">
+                        <FormLabel>Max Cook Time</FormLabel>
+                        <span className="text-sm font-medium text-primary">{formValues.maxCookingTime} mins</span>
+                      </div>
+                      <FormControl>
+                        <Slider
+                          min={15} max={60} step={5}
+                          value={[field.value || 30]}
+                          onValueChange={(value) => field.onChange(value[0])}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+            </div>
 
             <FormField
               control={form.control}
@@ -189,7 +191,7 @@ export function DietPlanForm({ onPlanGenerated, setLoading }: DietPlanFormProps)
                   <div className="mb-4">
                     <FormLabel>Allergen Warnings</FormLabel>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {allergies.map((item) => (
                       <FormField
                         key={item.id}
