@@ -29,9 +29,8 @@ export default function CommunityPage() {
     fetchRecipes();
   }, [pathname, fetchRecipes]);
 
-  const handleUpvote = (recipeId: number) => {
-    // This is an optimistic update. The actual data is updated in localStorage
-    // by the upvoteRecipeAction in the card, but we re-fetch to be safe.
+  // This function is now used to trigger a re-render of the list.
+  const handleRecipeUpdate = () => {
     fetchRecipes();
   };
   
@@ -82,7 +81,7 @@ export default function CommunityPage() {
           <div key={recipe.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
             <CommunityRecipeCard 
               recipe={recipe} 
-              onUpvote={handleUpvote}
+              onUpvote={handleRecipeUpdate}
               onRemove={handleRemove}
             />
           </div>

@@ -2,6 +2,7 @@
 'use client';
 
 import type { Recipe as FullRecipe } from './recipes';
+import type { CommunityRecipe } from './community-recipes';
 import { recipeToSpeech } from '@/ai/flows/text-to-speech-flow';
 
 // The full recipe definition
@@ -129,6 +130,46 @@ export async function saveRecipeForOffline(recipe: Recipe, userId: string): Prom
     // Remove if it already exists to add the new version
     const updatedRecipes = offlineRecipes.filter(r => r.slug !== recipe.slug);
     updatedRecipes.unshift(offlineRecipe); // Add to the front
+
+    setInStorage(key, updatedRecipes);
+}
+
+export async function saveCommunityRecipeForOffline(communityRecipe: CommunityRecipe, userId: string): Promise<void> {
+    if (!userId) throw new Error("User ID is required.");
+
+    const instructionsText = communityRecipe.ingredients && communityRecipe.instructions 
+      ? [...communityRecipe.ingredients, ...communityRecipe.instructions].join('\n') 
+      : 'No instructions provided.';
+
+    const ttsResult = await recipeToSpeech(instructionsText);
+    
+    const recipeForStorage: OfflineRecipe = {
+      ...communityRecipe,
+      category: 'Dinner',
+      cuisine: 'Community',
+      country: 'Community',
+      prepTime: 'N/A',
+      cookTime: 'N/A',
+      servings: 'N/A',
+      ingredients: communityRecipe.ingredients || [],
+      instructions: communityRecipe.instructions || [],
+      nutrition: {
+        calories: 'N/A',
+        protein: 'N/A',
+        carbohydrates: 'N/A',
+        fat: 'N/A',
+        fiber: 'N/A',
+        sugar: 'N/A',
+        sodium: 'N/A',
+      },
+      audioDataUri: ttsResult.audioDataUri,
+    };
+
+    const key = `${OFFLINE_RECIPES_PREFIX}${userId}`;
+    const offlineRecipes = getOfflineRecipes(userId);
+    
+    const updatedRecipes = offlineRecipes.filter(r => r.slug !== recipeForStorage.slug);
+    updatedRecipes.unshift(recipeForStorage);
 
     setInStorage(key, updatedRecipes);
 }
