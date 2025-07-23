@@ -8,17 +8,16 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Loader2, Mic, Users } from 'lucide-react';
-import { Recipe, recipes } from '@/lib/recipes';
+import { Search, Users } from 'lucide-react';
+import { recipes } from '@/lib/recipes';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useDiet } from '@/contexts/DietContext';
 import { CommunityRecipeCard } from '@/components/community/CommunityRecipeCard';
 import { getCommunityRecipes, removeCommunityRecipe, CommunityRecipe } from '@/lib/community-recipes';
 import { WhatsInYourKitchen } from '@/components/home/WhatsInYourKitchen';
+import { SearchDialog } from '@/components/search/SearchDialog';
 
 
 const allFeaturedRecipes = [
@@ -138,16 +137,9 @@ export default function Home() {
   const { toast } = useToast();
   const { diet } = useDiet();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Recipe[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-
-  // State for voice search
-  const [isListening, setIsListening] = useState(false);
-  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
-  const recognitionRef = useRef<any>(null);
-
+  
   // State for community recipes
   const [communityRecipes, setCommunityRecipes] = useState<CommunityRecipe[]>([]);
 
@@ -162,14 +154,6 @@ export default function Home() {
     setHasMounted(true);
     fetchCommunityRecipes();
   }, [fetchCommunityRecipes]);
-
-  const filteredRecipes = useMemo(() => {
-    if (diet === 'veg') {
-        return recipes.filter(r => r.diet === 'veg');
-    }
-    // In non-veg mode, show only non-veg recipes
-    return recipes.filter(r => r.diet === 'non-veg');
-  }, [diet]);
 
   const featuredRecipes = useMemo(() => {
     if (diet === 'veg') {
@@ -217,91 +201,6 @@ export default function Home() {
     });
     fetchCommunityRecipes();
   }
-
-  const handleSearch = useCallback((query: string) => {
-    if (query.trim().length > 1) {
-        setIsSearching(true);
-        const queryLower = query.toLowerCase();
-        const filteredResults = filteredRecipes.filter(
-            (recipe) =>
-            recipe.title.toLowerCase().includes(queryLower) ||
-            recipe.description.toLowerCase().includes(queryLower) ||
-            recipe.cuisine.toLowerCase().includes(queryLower) ||
-            recipe.category.toLowerCase().includes(queryLower)
-        );
-        
-        setTimeout(() => {
-            setSearchResults(filteredResults);
-            setIsSearching(false);
-        }, 300);
-    } else {
-        setSearchResults([]);
-    }
-  }, [filteredRecipes]);
-
-  useEffect(() => {
-    if (!hasMounted) return;
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setIsBrowserSupported(false);
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-
-    recognition.onstart = () => setIsListening(true);
-    recognition.onend = () => setIsListening(false);
-    
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setSearchQuery(transcript);
-    };
-
-    recognition.onerror = (event: any) => {
-      console.error('Speech recognition error', event.error);
-      if (event.error !== 'no-speech' && event.error !== 'aborted') {
-        toast({
-            variant: "destructive",
-            title: "Voice Search Error",
-            description: "Sorry, I couldn't hear you. Please try again.",
-        });
-      }
-    };
-    
-    recognitionRef.current = recognition;
-
-    return () => {
-      recognitionRef.current?.abort();
-    }
-  }, [hasMounted, toast]);
-
-  const handleVoiceSearch = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      recognitionRef.current?.start();
-    }
-  };
-
-  useEffect(() => {
-      const timerId = setTimeout(() => {
-          handleSearch(searchQuery);
-      }, 300);
-
-      return () => clearTimeout(timerId);
-  }, [searchQuery, handleSearch]);
-
-
-  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/recipes?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
@@ -458,66 +357,13 @@ export default function Home() {
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
           <div className="relative w-full z-10">
-            <form onSubmit={handleSearchSubmit}>
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10" />
-              <Input
-                type="search"
-                placeholder="I want to make..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-12 pr-24 rounded-lg text-base"
-                autoComplete="off"
-              />
-              {isBrowserSupported && hasMounted && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10",
-                    isListening && "text-destructive animate-pulse"
-                  )}
-                  onClick={handleVoiceSearch}
-                >
-                  <Mic className="h-5 w-5" />
-                </Button>
-              )}
-            </form>
-            {searchQuery.trim().length > 1 && (
-              <div className="absolute top-full mt-2 w-full bg-background border rounded-lg shadow-lg z-20 max-h-80 overflow-y-auto">
-                {isSearching ? (
-                  <div className="p-4 flex items-center justify-center text-muted-foreground">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Finding recipes...
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <ul className="divide-y divide-border">
-                    {searchResults.slice(0, 7).map((recipe) => (
-                      <li key={recipe.id}>
-                        <Link
-                          href={`/recipes/${recipe.slug}`}
-                          className="flex items-center gap-4 p-3 hover:bg-secondary/50 transition-colors"
-                        >
-                            <Image
-                              src={recipe.image}
-                              alt={recipe.title}
-                              width={48}
-                              height={48}
-                              className="rounded-lg object-cover w-12 h-12"
-                              data-ai-hint={recipe.imageHint}
-                            />
-                            <span className="font-medium">{recipe.title}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="p-4 text-center text-muted-foreground">
-                    No recipes found for &quot;{searchQuery}&quot;.
-                  </div>
-                )}
-              </div>
-            )}
+            <button
+                onClick={() => setIsSearchOpen(true)}
+                className="w-full h-12 px-4 flex items-center text-left bg-background border border-input rounded-lg text-base text-muted-foreground hover:bg-accent"
+            >
+                <Search className="h-5 w-5 mr-3" />
+                I want to make...
+            </button>
           </div>
           <div className="flex items-center justify-center gap-4">
             <span className="text-muted-foreground italic">or</span>
@@ -569,6 +415,8 @@ export default function Home() {
             </Link>
         </div>
     </section>
+    
+    <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
       
     </div>
   );
