@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Recipe, recipes } from '@/lib/recipes';
 import { Search, Loader2, Mic } from 'lucide-react';
@@ -143,6 +143,10 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 gap-0 w-full max-w-2xl h-auto max-h-[75vh] top-1/2 -translate-y-1/2 sm:top-16 sm:-translate-y-0 rounded-lg overflow-hidden flex flex-col">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Search Recipes</DialogTitle>
+          <DialogDescription>Search for recipes by name, ingredient, or cuisine.</DialogDescription>
+        </DialogHeader>
         <div className="flex items-center border-b pl-4 pr-2 sm:pr-4">
           <Search className="h-5 w-5 text-muted-foreground" />
           <Input
