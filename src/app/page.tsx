@@ -366,10 +366,12 @@ export default function Home() {
 
     {/* Community Section */}
     <section className="my-24 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-        <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold cuisine-title-gradient">From Our Community Kitchen</h2>
-            <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
+      <div className="text-center mb-12">
+        <div className="inline-block px-8 py-4 rounded-lg bg-gradient-to-r from-primary via-green-500 to-teal-400">
+          <h2 className="text-3xl font-bold text-white">From Our Community Kitchen</h2>
         </div>
+        <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
+      </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {topCommunityRecipes.length > 0 ? topCommunityRecipes.map(recipe => (
                 <CommunityRecipeCard 
@@ -394,15 +396,17 @@ export default function Home() {
 
     {/* Testimonials Section */}
     <section className="my-24 animate-fade-in-up" style={{ animationDelay: '900ms' }}>
-        <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold cuisine-title-gradient">What Our Users Say</h2>
-            <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">
-                Hear from home cooks who have found joy and inspiration with Savora.
-            </p>
-        </div>
+      <div className="text-center mb-12">
+          <div className="inline-block px-8 py-4 rounded-lg bg-gradient-to-r from-primary via-green-500 to-teal-400">
+            <h2 className="text-3xl font-bold text-white">What Our Users Say</h2>
+          </div>
+          <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
+              Hear from home cooks who have found joy and inspiration with Savora.
+          </p>
+      </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-                <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-0">
+                <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-0 rounded-sm">
                     <Avatar className="w-20 h-20 mb-4 border-4 border-background">
                         <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.name.split(' ')[0].toLowerCase()} />
                         <AvatarFallback>{testimonial.name.substring(0, 2).toUpperCase()}</AvatarFallback>
