@@ -23,68 +23,52 @@ import { WhatsInYourKitchen } from '@/components/home/WhatsInYourKitchen';
 
 const allFeaturedRecipes = [
   {
-    name: 'Ultimate Creamy Tomato Pasta',
-    image: '/images/recipes/creamy-tomato-pasta.jpg',
-    hint: 'creamy pasta',
-    description: 'A rich and decadent pasta dish that comes together in under 30 minutes.',
-    href: '/recipes/creamy-tomato-pasta',
+    name: 'Paella Valenciana',
+    image: '/images/recipes/paella-valenciana.jpg',
+    hint: 'paella pan',
+    description: 'The authentic Spanish paella with chicken and rabbit, cooked to create the perfect "socarrat".',
+    href: '/recipes/paella-valenciana',
+    diet: 'non-veg'
+  },
+  {
+    name: 'Mushroom & Spinach Quesadillas',
+    image: '/images/recipes/mushroom-and-spinach-quesadillas.jpg',
+    hint: 'quesadillas lunch',
+    description: 'Cheesy, savory quesadillas filled with sautéed mushrooms, garlic, and spinach. A perfect quick meal.',
+    href: '/recipes/mushroom-spinach-quesadillas',
     diet: 'veg'
   },
   {
-    name: 'Lemon Herb Roast Chicken',
-    image: '/images/recipes/lemon-herb-roast-chicken.jpg',
-    hint: 'roast chicken',
-    description: 'Impressive enough for guests, easy enough for a weeknight.',
-    href: '/recipes/lemon-herb-roast-chicken',
+    name: 'Authentic Pad Thai',
+    image: '/images/recipes/pad-thai-recipe.jpg',
+    hint: 'pad thai noodles',
+    description: 'A classic Thai noodle stir-fry with a perfect balance of sweet, sour, and savory flavors.',
+    href: '/recipes/pad-thai-recipe',
     diet: 'non-veg'
   },
   {
-    name: 'Best-Ever Black Bean Burgers',
-    image: '/images/recipes/black-bean-burgers.jpg',
-    hint: 'bean burger',
-    description: 'Hearty and flavorful homemade vegetarian burgers that even meat-eaters will love.',
-    href: '/recipes/black-bean-burgers',
+    name: 'Vibrant Quinoa Salad',
+    image: '/images/recipes/vibrant-quinoa-salad.jpg',
+    hint: 'quinoa salad',
+    description: 'A colorful and nutrient-packed quinoa salad with a zesty lemon vinaigrette.',
+    href: '/recipes/vibrant-quinoa-salad',
     diet: 'veg'
   },
   {
-    name: 'Sheet Pan Salmon & Veggies',
-    image: '/images/recipes/sheet-pan-salmon-and-veggies.jpg',
-    hint: 'salmon veggies',
-    description: 'A healthy, delicious, and incredibly easy one-pan dinner for minimal cleanup.',
-    href: '/recipes/sheet-pan-salmon-and-veggies',
+    name: 'Lamb Rogan Josh',
+    image: '/images/recipes/lamb-rogan-josh.jpg',
+    hint: 'lamb curry',
+    description: 'A fragrant and robust lamb curry from Kashmir with a brilliant red color and aromatic spices.',
+    href: '/recipes/lamb-rogan-josh',
     diet: 'non-veg'
   },
   {
-    name: 'Creamy Mushroom Risotto',
-    image: '/images/recipes/creamy-mushroom-risotto.jpg',
-    imageHint: 'mushroom risotto',
-    description: 'A creamy and savory vegetarian risotto. A true comfort food classic.',
-    href: '/recipes/creamy-mushroom-risotto',
+    name: 'Hearty Lentil Shepherd\'s Pie',
+    image: '/images/recipes/lentil-shepherds-pie.jpg',
+    hint: 'shepherds pie',
+    description: 'A comforting and savory vegetarian shepherd\'s pie with a rich lentil filling.',
+    href: '/recipes/lentil-shepherds-pie',
     diet: 'veg'
-  },
-  {
-    name: 'Chicken Tikka Masala',
-    image: '/images/recipes/chicken-tikka-masala.jpg',
-    imageHint: 'chicken curry',
-    description: 'A rich and creamy curry that is a staple in Indian cuisine. Perfect with naan or rice.',
-    href: '/recipes/chicken-tikka-masala',
-    diet: 'non-veg'
-  },
-  {
-    name: 'Classic Beef Lasagna',
-    image: '/images/recipes/classic-beef-lasagna.jpg',
-    hint: 'lasagna dinner',
-    description: 'Layers of rich meat sauce, creamy béchamel, and tender pasta.',
-    href: '/recipes/classic-beef-lasagna',
-    diet: 'non-veg'
-  },
-   {
-    name: 'Thai Green Curry',
-    image: '/images/recipes/thai-green-curry-chicken.jpg',
-    hint: 'thai curry',
-    description: 'Fragrant and spicy Thai green curry with tender chicken and vegetables.',
-    href: '/recipes/thai-green-curry-chicken',
-    diet: 'non-veg'
   },
   {
     name: 'Plan Your Week with Savora',
@@ -97,51 +81,51 @@ const allFeaturedRecipes = [
 ];
 
 const allSubCategories = [
-  { name: 'Quick and Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal', diet: 'veg' },
-  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/easy-beef-stir-fry.jpg', hint: 'stir fry dinner', diet: 'non-veg' },
-  { name: 'Vegetarian', href: '/recipes?q=vegetarian', image: '/images/recipes/black-bean-burgers.jpg', hint: 'vegetarian dish', diet: 'veg' },
-  { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food', diet: 'veg' },
-  { name: 'Instant Pot', href: '/recipes?q=instant pot', image: '/images/recipes/instant-pot-pot-roast.jpg', hint: 'pot roast', diet: 'non-veg' },
-  { name: 'Vegan', href: '/recipes?q=vegan', image: '/images/recipes/creamy-vegan-tomato-soup.jpg', hint: 'vegan pasta', diet: 'veg' },
-  { name: 'Meal Prep', href: '/recipes?q=meal prep', image: '/images/recipes/meal-prep-burrito-bowls.jpg', hint: 'meal prep', diet: 'non-veg' },
-  { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-lentil-soup.jpg', hint: 'tortilla soup', diet: 'veg' },
-  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
-  { name: 'Breakfast', href: '/recipes?q=breakfast', image: '/images/recipes/fluffy-pancakes.jpg', hint: 'pancakes breakfast', diet: 'veg' },
+  { name: 'Breakfast', href: '/recipes?q=breakfast', image: '/images/recipes/berry-smoothie-bowl.jpg', hint: 'smoothie bowl', diet: 'veg' },
   { name: 'Lunch', href: '/recipes?q=lunch', image: '/images/recipes/chicken-caesar-wrap.jpg', hint: 'lunch wrap', diet: 'non-veg' },
-  { name: 'Desserts', href: '/recipes?q=dessert', image: '/images/recipes/classic-chocolate-cake.jpg', hint: 'chocolate cake', diet: 'veg' },
+  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/easy-beef-stir-fry.jpg', hint: 'stir fry dinner', diet: 'non-veg' },
+  { name: 'Indian', href: '/recipes?country=India', image: '/images/recipes/paneer-butter-masala.jpg', hint: 'paneer curry', diet: 'veg' },
+  { name: 'Italian', href: '/recipes?country=Italy', image: '/images/recipes/classic-beef-lasagna.jpg', hint: 'lasagna dinner', diet: 'non-veg' },
+  { name: 'Mexican', href: '/recipes?country=Mexico', image: '/images/recipes/classic-beef-tacos.jpg', hint: 'beef tacos', diet: 'non-veg' },
+  { name: 'Thai', href: '/recipes?country=Thailand', image: '/images/recipes/thai-green-curry-chicken.jpg', hint: 'thai curry', diet: 'non-veg' },
+  { name: 'Soups', href: '/recipes?q=soup', image: '/images/recipes/creamy-butternut-squash-soup.jpg', hint: 'squash soup', diet: 'veg' },
+  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/greek-salad-with-grilled-chicken.jpg', hint: 'fresh salad', diet: 'non-veg' },
+  { name: 'Quick & Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal', diet: 'veg' },
+  { name: 'Healthy', href: '/recipes?q=healthy', image: '/images/recipes/sheet-pan-salmon-and-veggies.jpg', hint: 'salmon veggies', diet: 'non-veg' },
+  { name: 'Desserts', href: '/recipes?q=dessert', image: '/images/recipes/perfect-lemon-tart.jpg', hint: 'lemon tart', diet: 'veg' },
 ];
 
 const vegMainCategories = [
-  { name: 'Quick and Easy', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'quick meal' },
-  { name: 'Dinner', href: '/recipes?q=dinner', image: '/images/recipes/creamy-mushroom-risotto.jpg', hint: 'mushroom risotto' },
-  { name: 'Most Popular', href: '/recipes?q=pasta', image: '/images/recipes/creamy-tomato-pasta.jpg', hint: 'vegetarian pasta' },
-  { name: 'Salads', href: '/recipes?q=salad', image: '/images/recipes/vibrant-quinoa-salad.jpg', hint: 'healthy food' },
+  { name: 'Indian Cuisine', href: '/recipes?country=India', image: '/images/recipes/palak-paneer.jpg', hint: 'palak paneer' },
+  { name: 'Comfort Food', href: '/recipes?q=comfort', image: '/images/recipes/creamy-vegan-tomato-soup.jpg', hint: 'tomato soup' },
+  { name: 'Italian Classics', href: '/recipes?country=Italy', image: '/images/recipes/creamy-mushroom-risotto.jpg', hint: 'mushroom risotto' },
+  { name: 'Quick Bites', href: '/recipes?q=quick', image: '/images/recipes/caprese-sandwich.jpg', hint: 'sandwich' },
 ];
 
 const nonVegMainCategories = [
   {
-    name: 'Quick and Easy',
-    href: '/recipes?q=quick',
-    image: '/images/recipes/chicken-caesar-wrap.jpg',
-    hint: 'chicken rice bowl',
+    name: 'Spanish Feasts',
+    href: '/recipes?country=Spain',
+    image: '/images/recipes/spanish-garlic-shrimp.jpg',
+    hint: 'garlic shrimp',
   },
   {
-    name: 'Dinner',
-    href: '/recipes?q=dinner',
+    name: 'Japanese Ramen',
+    href: '/recipes?country=Japan',
+    image: '/images/recipes/tonkotsu-ramen.jpg',
+    hint: 'ramen bowl',
+  },
+  {
+    name: 'American Classics',
+    href: '/recipes?country=USA',
     image: '/images/recipes/classic-beef-lasagna.jpg',
-    hint: 'creamy pasta',
+    hint: 'lasagna slice',
   },
   {
-    name: 'Most Popular',
-    href: '/recipes?q=pasta',
-    image: '/images/recipes/creamy-tomato-pasta.jpg',
-    hint: 'noodle stirfry',
-  },
-  {
-    name: 'Salads',
-    href: '/recipes?q=salad',
-    image: '/images/recipes/greek-salad-with-grilled-chicken.jpg',
-    hint: 'salad bowl',
+    name: 'Greek Delights',
+    href: '/recipes?country=Greece',
+    image: '/images/recipes/greek-lemon-chicken-potatoes.jpg',
+    hint: 'lemon chicken',
   },
 ];
 
@@ -200,7 +184,7 @@ export default function Home() {
       return allSubCategories.filter(r => r.diet === 'veg');
     }
     // In non-veg mode, show only non-veg subcategories
-    return allSubCategories.filter(r => r.diet === 'non-veg');
+    return allSubCategories.filter(r => r.diet === 'non-veg' || r.diet === 'veg'); // Show all for variety
   }, [diet]);
 
   const mainCategories = useMemo(() => {
@@ -210,8 +194,8 @@ export default function Home() {
     return nonVegMainCategories;
   }, [diet]);
 
-  const subCategoriesFirstRow = subCategories.slice(0, 3);
-  const subCategoriesSecondRow = subCategories.slice(3, 7);
+  const subCategoriesFirstRow = subCategories.slice(0, Math.ceil(subCategories.length / 2));
+  const subCategoriesSecondRow = subCategories.slice(Math.ceil(subCategories.length / 2));
 
   const topCommunityRecipes = useMemo(() => {
     const filtered = diet === 'veg' 
