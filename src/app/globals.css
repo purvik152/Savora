@@ -79,4 +79,7 @@
     background-clip: text;
     color: transparent;
   }
+  .sticky-content {
+    @apply relative z-10;
+  }
 }

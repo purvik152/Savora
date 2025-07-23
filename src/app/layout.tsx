@@ -32,9 +32,9 @@ function ThemedLayout({ children }: { children: React.ReactNode }) {
 
   return (
       <div className={cn("flex min-h-screen flex-col", borderClass)}>
+          <FloatingDoodles />
           <Header />
-          <main className="flex-grow flex flex-col relative">
-            <FloatingDoodles />
+          <main className="flex-grow flex flex-col sticky-content">
             <div className="flex-grow flex flex-col">
               {children}
             </div>
