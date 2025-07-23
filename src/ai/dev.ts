@@ -21,4 +21,4 @@ import '@/ai/flows/import-recipe-from-url-flow.ts';
 import '@/ai/flows/adapt-recipe-flow.ts';
 import '@/ai/flows/generate-recipe-image-flow.ts';
 import '@/ai/flows/chef-challenge-flow.ts';
-import '@/ai/flows/generate-meal-plan-flow.ts';
+import '@/ai/flows/generate-weekly-diet-plan-flow.ts';

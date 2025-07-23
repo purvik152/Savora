@@ -142,7 +142,7 @@ const testimonials = [
     quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
     name: "Om Barvaliya",
     title: "Tech Enthusiast & Foodie",
-    avatar: '/images/recipes/Om Barvaliya.jpg',
+    avatar: 'file:///C:/Users/dell/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/TempState/4EB0194DDF4D6C7A72DCA4FD3149E92E/WhatsApp%20Image%202025-07-23%20at%2011.06.11_5dd508c8.jpg',
     avatarHint: "man portrait"
   },
   {
