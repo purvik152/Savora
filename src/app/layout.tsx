@@ -1,4 +1,5 @@
 
+'use client';
 
 import type { Metadata } from 'next';
 import './globals.css';
@@ -9,6 +10,7 @@ import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { DietProvider } from '@/contexts/DietContext';
+import { useDiet } from '@/contexts/DietContext';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -16,22 +18,40 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-export const metadata: Metadata = {
-  title: 'Savora: Your AI Recipe Assistant',
-  description: 'Discover, create, and master recipes with Savora, your intelligent AI-powered culinary companion.',
-};
+// Metadata can't be in a client component, so we export it separately if needed.
+// For the root layout, we'll keep it simple and define it in a wrapper if this becomes an issue.
+// export const metadata: Metadata = {
+//   title: 'Savora: Your AI Recipe Assistant',
+//   description: 'Discover, create, and master recipes with Savora, your intelligent AI-powered culinary companion.',
+// };
 
-export default function RootLayout({
+function ThemedLayout({ children }: { children: React.ReactNode }) {
+  const { diet } = useDiet();
+  const borderClass = diet === 'veg' ? 'border-green-500' : 'border-primary';
+
+  return (
+      <div className={cn("flex min-h-screen flex-col", borderClass)}>
+          <Header />
+          <main className="flex flex-grow flex-col">{children}</main>
+          <Footer />
+      </div>
+  )
+}
+
+function Root({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full" suppressHydrationWarning>
-      <head />
+     <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+          <title>Savora: Your AI Recipe Assistant</title>
+          <meta name="description" content="Discover, create, and master recipes with Savora, your intelligent AI-powered culinary companion." />
+      </head>
       <body
         className={cn(
-          'min-h-screen bg-background text-foreground font-body antialiased flex flex-col',
+          'min-h-screen bg-background text-foreground font-body antialiased',
           poppins.variable
         )}
       >
@@ -42,15 +62,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
             <DietProvider>
-              <div className="flex flex-col min-h-screen border-t-4 border-primary">
-                <Header />
-                <main className="flex-grow flex-1 flex flex-col">{children}</main>
-                <Footer />
-              </div>
+              <ThemedLayout>{children}</ThemedLayout>
               <Toaster />
             </DietProvider>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
+
+export default Root;
