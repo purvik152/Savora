@@ -20,6 +20,7 @@ import { WhatsInYourKitchen } from '@/components/home/WhatsInYourKitchen';
 import { SearchDialog } from '@/components/search/SearchDialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CookbookCta } from '@/components/home/CookbookCta';
 
 
 const allFeaturedRecipes = [
@@ -325,36 +326,43 @@ export default function Home() {
     </section>
     )}
 
-    {/* Search Section */}
-    <section
-      className="my-24 animate-fade-in-up"
-      style={{ animationDelay: '600ms' }}
-    >
-      <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
-        <div className="max-w-lg mx-auto flex flex-col items-center justify-center gap-6">
-          <div className="relative w-full z-10">
-            <button
-                onClick={() => setIsSearchOpen(true)}
-                className="w-full h-12 px-4 flex items-center text-left bg-background border border-input rounded-lg text-base text-muted-foreground hover:bg-accent"
-            >
-                <Search className="h-5 w-5 mr-3" />
-                I want to make...
-            </button>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-muted-foreground italic">or</span>
-            <Link href="/recipes">
-              <Button
-                size="lg"
-                className="h-12 px-6 font-bold uppercase tracking-wider"
-              >
-                + View All Recipes
-              </Button>
-            </Link>
-          </div>
+    {/* Search and Cookbook Section */}
+    <section className="my-24 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div
+            className="animate-fade-in-up"
+            style={{ animationDelay: '600ms' }}
+        >
+            <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl flex flex-col items-center justify-center min-h-[300px]">
+                <div className="w-full max-w-lg mx-auto flex flex-col items-center justify-center gap-6">
+                    <div className="relative w-full z-10">
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className="w-full h-12 px-4 flex items-center text-left bg-background border border-input rounded-lg text-base text-muted-foreground hover:bg-accent"
+                        >
+                            <Search className="h-5 w-5 mr-3" />
+                            I want to make...
+                        </button>
+                    </div>
+                    <div className="flex items-center justify-center gap-4">
+                        <span className="text-muted-foreground italic">or</span>
+                        <Link href="/recipes">
+                            <Button
+                                size="lg"
+                                className="h-12 px-6 font-bold uppercase tracking-wider"
+                            >
+                                + View All Recipes
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div className="animate-fade-in-up" style={{ animationDelay: '700ms' }}>
+            <CookbookCta />
+        </div>
     </section>
+
 
     {/* What's in your Kitchen Section */}
     <section 
