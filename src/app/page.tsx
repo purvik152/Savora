@@ -140,9 +140,9 @@ const testimonials = [
   },
   {
     quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
-    name: "David Chen",
+    name: "Om Barvaliya",
     title: "Tech Enthusiast & Foodie",
-    avatar: "https://placehold.co/128x128.png",
+    avatar: '/images/recipes/Om Barvaliya.jpg',
     avatarHint: "man portrait"
   },
   {
@@ -472,3 +472,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
