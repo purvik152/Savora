@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useDiet } from '@/contexts/DietContext';
+import { ScrollArea } from '../ui/scroll-area';
 
 
 interface SearchDialogProps {
@@ -141,7 +142,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 gap-0 w-full max-w-2xl h-auto max-h-[75vh] top-1/2 -translate-y-1/2 sm:top-16 sm:-translate-y-0 rounded-lg overflow-hidden">
+      <DialogContent className="p-0 gap-0 w-full max-w-2xl h-auto max-h-[75vh] top-1/2 -translate-y-1/2 sm:top-16 sm:-translate-y-0 rounded-lg overflow-hidden flex flex-col">
         <div className="flex items-center border-b pl-4 pr-2 sm:pr-4">
           <Search className="h-5 w-5 text-muted-foreground" />
           <Input
@@ -168,7 +169,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
             </Button>
           )}
         </div>
-        <div className="overflow-y-auto p-4">
+        <div className="overflow-y-auto p-4 flex-grow">
           {loading && (
             <div className="flex justify-center items-center py-8">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -176,34 +177,36 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           )}
 
           {!loading && results.length > 0 && (
-            <div>
+            <div className="flex flex-col h-full">
               <h3 className="text-sm font-semibold text-muted-foreground mb-4 px-2">
                 {query.trim().length > 1 ? 'Search Results' : `Popular ${diet === 'veg' ? 'Veg ' : ''}Recipes`}
               </h3>
-              <ul className="space-y-2">
-                {results.map((recipe) => (
-                  <li key={recipe.id}>
-                    <Link
-                      href={`/recipes/${recipe.slug}`}
-                      className="flex items-center gap-4 p-2 rounded-md hover:bg-accent"
-                      onClick={handleResultClick}
-                    >
-                      <Image
-                        src={recipe.image}
-                        alt={recipe.title}
-                        width={64}
-                        height={64}
-                        className="rounded-lg object-cover w-16 h-16"
-                        data-ai-hint={recipe.imageHint}
-                      />
-                      <div className="flex-grow">
-                        <p className="font-semibold">{recipe.title}</p>
-                        <p className="text-sm text-muted-foreground">{recipe.cuisine} - {recipe.category}</p>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <ScrollArea className="flex-grow">
+                <ul className="space-y-2 pr-4">
+                  {results.map((recipe) => (
+                    <li key={recipe.id}>
+                      <Link
+                        href={`/recipes/${recipe.slug}`}
+                        className="flex items-center gap-4 p-2 rounded-md hover:bg-accent"
+                        onClick={handleResultClick}
+                      >
+                        <Image
+                          src={recipe.image}
+                          alt={recipe.title}
+                          width={64}
+                          height={64}
+                          className="rounded-lg object-cover w-16 h-16"
+                          data-ai-hint={recipe.imageHint}
+                        />
+                        <div className="flex-grow">
+                          <p className="font-semibold">{recipe.title}</p>
+                          <p className="text-sm text-muted-foreground">{recipe.cuisine} - {recipe.category}</p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </ScrollArea>
             </div>
           )}
 
