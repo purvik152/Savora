@@ -46,15 +46,24 @@ function DietToggle() {
     const isVeg = diet === 'veg';
 
     return (
-        <div className="flex items-center space-x-2">
-            <span className={cn("font-semibold text-sm", !isVeg ? 'text-primary' : 'text-muted-foreground')}>Non-Veg</span>
-            <Switch
-                id="diet-mode"
-                checked={isVeg}
-                onCheckedChange={toggleDiet}
-                aria-label="Toggle dietary preference"
-            />
-            <span className={cn("font-semibold text-sm", isVeg ? 'text-primary' : 'text-muted-foreground')}>Veg</span>
+        <div 
+            onClick={toggleDiet}
+            className="flex items-center space-x-2 cursor-pointer p-1 rounded-full bg-secondary transition-colors"
+            role="button"
+            aria-label={`Switch to ${isVeg ? 'non-vegetarian' : 'vegetarian'} view`}
+        >
+            <div className={cn(
+                "px-3 py-1 text-sm font-semibold rounded-full transition-all duration-300 ease-in-out",
+                !isVeg ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'
+            )}>
+                Non-Veg
+            </div>
+            <div className={cn(
+                "px-3 py-1 text-sm font-semibold rounded-full transition-all duration-300 ease-in-out",
+                isVeg ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'
+            )}>
+                Veg
+            </div>
         </div>
     );
 }
