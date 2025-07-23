@@ -404,7 +404,7 @@ export default function Home() {
             {testimonials.map((testimonial, index) => (
                 <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                     <Avatar className="w-20 h-20 mb-4 border-4 border-background">
-                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.avatarHint} />
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.name.split(' ')[0].toLowerCase()} />
                         <AvatarFallback>{testimonial.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <CardContent className="p-0">
