@@ -1,12 +1,12 @@
 
 'use client';
 
-import { recipeAssistant, RecipeAssistantInput } from '@/ai/flows/recipe-assistant-flow';
+import { recipeAssistant } from '@/ai/flows/recipe-assistant-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { Loader2, Mic, Bot, Play, Pause, Power, Square, RotateCcw } from 'lucide-react';
+import { Loader2, Mic, Bot, Power, Play } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface VoiceAssistantProps {
@@ -26,176 +26,68 @@ const languageToCode: { [key: string]: string } = {
     bengali: 'bn-IN',
 };
 
-const AUTO_ADVANCE_DELAY = 7000; // 7 seconds
-
 export function VoiceAssistant({ recipeTitle, instructions, language, onStartCooking, onStepChange }: VoiceAssistantProps) {
   const { toast } = useToast();
   
-  const [hasMounted, setHasMounted] = useState(false);
-  
-  // Component State
-  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false); // When AI is thinking
-  const [isListening, setIsListening] = useState(false);  // When mic is on
-  const [isSpeaking, setIsSpeaking] = useState(false);  // When audio is playing
+  const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false); // When calling AI
   const [sessionActive, setSessionActive] = useState(false);
-  
-  // Conversation State
+  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  // Conversation state
   const [currentStep, setCurrentStep] = useState(0);
   const [transcript, setTranscript] = useState('');
   const [assistantResponse, setAssistantResponse] = useState('Press Start to begin your guided recipe.');
   
-  // Refs
   const recognitionRef = useRef<any>(null);
-  const finalTranscriptRef = useRef('');
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const sessionActiveRef = useRef(sessionActive);
-  const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    sessionActiveRef.current = sessionActive;
-  }, [sessionActive]);
-
-  useEffect(() => {
-    setHasMounted(true);
-    // Cleanup synthesis on component unmount
-    return () => {
-        window.speechSynthesis.cancel();
-        if (autoAdvanceTimeoutRef.current) {
-            clearTimeout(autoAdvanceTimeoutRef.current);
-        }
-    }
-  }, []);
-
-  const clearAutoAdvance = useCallback(() => {
-    if (autoAdvanceTimeoutRef.current) {
-        clearTimeout(autoAdvanceTimeoutRef.current);
-        autoAdvanceTimeoutRef.current = null;
-    }
-  }, []);
-
-  const stopAudio = useCallback(() => {
-    clearAutoAdvance();
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-  }, [clearAutoAdvance]);
-  
-  const startListening = useCallback(() => {
-    if (recognitionRef.current && !isListening) {
-      try {
-        stopAudio();
-        recognitionRef.current.start();
-      } catch (e) {
-        console.log("Recognition could not be started, likely already active.", e);
-      }
-    }
-  }, [stopAudio, isListening]);
-
-  // This is defined before handleUserQuery because it's a dependency.
-  const advanceToNextStep = useCallback(() => {
-      // Use a function that can be called by the timeout
-      if (sessionActiveRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        handleUserQuery("next");
-      }
-  }, []);
-
-  // --- Audio Controls using Web Speech API ---
-  const playAudio = useCallback((text: string, options: { isFinal?: boolean; isInstruction?: boolean } = {}) => {
-    const { isFinal = false, isInstruction = false } = options;
-    const langCode = languageToCode[language] || 'en-US';
-
-    if (!('speechSynthesis' in window)) {
-        console.error("Speech Synthesis not supported.");
-        setAssistantResponse("Sorry, your browser doesn't support voice output.");
-        return;
-    }
-    stopAudio(); // Stop any previous speech and clear timers
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langCode;
-    utterance.onstart = () => {
-        setIsSpeaking(true);
-        setIsProcessing(false);
-    };
-    utterance.onend = () => {
-        setIsSpeaking(false);
-        // A small delay before listening again can prevent the mic from picking up the end of the TTS audio
-        setTimeout(() => {
-            if (sessionActiveRef.current && !isFinal) {
-                startListening();
-            }
-        }, 100);
-
-        if (sessionActiveRef.current && !isFinal && isInstruction) {
-            // If it was an instruction, set a timer to auto-advance
-            autoAdvanceTimeoutRef.current = setTimeout(advanceToNextStep, AUTO_ADVANCE_DELAY);
-        }
-    };
-    utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
-        setIsSpeaking(false);
-        if (event.error !== 'canceled' && event.error !== 'interrupted') {
-            console.error("SpeechSynthesis Error", event);
-            toast({
-                variant: "destructive",
-                title: "Voice Error",
-                description: `Could not play audio. Error: ${event.error}`,
-            });
-        }
-    };
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, [toast, startListening, language, stopAudio, advanceToNextStep]);
-  
-  // --- Core AI Interaction ---
   const handleUserQuery = useCallback(async (query: string) => {
     if (!query.trim() || isProcessing) return;
     
     setIsProcessing(true);
-    setAssistantResponse('Thinking...');
-    stopAudio();
-
-    // First, check for simple, local commands to avoid unnecessary API calls
-    const lowerQuery = query.toLowerCase();
-    if (lowerQuery.includes('pause')) {
-        setAssistantResponse("Paused. Say 'resume' when you're ready.");
-        setIsProcessing(false);
-        return;
-    }
-    if (lowerQuery.includes('resume')) {
-        playAudio(instructions[currentStep], { isInstruction: true });
-        return;
-    }
-
+    
     try {
       const langCode = languageToCode[language] || 'en-US';
-      const assistantInput: RecipeAssistantInput = {
+      const assistantResult = await recipeAssistant({
         recipeTitle,
         instructions,
         currentStep,
         currentInstruction: instructions[currentStep] || "You are at the start.",
         userQuery: query,
         language: langCode,
-      };
-
-      const assistantResult = await recipeAssistant(assistantInput);
-      const isFinal = assistantResult.nextStep === -1;
+      });
+      
       const responseText = assistantResult.responseText;
+      const nextStep = assistantResult.nextStep;
       
       setAssistantResponse(responseText);
       
-      if (isFinal) {
+      if (nextStep === -1) {
         setSessionActive(false);
         setCurrentStep(0);
         onStepChange?.(null);
       } else {
-        setCurrentStep(assistantResult.nextStep);
-        onStepChange?.(assistantResult.nextStep);
+        setCurrentStep(nextStep);
+        onStepChange?.(nextStep);
       }
       
-      const isInstructionResponse = instructions.includes(responseText);
-      playAudio(responseText, { isFinal, isInstruction: isInstructionResponse });
-
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(responseText);
+        utterance.lang = langCode;
+        utterance.onend = () => {
+            // After speaking, if the session is still active, listen again.
+            if (nextStep !== -1 && recognitionRef.current) {
+                try {
+                    recognitionRef.current.start();
+                } catch(e) {
+                    console.error("Could not start recognition", e);
+                }
+            }
+        };
+        window.speechSynthesis.speak(utterance);
+      }
+      
     } catch (error) {
       console.error("Error processing voice command:", error);
       toast({
@@ -203,45 +95,39 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         title: "Assistant Error",
         description: "Sorry, I couldn't process that. Please try again."
       });
-      setAssistantResponse('An error occurred. Please try again.');
+    } finally {
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, isProcessing, recipeTitle, toast, stopAudio, playAudio, language, onStepChange]);
+  }, [currentStep, instructions, isProcessing, recipeTitle, toast, language, onStepChange]);
 
-  // --- Speech Recognition Setup & Handlers ---
   useEffect(() => {
-    if (!hasMounted) return;
-
+    setHasMounted(true);
+    
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setIsBrowserSupported(false);
       return;
     }
-    
+
     const recognition = new SpeechRecognition();
-    recognition.continuous = false;
+    recognition.continuous = false; // Listen for a single command
     recognition.interimResults = true;
     recognition.lang = languageToCode[language] || 'en-US';
     
     recognition.onstart = () => {
-      clearAutoAdvance();
-      finalTranscriptRef.current = '';
-      setTranscript('');
       setIsListening(true);
-    }
-    
+      setTranscript('');
+    };
+
     recognition.onend = () => {
       setIsListening(false);
-      // Ensure we only process a command if the session is active and we're not already processing something.
-      if (finalTranscriptRef.current && sessionActiveRef.current && !isProcessing) {
-        handleUserQuery(finalTranscriptRef.current);
-      }
     };
 
     recognition.onresult = (event: any) => {
-      let interimTranscript = '';
       let finalTranscript = '';
+      let interimTranscript = '';
+
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           finalTranscript += event.results[i][0].transcript;
@@ -250,68 +136,31 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         }
       }
       setTranscript(interimTranscript);
-      if (finalTranscript) {
-          finalTranscriptRef.current = finalTranscript;
+      if(finalTranscript) {
+        handleUserQuery(finalTranscript);
       }
     };
     
-    recognition.onerror = (event: any) => {
-      console.error('Speech recognition error', event.error);
-      setIsListening(false);
-      if (!['no-speech', 'aborted', 'not-allowed'].includes(event.error)) {
-        toast({
-          variant: 'destructive',
-          title: 'Voice Error',
-          description: `Could not understand audio. Error: ${event.error}`,
-        });
-      }
-    };
-
     recognitionRef.current = recognition;
-    
-    return () => {
-      if(recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-    }
-  }, [hasMounted, handleUserQuery, toast, language, clearAutoAdvance, isProcessing]);
-  
-  // --- User Actions ---
+
+  }, [language, handleUserQuery]);
+
   const startSession = () => {
-    onStartCooking?.();
+    if (onStartCooking) onStartCooking();
     setSessionActive(true);
     handleUserQuery("start cooking");
   };
-  
-  const endSession = useCallback(() => {
-    stopAudio();
-    if(recognitionRef.current && isListening) recognitionRef.current.abort();
+
+  const endSession = () => {
     setSessionActive(false);
     setIsListening(false);
-    setIsProcessing(false);
+    if(recognitionRef.current) recognitionRef.current.stop();
+    window.speechSynthesis.cancel();
     setCurrentStep(0);
     setAssistantResponse('Press Start to begin your guided recipe.');
     onStepChange?.(null);
-  }, [stopAudio, isListening, onStepChange]);
-  
-  const handleMicClick = () => {
-    clearAutoAdvance();
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      startListening();
-    }
   };
-
-  const handleRepeatClick = () => {
-    if (sessionActive) {
-        handleUserQuery('repeat');
-    }
-  }
-
-  // --- UI ---
-
-  // Loading state for server-render and initial client render
+  
   if (!hasMounted) {
     return (
         <Card className="bg-secondary/30">
@@ -341,14 +190,6 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     );
   }
 
-  const getStatusText = () => {
-    if (isProcessing) return 'Thinking...';
-    if (isListening) return 'Listening...';
-    if (isSpeaking) return 'Speaking...';
-    if (sessionActive) return 'Ready for your command.';
-    return 'Ready to start.';
-  };
-
   return (
     <Card className="bg-secondary/30">
       <CardHeader>
@@ -356,10 +197,16 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
       </CardHeader>
       <CardContent className="space-y-6 text-center">
         <div className="p-4 bg-background/50 rounded-lg min-h-[120px] flex flex-col justify-center items-center">
-          <p className="text-sm text-muted-foreground mb-1">{getStatusText()}</p>
-          <p className="font-medium text-lg text-foreground italic">
-            {isListening ? transcript : assistantResponse}
-          </p>
+            {isListening ? (
+                <p className="font-semibold text-lg text-primary italic">"{transcript || "Listening..."}"</p>
+            ) : isProcessing ? (
+                <div className="flex items-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin"/>
+                    <p className="font-semibold">Savora is thinking...</p>
+                </div>
+            ) : (
+                <p className="font-medium text-lg text-foreground italic">"{assistantResponse}"</p>
+            )}
         </div>
 
         {!sessionActive ? (
@@ -369,19 +216,19 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
             </Button>
         ) : (
             <div className="flex flex-col items-center gap-4">
+                <p className="text-sm text-muted-foreground">
+                    {isListening ? "Listening for your command..." : "Tap the microphone to speak"}
+                </p>
                 <div className="flex items-center justify-center gap-4">
-                     <Button onClick={handleRepeatClick} size="icon" variant="outline" className="rounded-full h-16 w-16" title="Repeat" disabled={isProcessing || isSpeaking || isListening}>
-                        <RotateCcw className="h-6 w-6" />
+                    <Button onClick={() => recognitionRef.current?.start()} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 animate-pulse")} disabled={isProcessing}>
+                        <Mic className="h-8 w-8" />
                     </Button>
-                    <Button onClick={handleMicClick} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 scale-110")} disabled={isProcessing || isSpeaking}>
-                        {isProcessing ? <Loader2 className="h-8 w-8 animate-spin" /> : (isListening ? <Square className="h-8 w-8" /> :<Mic className="h-8 w-8" />)}
-                    </Button>
-                    <Button onClick={endSession} size="icon" variant="destructive" className="rounded-full h-16 w-16" title="End Session"><Power className="h-6 w-6"/></Button>
+                    <Button onClick={endSession} size="icon" variant="destructive" className="rounded-full h-16 w-16"><Power className="h-6 w-6"/></Button>
                 </div>
 
                 {instructions[currentStep] && (
                     <div className="mt-2">
-                        <p className="font-bold">Current Step: {currentStep + 1} / {instructions.length}</p>
+                        <p className="font-bold">Step: {currentStep + 1} / {instructions.length}</p>
                         <p className="text-muted-foreground text-sm px-4">{instructions[currentStep]}</p>
                     </div>
                 )}
