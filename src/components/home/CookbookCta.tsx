@@ -9,7 +9,7 @@ export function CookbookCta() {
         <Card className="relative overflow-hidden h-full min-h-[300px] shadow-xl transition-all duration-300 ease-in-out group-hover:shadow-2xl group-hover:scale-105">
             <div className="relative w-full h-full">
                 <Image 
-                    src="/images/recipes/meal-planning.jpg"
+                    src="/images/recipes/recipe-bookk.jpg"
                     alt="Top 25 Recipes Cookbook"
                     fill
                     className="object-cover"
