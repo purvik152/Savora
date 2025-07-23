@@ -53,7 +53,7 @@ export default function MealPlannerPage() {
         </TabsContent>
 
         <TabsContent value="planner" className="mt-8">
-            <div className="flex flex-col items-center gap-12">
+            <div className="flex flex-col items-center gap-8">
               <div className="w-full max-w-lg animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                   <DietPlanForm onPlanGenerated={setWeeklyPlan} setLoading={setIsPlanLoading}/>
               </div>
