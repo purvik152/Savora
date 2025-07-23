@@ -10,11 +10,11 @@ export function CookbookCta() {
             <div className="relative w-full h-full">
                 <div className="absolute inset-0">
                     <Image 
-                        src="/images/recipes/recipe-bookk.jpg"
+                        src="https://placehold.co/600x400.png"
                         alt="Top 25 Recipes Cookbook"
                         fill
                         className="object-cover"
-                        data-ai-hint="meal prep containers"
+                        data-ai-hint="cookbook recipe book"
                         sizes="(max-width: 768px) 100vw, 50vw"
                     />
                 </div>
