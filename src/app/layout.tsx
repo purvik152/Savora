@@ -8,7 +8,6 @@ import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
-import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 import { DietProvider } from '@/contexts/DietContext';
 
 const poppins = Poppins({
@@ -43,8 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
             <DietProvider>
-              <div className="relative flex flex-col min-h-screen border-t-4 border-primary">
-                <FloatingDoodles />
+              <div className="flex flex-col min-h-screen border-t-4 border-primary">
                 <Header />
                 <main className="flex-grow flex-1 flex flex-col">{children}</main>
                 <Footer />
