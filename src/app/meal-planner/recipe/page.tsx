@@ -1,34 +1,24 @@
 
 'use client';
 
-import { notFound, useRouter, useSearchParams } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users, Flame, Check } from "lucide-react";
+import { Clock, Flame, Check, HeartPulse, Utensils, Zap } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
+import type { SingleRecipe } from '@/ai/flows/generate-recipe-by-goal-types';
 
-// This is a simplified interface for display purposes.
-// The full data would be passed from the meal planner.
-interface MealDetails {
-  title: string;
-  image: string;
-  prepTime: string;
-  calories: string;
-  ingredients: string[];
-  instructions: string[];
-}
-
-function MealDetailsView({ meal }: { meal: MealDetails }) {
+function MealDetailsView({ meal }: { meal: SingleRecipe }) {
   return (
     <div>
       <div className="container mx-auto px-4 py-8 md:py-16">
         <Card className="overflow-hidden shadow-2xl">
           <CardHeader className="p-0 relative h-64 md:h-96">
             <Image
-              src={meal.image || "https://placehold.co/600x400.png"}
-              alt={meal.title}
+              src={"https://placehold.co/600x400.png"}
+              alt={meal.recipeName}
               fill
               className="object-cover"
               sizes="100vw"
@@ -37,27 +27,32 @@ function MealDetailsView({ meal }: { meal: MealDetails }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
-              <Badge variant="secondary" className="mb-2">AI Generated Meal</Badge>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{meal.title}</h1>
+              <Badge variant="secondary" className="mb-2">AI Generated Recipe</Badge>
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">{meal.recipeName}</h1>
             </div>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
             <div className="max-w-4xl mx-auto">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8 text-center">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
                   <div className="p-4 bg-secondary/50 rounded-lg">
-                      <Clock className="h-8 w-8 text-primary mb-2 mx-auto" />
-                      <span className="font-bold">Prep Time</span>
-                      <span className="text-muted-foreground block">{meal.prepTime}</span>
+                      <HeartPulse className="h-8 w-8 text-primary mb-2 mx-auto" />
+                      <span className="font-bold">Calories</span>
+                      <span className="text-muted-foreground block">{meal.nutrition.calories}</span>
                   </div>
                    <div className="p-4 bg-secondary/50 rounded-lg">
                       <Flame className="h-8 w-8 text-primary mb-2 mx-auto" />
-                      <span className="font-bold">Calories</span>
-                      <span className="text-muted-foreground block">{meal.calories}</span>
+                      <span className="font-bold">Protein</span>
+                      <span className="text-muted-foreground block">{meal.nutrition.protein}</span>
                    </div>
                     <div className="p-4 bg-secondary/50 rounded-lg">
-                        <Users className="h-8 w-8 text-primary mb-2 mx-auto" />
-                        <span className="font-bold">Servings</span>
-                        <span className="text-muted-foreground block">1 person</span>
+                        <Utensils className="h-8 w-8 text-primary mb-2 mx-auto" />
+                        <span className="font-bold">Carbs</span>
+                        <span className="text-muted-foreground block">{meal.nutrition.carbs}</span>
+                    </div>
+                     <div className="p-4 bg-secondary/50 rounded-lg">
+                        <Zap className="h-8 w-8 text-primary mb-2 mx-auto" />
+                        <span className="font-bold">Fat</span>
+                        <span className="text-muted-foreground block">{meal.nutrition.fat}</span>
                     </div>
                 </div>
 
@@ -95,14 +90,13 @@ function MealDetailsView({ meal }: { meal: MealDetails }) {
 
 
 export default function MealPlannerRecipePage() {
-  const [meal, setMeal] = useState<MealDetails | null>(null);
+  const [meal, setMeal] = useState<SingleRecipe | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     // This code runs only on the client
-    const mealJson = sessionStorage.getItem('mealDetails');
+    const mealJson = sessionStorage.getItem('generatedRecipe');
 
     if (mealJson) {
       setMeal(JSON.parse(mealJson));
@@ -111,7 +105,7 @@ export default function MealPlannerRecipePage() {
       router.push('/meal-planner');
     }
     setLoading(false);
-  }, [router, searchParams]);
+  }, [router]);
 
   if (loading) {
     return <Skeleton className="h-screen w-full" />;
