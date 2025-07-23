@@ -75,6 +75,7 @@
     @apply text-3xl font-extrabold tracking-tight;
   }
   .cuisine-title-gradient {
+    @apply bg-gradient-to-r from-primary via-green-500 to-teal-400;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

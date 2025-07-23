@@ -58,7 +58,7 @@ export function WhatsInYourKitchen() {
 
   return (
     <div className="text-center">
-      <h2 className="text-3xl font-bold">What&apos;s In Your Kitchen?</h2>
+      <h2 className="text-3xl font-bold cuisine-title-gradient">What&apos;s In Your Kitchen?</h2>
       <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">
         Tell us what ingredients you have, and we&apos;ll suggest what you can make.
       </p>
