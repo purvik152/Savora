@@ -457,7 +457,7 @@ export default function Home() {
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
         <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
-          <div className="relative w-full">
+          <div className="relative w-full z-10">
             <form onSubmit={handleSearchSubmit}>
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10" />
               <Input
