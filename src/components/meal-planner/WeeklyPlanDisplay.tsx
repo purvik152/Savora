@@ -148,8 +148,8 @@ export function WeeklyPlanDisplay({ plan, loading }: WeeklyPlanDisplayProps) {
                   return meal ? (
                      <MealCard key={`${day}-${mealSlot}`} meal={meal} day={day} slot={mealSlot} />
                   ) : (
-                    <div key={`${day}-${mealSlot}`} className="h-32 border-dashed border-2 rounded-lg flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">{mealSlot}</span>
+                    <div key={`${day}-${mealSlot}`} className="h-full min-h-[144px] border-dashed border-2 rounded-lg flex items-center justify-center p-2">
+                        <span className="text-xs text-muted-foreground text-center">{mealSlot}</span>
                     </div>
                   )
                 })}
