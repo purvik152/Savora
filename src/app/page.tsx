@@ -25,7 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const allFeaturedRecipes = [
   {
     name: 'Plan Your Week with AI',
-    image: '/images/recipes/meal-planning.jpg',
+    image: '/images/features/meal-planning.jpg',
     hint: 'meal prep containers',
     description: 'Let our intelligent AI create a personalized weekly meal plan based on your diet, goals, and allergies.',
     href: '/meal-planner',
@@ -33,7 +33,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Cook with a Voice Assistant',
-    image: '/images/recipes/voice-assistant.jpg',
+    image: '/images/features/voice-assistant.jpg',
     hint: 'kitchen cooking voice',
     description: 'Navigate recipes hands-free. Just tell Savora to start, stop, or go to the next step.',
     href: '/recipes/creamy-tomato-pasta',
@@ -41,7 +41,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Discover Recipes by Mood',
-    image: '/images/recipes/mood-kitchen.jpg',
+    image: '/images/features/mood-kitchen.jpg',
     hint: 'comfort food cozy',
     description: 'Feeling cozy, energetic, or stressed? Our Mood Kitchen suggests the perfect dish for how you feel.',
     href: '/mood-kitchen',
@@ -49,7 +49,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Join the Community Kitchen',
-    image: '/images/recipes/community-kitchen.jpg',
+    image: '/images/features/community-kitchen.jpg',
     hint: 'community cooking class',
     description: 'Share your own creations and discover new favorites from home cooks just like you.',
     href: '/community',
@@ -57,7 +57,7 @@ const allFeaturedRecipes = [
   },
   {
     name: 'Take the Chef\'s Challenge',
-    image: '/images/recipes/chef-challenge.jpg',
+    image: '/images/features/chef-challenge.jpg',
     hint: 'mystery box ingredients',
     description: 'Challenge our AI chef to invent a brand new recipe from a random set of ingredients.',
     href: '/chef-challenge',
@@ -117,23 +117,23 @@ const nonVegMainCategories = [
 const testimonials = [
   {
     quote: "Savora has completely transformed how I approach weeknight dinners. The AI suggestions are genius and have gotten me out of my cooking rut!",
-    name: "Purvik Anghan",
-    title: "Student & Foodie",
-    avatar: "/images/recipes/purvik.jpg",
+    name: "Jessica L.",
+    title: "Home Cook & Foodie",
+    avatar: "/images/avatars/jessica-l.jpg",
     avatarHint: "woman portrait"
   },
   {
     quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
-    name: "Chirag Khambhala",
-    title: "Tech Enthusiast & Foodie",
-    avatar: '/images/recipes/chirag.jpg',
+    name: "Michael B.",
+    title: "Tech Enthusiast",
+    avatar: '/images/avatars/michael-b.jpg',
     avatarHint: "man portrait"
   },
   {
     quote: "As a vegetarian, I love how easy it is to switch to a 'veg' view and discover new, exciting recipes. The Mood Kitchen is such a fun and unique feature!",
-    name: "Dhruvin Mangukiya",
+    name: "Samantha K.",
     title: "Food Blogger",
-    avatar: "/images/recipes/dhruvin.jpg",
+    avatar: "/images/avatars/samantha-k.jpg",
     avatarHint: "woman smiling"
   }
 ];
@@ -402,7 +402,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-                <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50">
+                <Card key={index} className="flex flex-col items-center text-center p-8 bg-secondary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                     <Avatar className="w-20 h-20 mb-4 border-4 border-background">
                         <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.avatarHint} />
                         <AvatarFallback>{testimonial.name.substring(0, 2).toUpperCase()}</AvatarFallback>
