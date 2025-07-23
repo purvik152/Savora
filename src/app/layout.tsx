@@ -11,6 +11,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { DietProvider } from '@/contexts/DietContext';
 import { useDiet } from '@/contexts/DietContext';
+import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,7 +33,12 @@ function ThemedLayout({ children }: { children: React.ReactNode }) {
   return (
       <div className={cn("flex min-h-screen flex-col", borderClass)}>
           <Header />
-          <main className="flex flex-grow flex-col">{children}</main>
+          <main className="flex-grow flex flex-col relative">
+            <FloatingDoodles />
+            <div className="flex-grow flex flex-col">
+              {children}
+            </div>
+          </main>
           <Footer />
       </div>
   )
