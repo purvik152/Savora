@@ -24,60 +24,44 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const allFeaturedRecipes = [
   {
-    name: 'Paella Valenciana',
-    image: '/images/recipes/paella-valenciana.jpg',
-    hint: 'paella pan',
-    description: 'The authentic Spanish paella with chicken and rabbit, cooked to create the perfect "socarrat".',
-    href: '/recipes/paella-valenciana',
-    diet: 'non-veg'
-  },
-  {
-    name: 'Mushroom & Spinach Quesadillas',
-    image: '/images/recipes/mushroom-and-spinach-quesadillas.jpg',
-    hint: 'quesadillas lunch',
-    description: 'Cheesy, savory quesadillas filled with sautéed mushrooms, garlic, and spinach. A perfect quick meal.',
-    href: '/recipes/mushroom-spinach-quesadillas',
-    diet: 'veg'
-  },
-  {
-    name: 'Authentic Pad Thai',
-    image: '/images/recipes/pad-thai-recipe.jpg',
-    hint: 'pad thai noodles',
-    description: 'A classic Thai noodle stir-fry with a perfect balance of sweet, sour, and savory flavors.',
-    href: '/recipes/pad-thai-recipe',
-    diet: 'non-veg'
-  },
-  {
-    name: 'Vibrant Quinoa Salad',
-    image: '/images/recipes/vibrant-quinoa-salad.jpg',
-    hint: 'quinoa salad',
-    description: 'A colorful and nutrient-packed quinoa salad with a zesty lemon vinaigrette.',
-    href: '/recipes/vibrant-quinoa-salad',
-    diet: 'veg'
-  },
-  {
-    name: 'Lamb Rogan Josh',
-    image: '/images/recipes/lamb-rogan-josh.jpg',
-    hint: 'lamb curry',
-    description: 'A fragrant and robust lamb curry from Kashmir with a brilliant red color and aromatic spices.',
-    href: '/recipes/lamb-rogan-josh',
-    diet: 'non-veg'
-  },
-  {
-    name: 'Hearty Lentil Shepherd\'s Pie',
-    image: '/images/recipes/lentil-shepherds-pie.jpg',
-    hint: 'shepherds pie',
-    description: 'A comforting and savory vegetarian shepherd\'s pie with a rich lentil filling.',
-    href: '/recipes/lentil-shepherds-pie',
-    diet: 'veg'
-  },
-  {
-    name: 'Plan Your Week with Savora',
-    image: '/images/recipes/meal-planner.jpg',
-    hint: 'meal prep bowls',
-    description: 'Easily organize your weekly meals, track nutrition, and stay on top of your health goals.',
+    name: 'Plan Your Week with AI',
+    image: 'https://placehold.co/1200x550.png',
+    hint: 'meal prep containers',
+    description: 'Let our intelligent AI create a personalized weekly meal plan based on your diet, goals, and allergies.',
     href: '/meal-planner',
-    diet: 'all',
+    diet: 'all'
+  },
+  {
+    name: 'Cook with a Voice Assistant',
+    image: 'https://placehold.co/1200x550.png',
+    hint: 'kitchen cooking voice',
+    description: 'Navigate recipes hands-free. Just tell Savora to start, stop, or go to the next step.',
+    href: '/recipes/creamy-tomato-pasta',
+    diet: 'all'
+  },
+  {
+    name: 'Discover Recipes by Mood',
+    image: 'https://placehold.co/1200x550.png',
+    hint: 'comfort food cozy',
+    description: 'Feeling cozy, energetic, or stressed? Our Mood Kitchen suggests the perfect dish for how you feel.',
+    href: '/mood-kitchen',
+    diet: 'all'
+  },
+  {
+    name: 'Join the Community Kitchen',
+    image: 'https://placehold.co/1200x550.png',
+    hint: 'community cooking class',
+    description: 'Share your own creations and discover new favorites from home cooks just like you.',
+    href: '/community',
+    diet: 'all'
+  },
+  {
+    name: 'Take the Chef\'s Challenge',
+    image: 'https://placehold.co/1200x550.png',
+    hint: 'mystery box ingredients',
+    description: 'Challenge our AI chef to invent a brand new recipe from a random set of ingredients.',
+    href: '/chef-challenge',
+    diet: 'all'
   },
 ];
 
@@ -142,7 +126,7 @@ const testimonials = [
     quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
     name: "Om Barvaliya",
     title: "Tech Enthusiast & Foodie",
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: '/images/recipes/Om Barvaliya.jpg',
     avatarHint: "man portrait"
   },
   {
