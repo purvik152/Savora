@@ -58,12 +58,12 @@ export function WhatsInYourKitchen() {
 
   return (
     <div className="text-center">
-      <h2 className="text-3xl font-bold cuisine-title-gradient">What&apos;s In Your Kitchen?</h2>
+      <h2 className="text-3xl font-bold text-accent">What&apos;s In Your Kitchen?</h2>
       <p className="max-w-2xl mx-auto mt-2 text-muted-foreground">
         Tell us what ingredients you have, and we&apos;ll suggest what you can make.
       </p>
 
-      <Card className="max-w-2xl mx-auto mt-8 p-6 shadow-xl">
+      <Card className="max-w-lg mx-auto mt-8 p-6 shadow-xl">
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4">
           <Input
             type="text"

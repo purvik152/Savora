@@ -331,7 +331,7 @@ export default function Home() {
       style={{ animationDelay: '600ms' }}
     >
       <div className="bg-card border rounded-lg p-8 md:p-12 shadow-xl">
-        <div className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6">
+        <div className="max-w-lg mx-auto flex flex-col items-center justify-center gap-6">
           <div className="relative w-full z-10">
             <button
                 onClick={() => setIsSearchOpen(true)}
@@ -367,9 +367,7 @@ export default function Home() {
     {/* Community Section */}
     <section className="my-24 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
       <div className="text-center mb-12">
-        <div className="inline-block px-8 py-4 rounded-lg bg-gradient-to-r from-primary via-green-500 to-teal-400">
-          <h2 className="text-3xl font-bold text-white">From Our Community Kitchen</h2>
-        </div>
+        <h2 className="text-3xl font-bold text-accent">From Our Community Kitchen</h2>
         <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">Top-rated recipes submitted by home cooks like you.</p>
       </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -397,9 +395,7 @@ export default function Home() {
     {/* Testimonials Section */}
     <section className="my-24 animate-fade-in-up" style={{ animationDelay: '900ms' }}>
       <div className="text-center mb-12">
-          <div className="inline-block px-8 py-4 rounded-lg bg-gradient-to-r from-primary via-green-500 to-teal-400">
-            <h2 className="text-3xl font-bold text-white">What Our Users Say</h2>
-          </div>
+          <h2 className="text-3xl font-bold text-accent">What Our Users Say</h2>
           <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
               Hear from home cooks who have found joy and inspiration with Savora.
           </p>
