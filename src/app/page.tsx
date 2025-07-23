@@ -142,7 +142,7 @@ const testimonials = [
     quote: "The voice assistant is a game-changer. I can cook without constantly washing my hands to check my phone. It feels like I have a sous-chef in my kitchen.",
     name: "Om Barvaliya",
     title: "Tech Enthusiast & Foodie",
-    avatar: 'file:///C:/Users/dell/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/TempState/4EB0194DDF4D6C7A72DCA4FD3149E92E/WhatsApp%20Image%202025-07-23%20at%2011.06.11_5dd508c8.jpg',
+    avatar: 'https://placehold.co/128x128.png',
     avatarHint: "man portrait"
   },
   {
@@ -203,9 +203,6 @@ export default function Home() {
     }
     return nonVegMainCategories;
   }, [diet]);
-
-  const subCategoriesFirstRow = subCategories.slice(0, Math.ceil(subCategories.length / 2));
-  const subCategoriesSecondRow = subCategories.slice(Math.ceil(subCategories.length / 2));
 
   const topCommunityRecipes = useMemo(() => {
     const filtered = diet === 'veg' 
@@ -275,9 +272,8 @@ export default function Home() {
         style={{ animationDelay: '200ms' }}
       >
         {hasMounted ? (
-          <div className="flex flex-col items-center gap-y-12">
             <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesFirstRow.map((category, i) => (
+              {subCategories.map((category, i) => (
                 <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36 animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
                   <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
                     <Image
@@ -295,44 +291,14 @@ export default function Home() {
                 </Link>
               ))}
             </div>
-            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesSecondRow.map((category, i) => (
-                <Link key={category.name} href={category.href} className="group flex flex-col items-center gap-3 text-center w-36 animate-fade-in-up" style={{ animationDelay: `${(i + subCategoriesFirstRow.length) * 100}ms` }}>
-                  <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      fill
-                      className="object-cover"
-                      sizes="144px"
-                      data-ai-hint={category.hint}
-                    />
-                  </div>
-                  <span className="font-body text-sm font-bold uppercase tracking-wider text-foreground">
-                    {category.name}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
         ) : (
-          <div className="flex flex-col items-center gap-y-12">
-            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesFirstRow.map((category) => (
+          <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
+              {subCategories.map((category) => (
                 <div key={category.name} className="flex flex-col items-center gap-3 text-center w-36">
                   <Skeleton className="h-36 w-36 rounded-full" />
                   <Skeleton className="h-4 w-24 rounded-md" />
                 </div>
               ))}
-            </div>
-            <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-12 md:gap-x-12 lg:gap-x-16">
-              {subCategoriesSecondRow.map((category) => (
-                <div key={category.name} className="flex flex-col items-center gap-3 text-center w-36">
-                  <Skeleton className="h-36 w-36 rounded-full" />
-                  <Skeleton className="h-4 w-24 rounded-md" />
-                </div>
-              ))}
-            </div>
           </div>
         )}
       </section>
@@ -472,5 +438,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
