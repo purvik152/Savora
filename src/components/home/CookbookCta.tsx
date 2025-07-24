@@ -17,9 +17,9 @@ export function CookbookCta() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/40">
                 <h2 className="text-5xl font-extrabold text-white uppercase drop-shadow-md">
-                    Top 25 Recipes
+                    
                 </h2>
-                <p className="text-2xl font-semibold text-white/90 uppercase tracking-widest drop-shadow-sm mt-2">Cookbook</p>
+                <p className="text-2xl font-semibold text-white/90 uppercase tracking-widest drop-shadow-sm mt-2"></p>
             </div>
         </Card>
     </Link>
