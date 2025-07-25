@@ -33,7 +33,7 @@ export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
 // This is not a tool for an LLM to decide to use, but a direct function call.
 async function getNewsFromAPI(): Promise<NewsArticle[]> {
   const apiKey = process.env.NEWS_API_KEY;
-  if (!apiKey || apiKey === 'YOUR_NEWS_API_KEY_HERE') {
+  if (!apiKey || apiKey === 'd6a06e6c27a7411fbc3deb4c1d5356d9') {
     throw new Error("NewsAPI key not found. Please sign up for a free key at NewsAPI.org and add it to your .env file.");
   }
   
@@ -63,7 +63,7 @@ async function getNewsFromAPI(): Promise<NewsArticle[]> {
 const latestFoodNewsFlow = ai.defineFlow(
   {
     name: 'latestFoodNewsFlow',
-    inputSchema: z.undefined(),
+    inputSchema: z.void(),
     outputSchema: LatestFoodNewsOutputSchema,
   },
   async () => {
