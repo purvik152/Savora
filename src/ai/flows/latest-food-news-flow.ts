@@ -33,14 +33,13 @@ export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
 // This is not a tool for an LLM to decide to use, but a direct function call.
 async function getNewsFromAPI(): Promise<NewsArticle[]> {
   const apiKey = process.env.NEWS_API_KEY;
-  if (!apiKey || apiKey === 'd6a06e6c27a7411fbc3deb4c1d5356d9') {
+  if (!apiKey || apiKey === 'YOUR_NEWS_API_KEY_HERE') {
     throw new Error("NewsAPI key not found. Please sign up for a free key at NewsAPI.org and add it to your .env file.");
   }
   
-  // Query for general food, nutrition, health topics using the /everything endpoint,
-  // which is more flexible on the free plan.
-  const query = encodeURIComponent('food OR health OR nutrition');
-  const url = `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`;
+  // The /everything endpoint is restricted on the developer plan.
+  // We will use the /top-headlines endpoint with a category, which is available.
+  const url = `https://newsapi.org/v2/top-headlines?country=us&category=health&pageSize=10&apiKey=${apiKey}`;
 
   const response = await fetch(url);
   if (!response.ok) {
