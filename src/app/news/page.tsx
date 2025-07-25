@@ -26,7 +26,7 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
            />
         </div>
         <CardContent className="p-4">
-          <p className="text-sm font-semibold text-muted-foreground">{article.source}</p>
+          <p className="text-sm font-semibold text-muted-foreground">{article.source.name}</p>
           <h3 className="font-bold line-clamp-2 mt-1">{article.title}</h3>
           <div className="text-xs text-primary mt-2 flex items-center gap-1">
             Read full article <ExternalLink className="h-3 w-3"/>
@@ -59,8 +59,8 @@ export default function NewsPage() {
         });
         // Set mock data on error so the page doesn't look broken
         setLatestNews([
-          { title: `Could not fetch news.`, url: '#', source: 'Error', imageUrl: 'https://placehold.co/600x400.png' },
-          { title: `Please ensure your NewsAPI key is set in the .env file.`, url: '#', source: 'Error', imageUrl: 'https://placehold.co/600x400.png' },
+          { title: `Could not fetch news.`, url: '#', source: { name: 'Error' }, imageUrl: 'https://placehold.co/600x400.png' },
+          { title: `Please ensure your NewsAPI key is set in the .env file.`, url: '#', source: { name: 'Error' }, imageUrl: 'https://placehold.co/600x400.png' },
         ]);
       } finally {
         setLoading(false);

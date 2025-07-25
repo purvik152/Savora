@@ -14,7 +14,7 @@ import {z} from 'genkit';
 const NewsArticleSchema = z.object({
   title: z.string().describe('The headline of the news article.'),
   url: z.string().url().describe('The direct URL to the full news article.'),
-  source: z.string().describe('The name of the news source.'),
+  source: z.object({ name: z.string() }).describe('The news source, containing its name.'),
   imageUrl: z.string().url().optional().describe('The URL for a relevant image.'),
 });
 export type NewsArticle = z.infer<typeof NewsArticleSchema>;
@@ -53,7 +53,7 @@ async function getNewsFromAPI(): Promise<NewsArticle[]> {
   return data.articles.map((article: any) => ({
     title: article.title || 'No title provided',
     url: article.url,
-    source: article.source?.name || 'Unknown Source',
+    source: { name: article.source?.name || 'Unknown Source' },
     imageUrl: article.urlToImage || 'https://placehold.co/600x400.png',
   }));
 }
