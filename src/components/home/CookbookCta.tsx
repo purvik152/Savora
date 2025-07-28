@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 
 export function CookbookCta() {
   return (
-    <Link href="/cookbook" className="block h-full group">
+    <Link href="/recipes" className="block h-full group">
         <Card className="overflow-hidden h-full min-h-[300px] shadow-xl transition-all duration-300 ease-in-out group-hover:shadow-2xl group-hover:scale-105 relative">
             <Image 
                 src="/images/recipes/recipe-bookk.jpg"
@@ -15,11 +15,13 @@ export function CookbookCta() {
                 data-ai-hint="cookbook open book"
                 sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-                <h2 className="text-5xl font-extrabold text-white uppercase drop-shadow-md">
-                    
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-t from-black/60 to-transparent">
+                <h2 className="text-4xl font-extrabold text-white uppercase drop-shadow-lg">
+                    The Savora Cookbook
                 </h2>
-                <p className="text-2xl font-semibold text-white/90 uppercase tracking-widest drop-shadow-sm mt-2"></p>
+                <p className="text-xl font-semibold text-white/90 uppercase tracking-widest drop-shadow-sm mt-2">
+                    Our Top 25 Recipes
+                </p>
             </div>
         </Card>
     </Link>
