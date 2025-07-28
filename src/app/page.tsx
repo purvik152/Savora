@@ -5,7 +5,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -141,9 +140,6 @@ const testimonials = [
 
 
 export default function Home() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: false })
-  );
   const router = useRouter();
   const { toast } = useToast();
   const { diet } = useDiet();
@@ -217,7 +213,6 @@ export default function Home() {
       <section className="mb-16 animate-fade-in-up">
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
-            plugins={[plugin.current]}
             className="w-full"
           >
             <CarouselContent>
