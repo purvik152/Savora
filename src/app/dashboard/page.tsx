@@ -115,21 +115,24 @@ function FavoritesList() {
 
 export default function DashboardPage() {
   const { diet } = useDiet();
-  const { user, setUser } = useUser();
+  const { user, setUser, loading: userLoading } = useUser();
   const router = useRouter();
   
   const [pastRecipes, setPastRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    if (user) {
+    // This effect runs when user state is determined.
+    if (!userLoading) {
+      if (user) {
         setPastRecipes(getPastRecipes(user.id));
         setFavoriteRecipes(getFavoriteRecipes(user.id));
-    } else {
-        // If no user, redirect to sign-in page
+      } else {
+        // If not loading and no user, redirect.
         router.push('/sign-in');
+      }
     }
-  }, [user, router]);
+  }, [user, userLoading, router]);
 
 
   const filteredPastRecipes = useMemo(() => {
@@ -151,11 +154,12 @@ export default function DashboardPage() {
     router.push('/');
   }
 
-  if (!user) {
+  // Show a loading state while we check for a user session.
+  if (userLoading || !user) {
     return (
         <div className="container mx-auto flex h-full flex-col items-center justify-center px-4 py-8 md:py-12">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />
-            <p className="mt-4 text-muted-foreground">Redirecting to sign-in...</p>
+            <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
         </div>
     );
   }
