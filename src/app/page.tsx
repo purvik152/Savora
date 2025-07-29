@@ -5,6 +5,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay"
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -214,6 +215,12 @@ export default function Home() {
         {hasMounted && featuredRecipes.length > 0 ? (
           <Carousel
             className="w-full"
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: true,
+              }),
+            ]}
           >
             <CarouselContent>
               {featuredRecipes.map((recipe, index) => (
