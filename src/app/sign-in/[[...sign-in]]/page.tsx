@@ -9,17 +9,25 @@ import { AuthLayout } from '@/components/auth/AuthLayout';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/contexts/UserContext';
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would add authentication logic here.
-    // For this prototype, we'll just navigate to the dashboard.
+    // Simulate login by setting user in context and localStorage
+    const loggedInUser = {
+        id: email, // Use email as a unique ID for the mock user
+        name: 'Savora User', // Use a mock name for login
+        email: email,
+        avatar: 'https://placehold.co/128x128.png'
+    };
+    setUser(loggedInUser);
     router.push('/dashboard');
   };
 

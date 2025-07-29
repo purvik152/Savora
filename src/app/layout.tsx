@@ -1,7 +1,6 @@
 
 'use client';
 
-import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
@@ -11,6 +10,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/common/ThemeProvider';
 import { DietProvider } from '@/contexts/DietContext';
 import { useDiet } from '@/contexts/DietContext';
+import { UserProvider } from '@/contexts/UserContext';
 import { FloatingDoodles } from '@/components/common/FloatingDoodles';
 
 const poppins = Poppins({
@@ -18,13 +18,6 @@ const poppins = Poppins({
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-poppins',
 });
-
-// Metadata can't be in a client component, so we export it separately if needed.
-// For the root layout, we'll keep it simple and define it in a wrapper if this becomes an issue.
-// export const metadata: Metadata = {
-//   title: 'Savora: Your AI Recipe Assistant',
-//   description: 'Discover, create, and master recipes with Savora, your intelligent AI-powered culinary companion.',
-// };
 
 function ThemedLayout({ children }: { children: React.ReactNode }) {
   const { diet } = useDiet();
@@ -67,10 +60,12 @@ function Root({
           enableSystem
           disableTransitionOnChange
         >
+          <UserProvider>
             <DietProvider>
               <ThemedLayout>{children}</ThemedLayout>
               <Toaster />
             </DietProvider>
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>

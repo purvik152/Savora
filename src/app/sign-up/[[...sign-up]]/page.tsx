@@ -9,6 +9,7 @@ import { AuthLayout } from '@/components/auth/AuthLayout';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/contexts/UserContext';
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,11 +17,18 @@ export default function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would add signup logic here.
-    // For this prototype, we'll just navigate to the dashboard.
+    // Simulate signup by setting user in context and localStorage
+    const newUser = {
+        id: email, // Use email as a unique ID
+        name: fullName,
+        email: email,
+        avatar: 'https://placehold.co/128x128.png'
+    };
+    setUser(newUser);
     router.push('/dashboard');
   };
 
