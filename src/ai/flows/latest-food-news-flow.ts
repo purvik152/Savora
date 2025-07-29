@@ -10,14 +10,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-
-const NewsArticleSchema = z.object({
-  title: z.string().describe('The headline of the news article.'),
-  url: z.string().url().describe('The direct URL to the full news article.'),
-  source: z.object({ name: z.string() }).describe('The news source, containing its name.'),
-  imageUrl: z.string().url().optional().describe('The URL for a relevant image.'),
-});
-export type NewsArticle = z.infer<typeof NewsArticleSchema>;
+import { getNewsFromAPI, NewsArticleSchema } from '@/lib/news-api';
+export type { NewsArticle } from '@/lib/news-api';
 
 const LatestFoodNewsOutputSchema = z.object({
   articles: z.array(NewsArticleSchema).describe('A list of the latest food and health news articles.'),
@@ -30,35 +24,6 @@ export async function getLatestFoodNews(): Promise<LatestFoodNewsOutput> {
   return latestFoodNewsFlow();
 }
 
-// This is not a tool for an LLM to decide to use, but a direct function call.
-async function getNewsFromAPI(): Promise<NewsArticle[]> {
-  const apiKey = process.env.NEWS_API_KEY;
-  if (!apiKey || apiKey === 'YOUR_NEWS_API_KEY_HERE') {
-    throw new Error("NewsAPI key not found. Please sign up for a free key at NewsAPI.org and add it to your .env file.");
-  }
-  
-  // The /everything endpoint is restricted on the developer plan.
-  // We will use the /top-headlines endpoint with a category, which is available.
-  const url = `https://newsapi.org/v2/top-headlines?country=us&category=health&pageSize=10&apiKey=${apiKey}`;
-
-  const response = await fetch(url);
-  if (!response.ok) {
-      const errorData = await response.json();
-      console.error("NewsAPI Error:", errorData);
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-  }
-  const data = await response.json();
-  
-  // Map to the schema, ensuring all fields are present
-  return data.articles.map((article: any) => ({
-    title: article.title || 'No title provided',
-    url: article.url,
-    source: { name: article.source?.name || 'Unknown Source' },
-    imageUrl: article.urlToImage || 'https://placehold.co/600x400.png',
-  }));
-}
-
-
 const latestFoodNewsFlow = ai.defineFlow(
   {
     name: 'latestFoodNewsFlow',
@@ -67,7 +32,7 @@ const latestFoodNewsFlow = ai.defineFlow(
   },
   async () => {
     // Directly call the function to get news articles.
-    const articles = await getNewsFromAPI();
+    const articles = await getNewsFromAPI({ query: 'health' });
     return { articles };
   }
 );
