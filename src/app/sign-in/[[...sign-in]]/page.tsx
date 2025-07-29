@@ -1,36 +1,66 @@
 
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
+import { AuthLayout } from '@/components/auth/AuthLayout';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Page() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-10rem)] py-12">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Enter your credentials to access your account.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" />
-            </div>
-             <Button className="w-full">Sign In</Button>
-            <p className="text-center text-sm text-muted-foreground">
-                Don&apos;t have an account?{' '}
+    <AuthLayout>
+        <div className="flex flex-col justify-center space-y-6">
+            <div className="flex flex-col space-y-2 text-left">
+                <h1 className="text-2xl font-semibold tracking-tight">Sign In</h1>
+                <p className="text-sm text-muted-foreground">
+                Don&apos;t have an account yet?{' '}
                 <Link href="/sign-up" className="font-semibold text-primary hover:underline">
-                    Sign Up
+                    Sign up here
                 </Link>
+                </p>
+            </div>
+            <div className="grid gap-6">
+              <form>
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email address</Label>
+                    <Input id="email" type="email" placeholder="Enter email address" />
+                  </div>
+                  <div className="grid gap-2 relative">
+                    <div className="flex items-center">
+                        <Label htmlFor="password">Password</Label>
+                        <Link href="#" className="ml-auto inline-block text-sm underline">
+                            Forgot password?
+                        </Link>
+                    </div>
+                    <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter password" />
+                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 text-muted-foreground">
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                  <Button type="submit" className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                    Sign In
+                  </Button>
+                </div>
+              </form>
+            </div>
+             <p className="px-0 text-center text-xs text-muted-foreground">
+                By signing in or creating an account, you are agreeing to our{' '}
+                <Link href="#" className="underline underline-offset-4 hover:text-primary">
+                    Terms & Conditions
+                </Link>{' '}
+                and our{' '}
+                <Link href="#" className="underline underline-offset-4 hover:text-primary">
+                    Privacy Policy
+                </Link>
+                .
             </p>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+    </AuthLayout>
   );
 }
