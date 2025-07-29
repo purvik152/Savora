@@ -19,35 +19,18 @@ export function DietProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setHasMounted(true);
-  }, []);
-
-  const applyTheme = useCallback((theme: Diet) => {
-    if (typeof window !== 'undefined') {
-      // Veg theme has been removed, so this function is simpler.
-      // If you wanted to re-add it, the logic would go here.
-      // e.g. document.documentElement.classList.toggle('theme-veg', theme === 'veg');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (hasMounted) {
-      const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
-      if (savedDiet) {
+    const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
+    if (savedDiet) {
         setDietState(savedDiet);
-        applyTheme(savedDiet);
-      } else {
-        applyTheme('non-veg');
-      }
     }
-  }, [hasMounted, applyTheme]);
+  }, []);
 
   const setDiet = useCallback((newDiet: Diet) => {
-    if (hasMounted) {
-      setDietState(newDiet);
-      localStorage.setItem('savora-diet', newDiet);
-      applyTheme(newDiet);
+    setDietState(newDiet);
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('savora-diet', newDiet);
     }
-  }, [hasMounted, applyTheme]);
+  }, []);
   
   const toggleDiet = useCallback(() => {
     setDiet(diet === 'veg' ? 'non-veg' : 'veg');
@@ -55,10 +38,11 @@ export function DietProvider({ children }: { children: ReactNode }) {
 
   const value = { diet, toggleDiet, setDiet };
 
-  // To prevent hydration mismatch, we can return null or a skeleton on the server 
-  // and first client render until the component has mounted.
-  // Or, more simply, we can just render the children and let the theme apply on mount.
-  // The current logic with hasMounted solves this.
+  if (!hasMounted) {
+    // Return null or a loading state on the server and initial client render
+    // to avoid hydration mismatches with localStorage.
+    return null;
+  }
 
   return (
     <DietContext.Provider value={value}>
