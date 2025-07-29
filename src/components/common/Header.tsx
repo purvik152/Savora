@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, Search, Leaf, Drumstick, ChevronDown, LogOut } from 'lucide-react';
+import { Menu, Search, Leaf, Drumstick, ChevronDown, LogOut, Loader2 } from 'lucide-react';
 import { SavoraLogo } from '@/components/icons/SavoraLogo';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -74,7 +74,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { diet } = useDiet();
-  const { user, setUser } = useUser();
+  const { user, setUser, loading: userLoading } = useUser();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -172,7 +172,9 @@ export function Header() {
                         <span className="sr-only">Search recipes</span>
                     </Button>
                     <ThemeToggle />
-                    {user ? (
+                    {userLoading ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : user ? (
                         <Button onClick={handleLogout} variant="outline" size="sm">
                             <LogOut className="mr-2 h-4 w-4"/>
                             Logout

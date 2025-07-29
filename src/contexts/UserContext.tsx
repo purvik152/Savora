@@ -13,6 +13,7 @@ interface User {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+  loading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -21,10 +22,9 @@ const USER_STORAGE_KEY = 'savora-user';
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUserState] = useState<User | null>(null);
-  const [hasMounted, setHasMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setHasMounted(true);
     try {
       const storedUser = localStorage.getItem(USER_STORAGE_KEY);
       if (storedUser) {
@@ -33,6 +33,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to parse user from localStorage', error);
       localStorage.removeItem(USER_STORAGE_KEY);
+    } finally {
+        setLoading(false);
     }
   }, []);
 
@@ -47,14 +49,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  if (!hasMounted) {
-    // Prevent hydration mismatch by rendering nothing on the server
-    // and during the initial client-side render.
-    return null;
-  }
-
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserContext.Provider>
   );

@@ -19,9 +19,13 @@ export function DietProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setHasMounted(true);
-    const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
-    if (savedDiet) {
-        setDietState(savedDiet);
+    try {
+        const savedDiet = localStorage.getItem('savora-diet') as Diet | null;
+        if (savedDiet) {
+            setDietState(savedDiet);
+        }
+    } catch (error) {
+        console.error('Failed to parse diet from localStorage', error);
     }
   }, []);
 
@@ -37,10 +41,9 @@ export function DietProvider({ children }: { children: ReactNode }) {
   }, [diet, setDiet]);
 
   const value = { diet, toggleDiet, setDiet };
-
+  
+  // Render children only after the initial state has been determined from localStorage
   if (!hasMounted) {
-    // Return null or a loading state on the server and initial client render
-    // to avoid hydration mismatches with localStorage.
     return null;
   }
 
