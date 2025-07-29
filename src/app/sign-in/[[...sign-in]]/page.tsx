@@ -8,9 +8,21 @@ import Link from 'next/link';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, you would add authentication logic here.
+    // For this prototype, we'll just navigate to the dashboard.
+    router.push('/dashboard');
+  };
+
 
   return (
     <AuthLayout>
@@ -25,11 +37,11 @@ export default function Page() {
                 </p>
             </div>
             <div className="grid gap-6">
-              <form>
+              <form onSubmit={handleSignIn}>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email address</Label>
-                    <Input id="email" type="email" placeholder="Enter email address" />
+                    <Input id="email" type="email" placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                   <div className="grid gap-2 relative">
                     <div className="flex items-center">
@@ -38,7 +50,7 @@ export default function Page() {
                             Forgot password?
                         </Link>
                     </div>
-                    <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter password" />
+                    <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 text-muted-foreground">
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
