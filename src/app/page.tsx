@@ -332,7 +332,7 @@ export default function Home() {
                     <div className="relative w-full z-10">
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className="w-full h-12 px-4 flex items-center text-left bg-background border border-input rounded-lg text-base text-muted-foreground hover:bg-accent"
+                            className="w-full h-12 px-4 flex items-center text-left bg-background border border-input rounded-lg text-base text-muted-foreground hover:bg-secondary"
                         >
                             <Search className="h-5 w-5 mr-3" />
                             I want to make...
