@@ -15,8 +15,8 @@ export function CookbookCta() {
                 data-ai-hint="cookbook open book"
                 sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-t from-black/60 to-transparent">
-                <h2 className="text-4xl font-extrabold text-white uppercase drop-shadow-lg">
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/50">
+                <h2 className="text-4xl font-extrabold text-white uppercase drop-shadow-lg [text-wrap:balance]">
                     The Savora Cookbook
                 </h2>
                 <p className="text-xl font-semibold text-white/90 uppercase tracking-widest drop-shadow-sm mt-2">
