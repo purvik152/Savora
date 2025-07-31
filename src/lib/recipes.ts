@@ -16,6 +16,7 @@ export interface Recipe {
   ingredients: string[];
   instructions: string[];
   videoUrl?: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
   allergens?: ('nuts' | 'dairy' | 'gluten')[];
   nutrition: {
     calories: string;
@@ -44,6 +45,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '15 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 1/2 cups all-purpose flour',
       '3 1/2 tsp baking powder',
@@ -88,6 +90,7 @@ export const recipes: Recipe[] = [
     prepTime: '5 mins',
     cookTime: '5 mins',
     servings: '1 person',
+    difficulty: 'Beginner',
     ingredients: [
       '1 slice of sourdough bread',
       '1/2 ripe avocado',
@@ -128,6 +131,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '0 mins',
     servings: '1 person',
+    difficulty: 'Beginner',
     ingredients: [
       '1 frozen banana',
       '1 cup mixed frozen berries',
@@ -167,6 +171,7 @@ export const recipes: Recipe[] = [
     prepTime: '5 mins',
     cookTime: '10 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
       '4 slices of brioche or challah bread',
       '2 large eggs',
@@ -208,6 +213,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '15 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
       '2 large flour tortillas',
       '4 large eggs, scrambled',
@@ -251,6 +257,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '20 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 cup quinoa, rinsed',
       '2 cups water or vegetable broth',
@@ -296,6 +303,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '5 mins',
     servings: '1 person',
+    difficulty: 'Beginner',
     ingredients: [
         '2 slices ciabatta or focaccia bread',
         '1 tbsp pesto',
@@ -337,6 +345,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '0 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
         '2 large flour tortillas',
         '2 cups chopped romaine lettuce',
@@ -378,6 +387,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 tbsp olive oil',
       '1 onion, chopped',
@@ -423,6 +433,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '0 mins',
     servings: '1 person',
+    difficulty: 'Beginner',
     ingredients: [
       '1 ripe avocado',
       '1 can (5-ounce) tuna, drained',
@@ -464,6 +475,7 @@ export const recipes: Recipe[] = [
     prepTime: "10 mins",
     cookTime: "20 mins",
     servings: "4 people",
+    difficulty: 'Beginner',
     videoUrl: 'https://www.youtube.com/watch?v=11s3-HNBd4w',
     ingredients: [
       "1 lb (450g) rigatoni",
@@ -512,6 +524,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '1 hr 15 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     videoUrl: 'https://www.youtube.com/watch?v=r_9s3i2432s',
     ingredients: [
       '1 (3-4 lb) whole chicken',
@@ -554,6 +567,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '10 mins',
     servings: '4 burgers',
+    difficulty: 'Beginner',
     ingredients: [
       '1 can (15-ounce) black beans, rinsed and patted dry',
       '1/2 green bell pepper, chopped',
@@ -597,6 +611,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
       '2 (6-ounce) salmon fillets',
       '1 lb asparagus, trimmed',
@@ -639,6 +654,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '15 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb flank steak, thinly sliced against the grain',
       '1 tbsp cornstarch',
@@ -684,6 +700,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins (plus marination)',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1.5 lbs boneless, skinless chicken breasts, cut into 1-inch cubes',
       '1 cup plain yogurt',
@@ -733,6 +750,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '15 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb ground beef',
       '1 packet taco seasoning',
@@ -772,6 +790,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '15 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb chicken breast, boneless and skinless',
       '1 tbsp olive oil',
@@ -821,6 +840,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins (plus marination)',
     cookTime: '10 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1.5 lbs chicken breast or thighs, cut into strips',
       'Wooden skewers, soaked in water',
@@ -873,6 +893,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '25 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1.5 lbs chicken breast, cubed',
       '1 tbsp coconut oil',
@@ -918,6 +939,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '10 mins',
     servings: '4 people (as a tapa)',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb large shrimp, peeled and deveined',
       '1/2 cup extra virgin olive oil',
@@ -959,6 +981,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '1 hr',
     servings: '6-8 people',
+    difficulty: 'Intermediate',
     videoUrl: 'https://www.youtube.com/watch?v=sB6yv_G0_2s',
     ingredients: [
       '1 lb ground beef',
@@ -1013,6 +1036,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 tbsp olive oil',
       '1 lb cremini mushrooms, sliced',
@@ -1033,7 +1057,7 @@ export const recipes: Recipe[] = [
       'Deglaze with wine: Pour in 1/2 cup of dry white wine and continue to stir until it is completely absorbed by the rice.',
       'Add broth gradually: Begin adding the warmed vegetable broth one ladleful (about 1/2 cup) at a time, stirring frequently. Wait until the liquid is almost completely absorbed before adding the next ladleful. Continue this process until the rice is creamy and al dente, which should take about 15-20 minutes. You may not need all the broth.',
       'Finish the risotto: Stir in the cooked mushrooms, 1/2 cup of grated Parmesan cheese, and 2 tbsp of butter. The risotto should be creamy and rich.',
-      'Season and serve: Season with salt and pepper to taste. Serve immediately, garnished with chopped fresh parsley.',
+      'Season and serve: Serve immediately, garnished with chopped fresh parsley.',
     ],
     allergens: ['gluten', 'dairy'],
     nutrition: {
@@ -1060,6 +1084,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '4 large bell peppers, any color, halved and seeded',
       '1 tbsp olive oil',
@@ -1104,6 +1129,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins',
     cookTime: '40 mins',
     servings: '6 people',
+    difficulty: 'Intermediate',
     ingredients: [
       'For the filling:',
       '2 tbsp olive oil',
@@ -1154,6 +1180,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '6 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 tbsp olive oil',
       '1 large onion, chopped',
@@ -1200,6 +1227,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '1 hr 30 mins',
     servings: '6 people',
+    difficulty: 'Intermediate',
     ingredients: [
         '3 lb beef chuck roast',
         '2 tbsp olive oil',
@@ -1248,6 +1276,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 tbsp vegetable oil',
       '1 large onion, chopped',
@@ -1296,6 +1325,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '0 mins',
     servings: '2 sandwiches',
+    difficulty: 'Beginner',
     ingredients: [
       '1 (15-ounce) can chickpeas, rinsed and drained',
       '1/4 cup vegan mayonnaise',
@@ -1339,6 +1369,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '25 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 tbsp olive oil',
       '1 large yellow onion, chopped',
@@ -1383,6 +1414,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '25 mins',
     servings: '4 bowls',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb boneless, skinless chicken breast, cut into bite-sized pieces',
       '1 tbsp olive oil',
@@ -1427,6 +1459,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '30 mins',
     servings: '4 servings',
+    difficulty: 'Beginner',
     ingredients: [
       '1.5 lbs boneless, skinless chicken breasts, cut into 1-inch chunks',
       '1 lb broccoli florets',
@@ -1471,6 +1504,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '250g paneer, cubed',
       '2 tbsp butter',
@@ -1519,6 +1553,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '25 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 cups mixed vegetables (carrots, peas, beans, potatoes)',
       '1 tbsp oil',
@@ -1567,6 +1602,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '1 hr 30 mins',
     servings: '4 people',
+    difficulty: 'Advanced',
     ingredients: [
       '2 lbs lamb shoulder, cut into cubes',
       '1/2 cup plain yogurt',
@@ -1614,6 +1650,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '5 mins',
     servings: '2 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 lb large sea scallops, patted dry',
       '2 tbsp olive oil',
@@ -1657,6 +1694,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '30 mins',
     servings: '4-6 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 large butternut squash, peeled and cubed',
       '1 tbsp olive oil',
@@ -1702,6 +1740,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '15 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '8 oz lo mein noodles or spaghetti',
       '1 tbsp sesame oil',
@@ -1748,6 +1787,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '35 mins',
     servings: '8 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 cups all-purpose flour',
       '2 cups sugar',
@@ -1796,6 +1836,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins',
     cookTime: '1 hr 10 mins',
     servings: '12 people',
+    difficulty: 'Advanced',
     ingredients: [
       '1 1/2 cups graham cracker crumbs',
       '1/4 cup sugar',
@@ -1841,6 +1882,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '40 mins',
     servings: '6 people',
+    difficulty: 'Beginner',
     ingredients: [
       '6 medium apples, peeled, cored, and sliced',
       '1/4 cup brown sugar',
@@ -1886,6 +1928,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '0 mins',
     servings: '8 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '6 large egg yolks',
       '3/4 cup white sugar',
@@ -1931,6 +1974,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins',
     cookTime: '35 mins',
     servings: '8 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 (9-inch) pre-baked tart shell',
       '4 large eggs',
@@ -1974,6 +2018,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '4 hrs',
     servings: '8 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '4 lb pork shoulder (Boston butt)',
       '2 tbsp brown sugar',
@@ -2019,6 +2064,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '2-3 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 tbsp olive oil',
       '1 large onion, chopped',
@@ -2067,6 +2113,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '25 mins',
     servings: '4 people',
+    difficulty: 'Advanced',
     ingredients: [
       '2 lbs chicken wings',
       '1/2 cup cornstarch',
@@ -2117,6 +2164,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '12 puffs',
+    difficulty: 'Beginner',
     ingredients: [
       '1 large egg',
       '1/4 cup olive oil',
@@ -2159,6 +2207,7 @@ export const recipes: Recipe[] = [
     prepTime: '45 mins',
     cookTime: '1 hr',
     servings: '6-8 people',
+    difficulty: 'Advanced',
     ingredients: [
       '2 large eggplants, sliced',
       '1 lb ground lamb or beef',
@@ -2205,6 +2254,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins (plus marination)',
     cookTime: '45 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '4 chicken leg quarters',
       'For the Jerk Marinade:',
@@ -2254,6 +2304,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins (plus soaking)',
     cookTime: '3 hrs',
     servings: '8 people',
+    difficulty: 'Advanced',
     ingredients: [
       '2 lbs dried black beans, soaked overnight',
       '1 lb salted pork ribs',
@@ -2299,6 +2350,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '15 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1.5 lbs sirloin steak, cut into strips',
       '2 tbsp soy sauce',
@@ -2348,6 +2400,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins',
     cookTime: '40 mins',
     servings: '6 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 slices of bread, crusts removed',
       '1 cup milk',
@@ -2398,6 +2451,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '1 hr 15 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '8 chicken thighs, bone-in and skin-on',
       '2 tbsp olive oil',
@@ -2449,6 +2503,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '50 mins',
     servings: '24 pieces',
+    difficulty: 'Advanced',
     ingredients: [
       '1 lb walnuts or pistachios, finely chopped',
       '1 tsp ground cinnamon',
@@ -2498,6 +2553,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '15 mins',
     servings: '6 arepas',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 cups masarepa (pre-cooked cornmeal)',
       '2 1/2 cups warm water',
@@ -2541,6 +2597,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '20 mins',
     servings: '2-4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 lbs Russet potatoes, cut into fries',
       'Vegetable oil, for frying',
@@ -2585,6 +2642,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins (plus marination)',
     cookTime: '10 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1.5 lbs sirloin or ribeye steak, very thinly sliced',
       'For the Marinade:',
@@ -2629,6 +2687,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '20 mins',
     servings: '2 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 cups cooked short-grain rice',
       '1 carrot, julienned',
@@ -2675,6 +2734,7 @@ export const recipes: Recipe[] = [
     prepTime: '10 mins',
     cookTime: '15 mins',
     servings: '2 people',
+    difficulty: 'Beginner',
     ingredients: [
       '2 tbsp vegetable oil',
       '1 cup chopped kimchi, plus 2 tbsp of the juice',
@@ -2720,6 +2780,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '25 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       'For the meatballs:',
       '1 lb ground beef/pork mix',
@@ -2772,6 +2833,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '20 mins',
     servings: '2 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 lb cod or haddock fillets, cut into large pieces',
       '1 cup all-purpose flour',
@@ -2815,6 +2877,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins',
     cookTime: '0 mins',
     servings: '4 people',
+    difficulty: 'Beginner',
     ingredients: [
       '1 lb fresh strawberries, hulled and sliced',
       '1 tbsp sugar',
@@ -2855,6 +2918,7 @@ export const recipes: Recipe[] = [
     prepTime: '25 mins',
     cookTime: '30 mins',
     servings: '12 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 1/2 cups all-purpose flour',
       '1 tsp baking powder',
@@ -2903,6 +2967,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '20 mins',
     servings: '4 people',
+    difficulty: 'Advanced',
     ingredients: [
       '1 cup water',
       '1/2 cup butter',
@@ -2948,6 +3013,7 @@ export const recipes: Recipe[] = [
     prepTime: '15 mins (plus soaking)',
     cookTime: '30 mins',
     servings: '4 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 cups glutinous (sweet) rice, soaked for at least 4 hours',
       '1 (13.5 ounce) can full-fat coconut milk, divided',
@@ -2988,6 +3054,7 @@ export const recipes: Recipe[] = [
     prepTime: '30 mins',
     cookTime: '12 mins',
     servings: '18 cookies',
+    difficulty: 'Intermediate',
     ingredients: [
       '1 1/4 cups cornstarch',
       '1 cup all-purpose flour',
@@ -3037,6 +3104,7 @@ export const recipes: Recipe[] = [
     prepTime: '1 hr',
     cookTime: '20 mins',
     servings: '4-6 people',
+    difficulty: 'Advanced',
     ingredients: [
       'For the dough: 2 cups all-purpose flour, 1/2 cup warm water, 1 large egg, 1 tsp salt',
       'For the filling: 1 lb potatoes, boiled and mashed, 8 oz farmer\'s cheese or ricotta, 1 onion, chopped and sautéed, Salt and pepper to taste',
@@ -3077,6 +3145,7 @@ export const recipes: Recipe[] = [
     prepTime: '20 mins',
     cookTime: '2 hrs',
     servings: '6 people',
+    difficulty: 'Intermediate',
     ingredients: [
       '2 lbs beef chuck, cubed',
       '2 tbsp vegetable oil',
