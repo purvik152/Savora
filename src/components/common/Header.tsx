@@ -39,7 +39,6 @@ const mainNavLinks = [
 const menuLinks = [
     { href: '/mood-kitchen', label: 'Mood Kitchen' },
     { href: '/chef-challenge', label: 'Chef\'s Challenge' },
-    { href: '/diorama', label: 'Foodie Diorama' }
 ]
 
 function DietToggle() {
