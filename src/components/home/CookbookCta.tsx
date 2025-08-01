@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 
 export function CookbookCta() {
   return (
-    <Link href="/recipes" className="block h-full group">
+    <Link href="/cookbook" className="block h-full group">
         <Card className="overflow-hidden h-full min-h-[300px] shadow-xl transition-all duration-300 ease-in-out group-hover:shadow-2xl group-hover:scale-105 relative">
             <Image 
                 src="/images/recipes/recipe-bookk.jpg"
