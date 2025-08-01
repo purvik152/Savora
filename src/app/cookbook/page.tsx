@@ -6,9 +6,11 @@ import Link from "next/link";
 import { recipes, Recipe } from "@/lib/recipes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChefHat } from "lucide-react";
+import { useDiet } from "@/contexts/DietContext";
+import { useMemo } from "react";
 
 // Get the last 25 recipes, which are our new global additions
-const cookbookRecipes = recipes.slice(-25);
+const allCookbookRecipes = recipes.slice(-25);
 
 const CookbookRecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay: string }) => (
     <Link href={`/recipes/${recipe.slug}`} className="block h-full animate-fade-in-up" style={{ animationDelay }}>
@@ -38,6 +40,15 @@ const CookbookRecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animat
 );
 
 export default function CookbookPage() {
+    const { diet } = useDiet();
+
+    const cookbookRecipes = useMemo(() => {
+        if (diet === 'veg') {
+            return allCookbookRecipes.filter(r => r.diet === 'veg');
+        }
+        return allCookbookRecipes.filter(r => r.diet === 'non-veg');
+    }, [diet]);
+
     return (
         <div className="container mx-auto px-4 py-8 md:py-16">
             <div className="max-w-4xl mx-auto text-center mb-12 animate-fade-in-up">
@@ -53,6 +64,14 @@ export default function CookbookPage() {
                     <CookbookRecipeCard key={recipe.id} recipe={recipe} animationDelay={`${index * 50}ms`} />
                 ))}
             </div>
+
+            {cookbookRecipes.length === 0 && (
+                <div className="text-center col-span-full py-16 animate-fade-in-up">
+                    <p className="text-muted-foreground">
+                        No cookbook recipes found for the '{diet}' view yet.
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
