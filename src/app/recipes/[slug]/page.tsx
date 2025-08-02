@@ -118,6 +118,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
 
   // State for voice guidance highlighting
   const [highlightedStep, setHighlightedStep] = useState<number | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   const isProcessing = isAdjusting || isTranslating || isAdapting;
   
@@ -140,6 +141,20 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
     setHasMounted(true);
   }, []);
   
+  const handleStepChange = useCallback((newStep: number | null) => {
+    setHighlightedStep(current => {
+      // If there was a previous step, mark it as completed
+      if (current !== null && (newStep === null || newStep > current)) {
+        setCompletedSteps(prev => new Set(prev).add(current));
+      }
+      return newStep;
+    });
+
+    // If session ends, clear all highlights and completions
+    if (newStep === null) {
+      setCompletedSteps(new Set());
+    }
+  }, []);
 
   const chartConfig = useMemo(() => ({
     protein: {
@@ -594,6 +609,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
                         step={step} 
                         index={index} 
                         isHighlighted={index === highlightedStep}
+                        isCompleted={completedSteps.has(index)}
                       />
                     ))}
                   </ol>
@@ -768,7 +784,7 @@ function RecipeView({ recipe: initialRecipe }: { recipe: Recipe }) {
                       instructions={displayedInstructions}
                       language={language}
                       onStartCooking={handleStartCooking}
-                      onStepChange={setHighlightedStep}
+                      onStepChange={handleStepChange}
                     />
                   </div>
                 )}

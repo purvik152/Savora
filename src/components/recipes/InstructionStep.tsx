@@ -12,12 +12,13 @@ interface InstructionStepProps {
   step: string;
   index: number;
   isHighlighted?: boolean;
+  isCompleted?: boolean;
 }
 
 // Regex to find time mentions like "10 mins", "1 hour", "5-7 minutes"
 const timeRegex = /(\d+)(?:-(\d+))?\s*(min|minute|minutes|hr|hour|hours)/i;
 
-export function InstructionStep({ step, index, isHighlighted = false }: InstructionStepProps) {
+export function InstructionStep({ step, index, isHighlighted = false, isCompleted = false }: InstructionStepProps) {
   const { toast } = useToast();
   const [duration, setDuration] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
@@ -140,7 +141,7 @@ export function InstructionStep({ step, index, isHighlighted = false }: Instruct
     return (
       <li className={cn(baseClasses, isHighlighted ? highlightClasses : '')}>
         <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
-        <p className="flex-1 text-base text-foreground/90">{step}</p>
+        <p className={cn("flex-1 text-base text-foreground/90 transition-colors", isCompleted && "line-through text-muted-foreground")}>{step}</p>
       </li>
     );
   }
@@ -157,7 +158,7 @@ export function InstructionStep({ step, index, isHighlighted = false }: Instruct
     <li className={cn(baseClasses, "has-[:focus]:border-primary has-[:focus-within]:border-primary", isHighlighted ? highlightClasses : defaultClasses)}>
       <div className="flex-shrink-0 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mt-1">{index + 1}</div>
       <div className="flex-1 space-y-3">
-        <p className="text-base text-foreground/90">{step}</p>
+        <p className={cn("text-base text-foreground/90 transition-colors", isCompleted && "line-through text-muted-foreground")}>{step}</p>
         <div className={cn("rounded-lg p-3 transition-all", isFinished ? "bg-green-100 dark:bg-green-900/30" : "bg-background/50")}>
             <div className="flex items-center gap-4">
                 <Button onClick={toggleTimer} size="icon" variant={isActive ? "secondary" : "default"} disabled={isFinished} className="w-12 h-12">
