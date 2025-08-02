@@ -41,11 +41,20 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   const [assistantResponse, setAssistantResponse] = useState('Press Start to begin your guided recipe.');
   
   const recognitionRef = useRef<any>(null);
+  const autoNextTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearAutoNextTimeout = () => {
+    if (autoNextTimeoutRef.current) {
+        clearTimeout(autoNextTimeoutRef.current);
+        autoNextTimeoutRef.current = null;
+    }
+  };
 
   const handleUserQuery = useCallback(async (query: string) => {
     if (!query.trim() || isProcessing) return;
     
     setIsProcessing(true);
+    clearAutoNextTimeout();
     
     try {
       const langCode = languageToCode[language] || 'en-US';
@@ -77,9 +86,13 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         utterance.lang = langCode;
         utterance.onend = () => {
             // After speaking, if the session is still active, listen again.
-            if (nextStep !== -1 && recognitionRef.current) {
+            if (nextStep !== -1) {
                 try {
                     recognitionRef.current.start();
+                    // Set a timeout to automatically go to the next step if user is silent
+                    autoNextTimeoutRef.current = setTimeout(() => {
+                        handleUserQuery("next");
+                    }, 7000);
                 } catch(e) {
                     console.error("Could not start recognition", e);
                 }
@@ -118,6 +131,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     recognition.onstart = () => {
       setIsListening(true);
       setTranscript('');
+      clearAutoNextTimeout();
     };
 
     recognition.onend = () => {
@@ -127,6 +141,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     recognition.onresult = (event: any) => {
       let finalTranscript = '';
       let interimTranscript = '';
+      clearAutoNextTimeout();
 
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
@@ -143,6 +158,10 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     
     recognitionRef.current = recognition;
 
+    return () => {
+        clearAutoNextTimeout();
+    }
+
   }, [language, handleUserQuery]);
 
   const startSession = () => {
@@ -154,6 +173,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   const endSession = () => {
     setSessionActive(false);
     setIsListening(false);
+    clearAutoNextTimeout();
     if(recognitionRef.current) recognitionRef.current.stop();
     window.speechSynthesis.cancel();
     setCurrentStep(0);
