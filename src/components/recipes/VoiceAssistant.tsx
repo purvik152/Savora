@@ -31,6 +31,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false); // When calling AI
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [sessionActive, setSessionActive] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const [hasMounted, setHasMounted] = useState(false);
@@ -43,17 +44,18 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   const recognitionRef = useRef<any>(null);
   const autoNextTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const clearAutoNextTimeout = () => {
+  const clearAutoNextTimeout = useCallback(() => {
     if (autoNextTimeoutRef.current) {
         clearTimeout(autoNextTimeoutRef.current);
         autoNextTimeoutRef.current = null;
     }
-  };
+  }, []);
 
   const handleUserQuery = useCallback(async (query: string) => {
-    if (!query.trim() || isProcessing) return;
+    if (!query.trim() || isProcessing || isSpeaking) return;
     
     setIsProcessing(true);
+    setTranscript('');
     clearAutoNextTimeout();
     
     try {
@@ -84,21 +86,21 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(responseText);
         utterance.lang = langCode;
+        utterance.onstart = () => setIsSpeaking(true);
         utterance.onend = () => {
+            setIsSpeaking(false);
             // After speaking, if the session is still active, listen again.
             if (nextStep !== -1) {
                 try {
                     recognitionRef.current.start();
-                    // Set a timeout to automatically go to the next step if user is silent
-                    autoNextTimeoutRef.current = setTimeout(() => {
-                        handleUserQuery("next");
-                    }, 7000);
                 } catch(e) {
                     console.error("Could not start recognition", e);
                 }
             }
         };
         window.speechSynthesis.speak(utterance);
+      } else {
+        setIsProcessing(false);
       }
       
     } catch (error) {
@@ -108,10 +110,22 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         title: "Assistant Error",
         description: "Sorry, I couldn't process that. Please try again."
       });
-    } finally {
       setIsProcessing(false);
     }
-  }, [currentStep, instructions, isProcessing, recipeTitle, toast, language, onStepChange]);
+  }, [currentStep, instructions, isProcessing, isSpeaking, recipeTitle, toast, language, onStepChange, clearAutoNextTimeout]);
+
+  // Effect to handle auto-advancing
+  useEffect(() => {
+    if (sessionActive && !isSpeaking && !isListening && !isProcessing) {
+        clearAutoNextTimeout();
+        autoNextTimeoutRef.current = setTimeout(() => {
+            handleUserQuery("next");
+        }, 7000);
+    }
+    // Cleanup timeout if component unmounts or state changes
+    return () => clearAutoNextTimeout();
+  }, [sessionActive, isSpeaking, isListening, isProcessing, handleUserQuery, clearAutoNextTimeout]);
+
 
   useEffect(() => {
     setHasMounted(true);
@@ -158,11 +172,7 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     
     recognitionRef.current = recognition;
 
-    return () => {
-        clearAutoNextTimeout();
-    }
-
-  }, [language, handleUserQuery]);
+  }, [language, handleUserQuery, clearAutoNextTimeout]);
 
   const startSession = () => {
     if (onStartCooking) onStartCooking();
@@ -173,6 +183,8 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
   const endSession = () => {
     setSessionActive(false);
     setIsListening(false);
+    setIsProcessing(false);
+    setIsSpeaking(false);
     clearAutoNextTimeout();
     if(recognitionRef.current) recognitionRef.current.stop();
     window.speechSynthesis.cancel();
@@ -210,6 +222,8 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
     );
   }
 
+  const isIdle = !isListening && !isProcessing && !isSpeaking;
+
   return (
     <Card className="bg-secondary/30">
       <CardHeader>
@@ -224,6 +238,11 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
                     <Loader2 className="h-5 w-5 animate-spin"/>
                     <p className="font-semibold">Savora is thinking...</p>
                 </div>
+            ) : isSpeaking ? (
+                 <div className="flex items-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin"/>
+                    <p className="font-semibold">Savora is speaking...</p>
+                </div>
             ) : (
                 <p className="font-medium text-lg text-foreground italic">"{assistantResponse}"</p>
             )}
@@ -237,10 +256,10 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         ) : (
             <div className="flex flex-col items-center gap-4">
                 <p className="text-sm text-muted-foreground">
-                    {isListening ? "Listening for your command..." : "Tap the microphone to speak"}
+                    {isListening ? "Listening for your command..." : isSpeaking ? "..." : "Tap the microphone to speak"}
                 </p>
                 <div className="flex items-center justify-center gap-4">
-                    <Button onClick={() => recognitionRef.current?.start()} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 animate-pulse")} disabled={isProcessing}>
+                    <Button onClick={() => recognitionRef.current?.start()} size="icon" className={cn("rounded-full h-20 w-20 transition-all", isListening && "bg-red-500 hover:bg-red-600 animate-pulse")} disabled={!isIdle}>
                         <Mic className="h-8 w-8" />
                     </Button>
                     <Button onClick={endSession} size="icon" variant="destructive" className="rounded-full h-16 w-16"><Power className="h-6 w-6"/></Button>
