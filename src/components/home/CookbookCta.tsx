@@ -15,9 +15,6 @@ export function CookbookCta() {
                 data-ai-hint="cookbook open book"
                 sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/50">
-                
-            </div>
         </Card>
     </Link>
   );
