@@ -7,13 +7,16 @@ import { recipes, Recipe } from "@/lib/recipes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChefHat } from "lucide-react";
 import { useDiet } from "@/contexts/DietContext";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useUser } from "@/contexts/UserContext";
+import { useRouter } from "next/navigation";
+import { LoginSuggestionDialog } from "@/components/common/LoginSuggestionDialog";
 
 // Get the last 25 recipes, which are our new global additions
 const allCookbookRecipes = recipes.slice(-25);
 
-const CookbookRecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animationDelay: string }) => (
-    <Link href={`/recipes/${recipe.slug}`} className="block h-full animate-fade-in-up" style={{ animationDelay }}>
+const CookbookRecipeCard = ({ recipe, onCardClick, animationDelay }: { recipe: Recipe, onCardClick: (recipe: Recipe) => void, animationDelay: string }) => (
+    <div onClick={() => onCardClick(recipe)} className="block h-full animate-fade-in-up cursor-pointer" style={{ animationDelay }}>
         <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl hover:-translate-y-2 group">
             <CardHeader className="p-0 border-b">
                 <div className="relative w-full h-48">
@@ -36,18 +39,43 @@ const CookbookRecipeCard = ({ recipe, animationDelay }: { recipe: Recipe, animat
                 </div>
             </CardContent>
         </Card>
-    </Link>
+    </div>
 );
 
 export default function CookbookPage() {
     const { diet } = useDiet();
+    const { user } = useUser();
+    const router = useRouter();
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
     const cookbookRecipes = useMemo(() => {
+        const filtered = allCookbookRecipes.filter(r => {
+            if (diet === 'veg') return r.diet === 'veg';
+            return true;
+        });
+
         if (diet === 'veg') {
-            return allCookbookRecipes.filter(r => r.diet === 'veg');
+            return filtered;
         }
-        return allCookbookRecipes.filter(r => r.diet === 'non-veg');
+        return filtered.filter(r => r.diet === 'non-veg' || r.diet === 'all');
     }, [diet]);
+
+    const handleRecipeClick = (recipe: Recipe) => {
+        if (user) {
+            router.push(`/recipes/${recipe.slug}`);
+        } else {
+            setSelectedRecipe(recipe);
+            setShowLoginDialog(true);
+        }
+    };
+
+    const handleContinue = () => {
+        if (selectedRecipe) {
+            router.push(`/recipes/${selectedRecipe.slug}`);
+        }
+        setShowLoginDialog(false);
+    };
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-16">
@@ -61,7 +89,12 @@ export default function CookbookPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {cookbookRecipes.map((recipe, index) => (
-                    <CookbookRecipeCard key={recipe.id} recipe={recipe} animationDelay={`${index * 50}ms`} />
+                    <CookbookRecipeCard 
+                        key={recipe.id} 
+                        recipe={recipe}
+                        onCardClick={handleRecipeClick}
+                        animationDelay={`${index * 50}ms`} 
+                    />
                 ))}
             </div>
 
@@ -72,6 +105,12 @@ export default function CookbookPage() {
                     </p>
                 </div>
             )}
+            
+             <LoginSuggestionDialog 
+                open={showLoginDialog}
+                onOpenChange={setShowLoginDialog}
+                onContinue={handleContinue}
+             />
         </div>
     );
 }
