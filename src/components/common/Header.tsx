@@ -179,11 +179,7 @@ export function Header() {
                             <LogOut className="mr-2 h-4 w-4"/>
                             Logout
                         </Button>
-                    ) : (
-                        <Button asChild>
-                          <Link href="/sign-in">Login</Link>
-                        </Button>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </div>
