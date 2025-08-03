@@ -40,7 +40,7 @@ export function WhatsInYourKitchen() {
 
     try {
       const result = await getSuggestionsByIngredients({
-        ingredients: ingredients.split(',').map(i => i.trim()),
+        ingredients: ingredients.split(',').map(i => i.trim()).filter(Boolean),
         recipes: activeRecipes,
       });
       if (result.suggestions && result.suggestions.length > 0) {
@@ -70,7 +70,7 @@ export function WhatsInYourKitchen() {
             value={ingredients}
             onChange={(e) => setIngredients(e.target.value)}
             placeholder="e.g., onion, rice, tomato, chicken"
-            className="h-12 text-base flex-grow"
+            className="h-12 text-base flex-grow shadow-lg"
             disabled={loading}
           />
           <Button type="submit" size="lg" className="h-12 w-full sm:w-auto" disabled={loading}>
