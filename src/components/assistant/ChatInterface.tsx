@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { cookingAssistantFlow, CookingAssistantInput } from '@/ai/flows/cooking-assistant-flow';
+import { cookingAssistant } from '@/ai/flows/cooking-assistant-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -45,7 +45,7 @@ export function ChatInterface() {
 
     try {
       const history = newMessages.slice(0, -1);
-      const result = await cookingAssistantFlow({
+      const result = await cookingAssistant({
         history,
         message: input,
       });
