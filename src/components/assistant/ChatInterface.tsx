@@ -11,6 +11,7 @@ import { Bot, Loader2, User, Sparkles, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 
 interface Message {
@@ -141,7 +142,7 @@ export function ChatInterface() {
         <Card className="h-[75vh] flex flex-col">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-3">
-              <Bot className="text-primary h-8 w-8" />
+              <Image src="/images/ai-logo.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" />
               Savora AI Cooking Assistant
             </CardTitle>
             <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
@@ -159,6 +160,7 @@ export function ChatInterface() {
                   >
                     {message.role === 'model' && (
                       <Avatar className="h-8 w-8 border-2 border-primary">
+                        <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
                         <AvatarFallback>AI</AvatarFallback>
                       </Avatar>
                     )}
@@ -183,6 +185,7 @@ export function ChatInterface() {
                 {loading && (
                   <div className="flex items-start gap-4 justify-start">
                     <Avatar className="h-8 w-8 border-2 border-primary">
+                      <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
                     <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
