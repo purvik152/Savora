@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { cookingAssistant } from '@/ai/flows/cooking-assistant-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 interface Message {
   role: 'user' | 'model';
   content: string;
+}
+
+// The new format that the prompt expects
+interface PromptHistoryMessage {
+    isUser?: boolean;
+    isModel?: boolean;
+    content: string;
 }
 
 export function ChatInterface() {
@@ -33,7 +40,7 @@ export function ChatInterface() {
   }, [messages]);
 
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
@@ -44,7 +51,13 @@ export function ChatInterface() {
     setLoading(true);
 
     try {
-      const history = newMessages.slice(0, -1);
+      // Convert the message history to the format the prompt now expects
+      const history: PromptHistoryMessage[] = newMessages.slice(0, -1).map(msg => ({
+          isUser: msg.role === 'user',
+          isModel: msg.role === 'model',
+          content: msg.content,
+      }));
+
       const result = await cookingAssistant({
         history,
         message: input,
@@ -64,7 +77,7 @@ export function ChatInterface() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [messages, input, loading]);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
