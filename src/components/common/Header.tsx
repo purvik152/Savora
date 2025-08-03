@@ -40,6 +40,7 @@ const menuLinks = [
     { href: '/cookbook', label: 'Cookbook' },
     { href: '/mood-kitchen', label: 'Mood Kitchen' },
     { href: '/chef-challenge', label: 'Chef\'s Challenge' },
+    { href: '/cooking-assistant', label: 'AI Assistant' },
 ]
 
 function DietToggle() {
