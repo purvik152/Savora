@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -28,11 +29,24 @@ export const cookingAssistantFlow = ai.defineFlow(
   async (input) => {
     const {output} = await cookingAssistantPrompt(input);
     
-    if (output?.response) {
-      const ttsResult = await recipeToSpeech(output.response);
-      output.audioDataUri = ttsResult.audioDataUri;
+    if (!output?.response) {
+      // Handle cases where the AI doesn't return a response
+      return { response: "Sorry, I couldn't generate a response.", audioDataUri: null };
     }
 
-    return output!;
+    try {
+      const ttsResult = await recipeToSpeech(output.response);
+      return {
+        response: output.response,
+        audioDataUri: ttsResult.audioDataUri,
+      };
+    } catch (error) {
+      console.error("TTS Generation failed:", error);
+      // If TTS fails, still return the text response without audio.
+      return {
+        response: output.response,
+        audioDataUri: null,
+      };
+    }
   }
 );

@@ -7,14 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Loader2, User, Sparkles } from 'lucide-react';
+import { Bot, Loader2, User, Sparkles, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface Message {
   role: 'user' | 'model';
   content: string;
-  audioDataUri?: string;
+  audioDataUri?: string | null;
 }
 
 // The new format that the prompt expects
@@ -30,6 +32,54 @@ export function ChatInterface() {
   const [input, setInput] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const [isListening, setIsListening] = useState(false);
+  const [isBrowserSupported, setIsBrowserSupported] = useState(true);
+  const recognitionRef = useRef<any>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setIsBrowserSupported(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        toast({
+          variant: 'destructive',
+          title: 'Voice Search Error',
+          description: "Sorry, I couldn't hear you. Please try again.",
+        });
+      }
+    };
+    
+    recognitionRef.current = recognition;
+  }, [toast]);
+
+  const handleVoiceSearch = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
+
 
   useEffect(() => {
     // Scroll to the bottom when messages change
@@ -148,13 +198,30 @@ export function ChatInterface() {
           </CardContent>
           <div className="p-4 border-t">
             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="e.g., How can I substitute eggs in this recipe?"
-                className="flex-grow"
-                disabled={loading}
-              />
+              <div className="relative flex-grow">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="e.g., How can I substitute eggs in this recipe?"
+                  className="pr-10"
+                  disabled={loading}
+                />
+                 {isBrowserSupported && (
+                    <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleVoiceSearch}
+                    className={cn(
+                        "absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8",
+                        isListening && 'text-destructive animate-pulse'
+                    )}
+                    >
+                    <Mic className="h-4 w-4" />
+                    <span className="sr-only">Search with voice</span>
+                    </Button>
+                )}
+              </div>
               <Button type="submit" disabled={loading || !input.trim()}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 <span className="sr-only">Send message</span>
