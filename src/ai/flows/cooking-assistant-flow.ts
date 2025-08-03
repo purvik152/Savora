@@ -13,6 +13,7 @@ import {
   CookingAssistantOutputSchema,
   cookingAssistantPrompt,
 } from './cooking-assistant-types';
+import { recipeToSpeech } from './text-to-speech-flow';
 
 export async function cookingAssistant(input: CookingAssistantInput): Promise<CookingAssistantOutput> {
   return cookingAssistantFlow(input);
@@ -26,6 +27,12 @@ export const cookingAssistantFlow = ai.defineFlow(
   },
   async (input) => {
     const {output} = await cookingAssistantPrompt(input);
+    
+    if (output?.response) {
+      const ttsResult = await recipeToSpeech(output.response);
+      output.audioDataUri = ttsResult.audioDataUri;
+    }
+
     return output!;
   }
 );

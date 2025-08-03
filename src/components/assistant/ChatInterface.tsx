@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 interface Message {
   role: 'user' | 'model';
   content: string;
+  audioDataUri?: string;
 }
 
 // The new format that the prompt expects
@@ -28,6 +29,7 @@ export function ChatInterface() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Scroll to the bottom when messages change
@@ -64,8 +66,12 @@ export function ChatInterface() {
       });
       
       if (result?.response) {
-          const modelMessage: Message = { role: 'model', content: result.response };
+          const modelMessage: Message = { role: 'model', content: result.response, audioDataUri: result.audioDataUri };
           setMessages(prev => [...prev, modelMessage]);
+          if (result.audioDataUri && audioRef.current) {
+            audioRef.current.src = result.audioDataUri;
+            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
+          }
       } else {
           throw new Error("AI did not return a response.");
       }
@@ -156,6 +162,7 @@ export function ChatInterface() {
             </form>
           </div>
         </Card>
+        <audio ref={audioRef} className="hidden" />
       </div>
     </div>
   );

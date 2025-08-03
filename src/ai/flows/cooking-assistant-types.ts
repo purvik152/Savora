@@ -15,13 +15,14 @@ export type CookingAssistantInput = z.infer<typeof CookingAssistantInputSchema>;
 
 export const CookingAssistantOutputSchema = z.object({
   response: z.string().describe("The assistant's response."),
+  audioDataUri: z.string().optional().describe('The audio version of the response as a data URI.'),
 });
 export type CookingAssistantOutput = z.infer<typeof CookingAssistantOutputSchema>;
 
 export const cookingAssistantPrompt = ai.definePrompt({
   name: 'cookingAssistantPrompt',
   input: {schema: CookingAssistantInputSchema},
-  output: {schema: CookingAssistantOutputSchema},
+  output: {schema: z.object({ response: z.string() })},
   system: `You are Savora, a friendly and expert AI cooking companion. Your goal is to help users with all their food-related questions. You can answer questions about recipes, cooking techniques, ingredient substitutions, meal planning, and more. Be helpful, encouraging, and clear in your responses.`,
   prompt: `{{#each history}}
 {{#if this.isUser}}
