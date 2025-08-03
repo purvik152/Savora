@@ -4,22 +4,35 @@
 import { useState, useEffect } from "react";
 import { Newspaper, Loader2, ExternalLink } from "lucide-react";
 import { NewsFeedForm } from "@/components/news/NewsFeedForm";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getLatestFoodNews, NewsArticle } from "@/ai/flows/latest-food-news-flow";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { format } from 'date-fns';
+import Image from "next/image";
 
 function NewsArticleCard({ article }: { article: NewsArticle }) {
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-      <CardContent className="p-6">
+    <Card className="overflow-hidden transition-shadow hover:shadow-lg h-full flex flex-col">
+       <Link href={article.url} target="_blank" rel="noopener noreferrer" className="block">
+         <div className="relative h-40 w-full bg-secondary">
+            <Image 
+                src={article.imageUrl || 'https://placehold.co/600x400.png'}
+                alt={article.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                data-ai-hint="news article"
+            />
+         </div>
+       </Link>
+      <CardContent className="p-6 flex flex-col flex-grow">
         <p className="text-sm font-semibold text-muted-foreground mb-2">
           {article.source.name} - 
           <span className="ml-1">{article.publishedAt ? format(new Date(article.publishedAt), 'PPP') : 'N/A'}</span>
         </p>
-        <h3 className="font-bold text-lg leading-tight mb-3">
+        <h3 className="font-bold text-lg leading-tight mb-3 flex-grow">
             <Link href={article.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
                 {article.title}
             </Link>
@@ -27,7 +40,7 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
         <p className="text-sm text-foreground/80 line-clamp-3 mb-4">
             {article.description}
         </p>
-        <Link href={article.url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-semibold flex items-center gap-1 hover:underline">
+        <Link href={article.url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-semibold flex items-center gap-1 hover:underline mt-auto">
             Read full article <ExternalLink className="h-3 w-3"/>
         </Link>
       </CardContent>
@@ -85,9 +98,10 @@ export default function NewsPage() {
         <div className="lg:col-span-2 animate-fade-in-up" style={{animationDelay: '400ms'}}>
             <h2 className="text-3xl font-bold mb-6">Latest Headlines</h2>
             {loading ? (
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[...Array(4)].map((_, i) => (
                         <Card key={i}>
+                             <Skeleton className="h-40 w-full" />
                             <CardContent className="p-6 space-y-3">
                                 <Skeleton className="h-4 w-1/2" />
                                 <Skeleton className="h-6 w-full" />
@@ -98,7 +112,7 @@ export default function NewsPage() {
                     ))}
                 </div>
             ) : (
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {latestNews.map((article, index) => (
                        <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                          <NewsArticleCard article={article} />

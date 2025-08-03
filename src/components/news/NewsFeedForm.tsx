@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, ThumbsUp, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const formSchema = z.object({
   userSearchHistory: z.string().min(3, "Please enter at least one past search (e.g., 'keto recipes')."),
@@ -132,13 +133,25 @@ export function NewsFeedForm() {
           <h2 className="text-3xl font-bold text-center mb-8">Your Top Stories</h2>
           <div className="space-y-4">
             {newsSuggestions.map((suggestion, index) => (
-              <Card key={index} className="bg-background/70">
-                <CardContent className="p-6 flex items-start gap-4">
+              <Card key={index} className="bg-background/70 overflow-hidden">
+                <Link href={suggestion.url} target="_blank" rel="noopener noreferrer">
+                    <div className="relative h-32 w-full bg-secondary">
+                        <Image 
+                            src={suggestion.imageUrl || 'https://placehold.co/600x400.png'}
+                            alt={suggestion.title}
+                            fill
+                            className="object-cover"
+                            sizes="33vw"
+                            data-ai-hint="news article"
+                        />
+                    </div>
+                </Link>
+                <CardContent className="p-4 flex items-start gap-4">
                   <div className="bg-primary/20 text-primary p-2 rounded-full mt-1">
-                    <ThumbsUp className="h-6 w-6" />
+                    <ThumbsUp className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                      <Link href={suggestion.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">
+                      <Link href={suggestion.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-sm text-foreground hover:underline">
                         {suggestion.title}
                       </Link>
                       <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
