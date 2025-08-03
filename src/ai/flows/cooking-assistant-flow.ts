@@ -53,3 +53,8 @@ export const cookingAssistantFlow = ai.defineFlow(
     return output!;
   }
 );
+
+// Exporting the flow directly to be used as a server action
+export async function cookingAssistant(input: CookingAssistantInput): Promise<CookingAssistantOutput> {
+    return cookingAssistantFlow(input);
+}

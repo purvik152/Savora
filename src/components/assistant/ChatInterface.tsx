@@ -1,9 +1,8 @@
 
 "use client";
 
-import { useState } from 'react';
-import { useFlow, type Message } from '@genkit-ai/next/react';
-import { cookingAssistantFlow } from '@/ai/flows/cooking-assistant-flow';
+import { useState, useRef, useEffect } from 'react';
+import { cookingAssistantFlow, CookingAssistantInput } from '@/ai/flows/cooking-assistant-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,33 +11,58 @@ import { Bot, Loader2, User, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
+interface Message {
+  role: 'user' | 'model';
+  content: string;
+}
+
 export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState('');
-  const { run: runAssistant, loading } = useFlow(cookingAssistantFlow);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    if (scrollAreaRef.current) {
+        const viewport = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewport) {
+            viewport.scrollTop = viewport.scrollHeight;
+        }
+    }
+  }, [messages]);
+
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
     const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput('');
+    setLoading(true);
 
     try {
-      const response = await runAssistant({
-        history: messages,
+      const history = newMessages.slice(0, -1);
+      const result = await cookingAssistantFlow({
+        history,
         message: input,
       });
-
-      if (response?.response) {
-        const modelMessage: Message = { role: 'model', content: response.response };
-        setMessages(prev => [...prev, modelMessage]);
+      
+      if (result?.response) {
+          const modelMessage: Message = { role: 'model', content: result.response };
+          setMessages(prev => [...prev, modelMessage]);
+      } else {
+          throw new Error("AI did not return a response.");
       }
+
     } catch (error) {
       console.error('Error calling cooking assistant flow:', error);
-      const errorMessage: Message = { role: 'model', content: 'Sorry, I ran into an error. Please try again.' };
+      const errorMessage: Message = { role: 'model', content: "Sorry, I encountered an error. Please try again." };
       setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +78,7 @@ export function ChatInterface() {
             <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
           </CardHeader>
           <CardContent className="flex-grow p-0 overflow-hidden">
-            <ScrollArea className="h-full p-6">
+            <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
               <div className="space-y-6">
                 {messages.map((message, index) => (
                   <div
