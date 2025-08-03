@@ -1,3 +1,4 @@
+
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
@@ -15,7 +16,7 @@ export type CookingAssistantInput = z.infer<typeof CookingAssistantInputSchema>;
 
 export const CookingAssistantOutputSchema = z.object({
   response: z.string().describe("The assistant's response."),
-  audioDataUri: z.string().optional().describe('The audio version of the response as a data URI.'),
+  audioDataUri: z.string().nullable().optional().describe('The audio version of the response as a data URI.'),
 });
 export type CookingAssistantOutput = z.infer<typeof CookingAssistantOutputSchema>;
 
