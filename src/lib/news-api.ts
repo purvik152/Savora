@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 export const NewsArticleSchema = z.object({
   title: z.string().describe('The headline of the news article.'),
-  url: z.string().url().describe('The direct URL to the full news article.'),
+  url: z.string().describe('The direct URL to the full news article.'),
   source: z.object({ name: z.string() }).describe('The news source, containing its name.'),
-  imageUrl: z.string().url().optional().describe('The URL for a relevant image.'),
+  imageUrl: z.string().optional().describe('The URL for a relevant image.'),
   description: z.string().optional().describe('A brief description of the article.'),
   publishedAt: z.string().optional().describe('The publication date of the article.'),
 });
@@ -31,8 +31,11 @@ export async function getNewsFromAPI({ query }: GetNewsInput): Promise<NewsArtic
   }
   const data = await response.json();
   
+  // Filter out articles with null or invalid URLs before mapping
+  const validArticles = data.articles.filter((article: any) => article.url);
+
   // Map to the schema, ensuring all fields are present
-  return data.articles.map((article: any) => ({
+  return validArticles.map((article: any) => ({
     title: article.title || 'No title provided',
     url: article.url,
     source: { name: article.source?.name || 'Unknown Source' },
