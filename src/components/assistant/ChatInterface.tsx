@@ -142,7 +142,7 @@ export function ChatInterface() {
         <Card className="h-[75vh] flex flex-col">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-3">
-              <Image src="/images/ai-logo.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" />
+              <Image src="https://placehold.co/40x40.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" data-ai-hint="robot logo" />
               Savora AI Cooking Assistant
             </CardTitle>
             <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
@@ -160,7 +160,7 @@ export function ChatInterface() {
                   >
                     {message.role === 'model' && (
                       <Avatar className="h-8 w-8 border-2 border-primary">
-                        <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
+                        <AvatarImage src="https://placehold.co/32x32.png" alt="AI Assistant" data-ai-hint="robot logo" />
                         <AvatarFallback>AI</AvatarFallback>
                       </Avatar>
                     )}
@@ -185,7 +185,7 @@ export function ChatInterface() {
                 {loading && (
                   <div className="flex items-start gap-4 justify-start">
                     <Avatar className="h-8 w-8 border-2 border-primary">
-                      <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
+                      <AvatarImage src="https://placehold.co/32x32.png" alt="AI Assistant" data-ai-hint="robot logo" />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
                     <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
