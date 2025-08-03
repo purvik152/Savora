@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useFlow, type Message } from '@genkit-ai/flow/react';
+import { useState } from 'react';
+import { useFlow, type Message } from '@genkit-ai/next/react';
 import { cookingAssistantFlow } from '@/ai/flows/cooking-assistant-flow';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
