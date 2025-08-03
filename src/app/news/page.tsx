@@ -7,35 +7,34 @@ import { NewsFeedForm } from "@/components/news/NewsFeedForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { getLatestFoodNews, NewsArticle } from "@/ai/flows/latest-food-news-flow";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { format } from 'date-fns';
 
 function NewsArticleCard({ article }: { article: NewsArticle }) {
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-      <Link href={article.url} target="_blank" rel="noopener noreferrer">
-        <div className="relative h-40 w-full bg-secondary">
-           <Image 
-                src={article.imageUrl || 'https://placehold.co/600x400.png'}
-                alt={article.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-                data-ai-hint="news article"
-           />
-        </div>
-        <CardContent className="p-4">
-          <p className="text-sm font-semibold text-muted-foreground">{article.source.name}</p>
-          <h3 className="font-bold line-clamp-2 mt-1">{article.title}</h3>
-          <div className="text-xs text-primary mt-2 flex items-center gap-1">
+      <CardContent className="p-6">
+        <p className="text-sm font-semibold text-muted-foreground mb-2">
+          {article.source.name} - 
+          <span className="ml-1">{article.publishedAt ? format(new Date(article.publishedAt), 'PPP') : 'N/A'}</span>
+        </p>
+        <h3 className="font-bold text-lg leading-tight mb-3">
+            <Link href={article.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                {article.title}
+            </Link>
+        </h3>
+        <p className="text-sm text-foreground/80 line-clamp-3 mb-4">
+            {article.description}
+        </p>
+        <Link href={article.url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-semibold flex items-center gap-1 hover:underline">
             Read full article <ExternalLink className="h-3 w-3"/>
-          </div>
-        </CardContent>
-      </Link>
+        </Link>
+      </CardContent>
     </Card>
   );
 }
+
 
 export default function NewsPage() {
   const [latestNews, setLatestNews] = useState<NewsArticle[]>([]);
@@ -59,8 +58,8 @@ export default function NewsPage() {
         });
         // Set mock data on error so the page doesn't look broken
         setLatestNews([
-          { title: `Could not fetch news.`, url: '#', source: { name: 'Error' }, imageUrl: 'https://placehold.co/600x400.png' },
-          { title: `Please ensure your NewsAPI key is set in the .env file.`, url: '#', source: { name: 'Error' }, imageUrl: 'https://placehold.co/600x400.png' },
+          { title: `Could not fetch news.`, url: '#', source: { name: 'Error' }, description: 'There was an issue connecting to the news service.' },
+          { title: `Please ensure your NewsAPI key is set in the .env file.`, url: '#', source: { name: 'Error' }, description: 'A valid API key is required to fetch headlines.' },
         ]);
       } finally {
         setLoading(false);
@@ -86,20 +85,20 @@ export default function NewsPage() {
         <div className="lg:col-span-2 animate-fade-in-up" style={{animationDelay: '400ms'}}>
             <h2 className="text-3xl font-bold mb-6">Latest Headlines</h2>
             {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-6">
                     {[...Array(4)].map((_, i) => (
                         <Card key={i}>
-                            <Skeleton className="h-40 w-full" />
-                            <CardContent className="p-4 space-y-2">
-                                <Skeleton className="h-4 w-1/4" />
-                                <Skeleton className="h-5 w-full" />
-                                <Skeleton className="h-5 w-3/4" />
+                            <CardContent className="p-6 space-y-3">
+                                <Skeleton className="h-4 w-1/2" />
+                                <Skeleton className="h-6 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-5/6" />
                             </CardContent>
                         </Card>
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-6">
                     {latestNews.map((article, index) => (
                        <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                          <NewsArticleCard article={article} />

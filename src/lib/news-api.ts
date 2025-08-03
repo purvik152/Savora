@@ -6,6 +6,8 @@ export const NewsArticleSchema = z.object({
   url: z.string().url().describe('The direct URL to the full news article.'),
   source: z.object({ name: z.string() }).describe('The news source, containing its name.'),
   imageUrl: z.string().url().optional().describe('The URL for a relevant image.'),
+  description: z.string().optional().describe('A brief description of the article.'),
+  publishedAt: z.string().optional().describe('The publication date of the article.'),
 });
 export type NewsArticle = z.infer<typeof NewsArticleSchema>;
 
@@ -34,6 +36,8 @@ export async function getNewsFromAPI({ query }: GetNewsInput): Promise<NewsArtic
     title: article.title || 'No title provided',
     url: article.url,
     source: { name: article.source?.name || 'Unknown Source' },
-    imageUrl: article.urlToImage || 'https://placehold.co/600x400.png',
-  }));
+    imageUrl: article.urlToImage || undefined,
+    description: article.description || '',
+    publishedAt: article.publishedAt || undefined,
+  })).filter((article: NewsArticle) => article.title && article.description && article.url);
 }
