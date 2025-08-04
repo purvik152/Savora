@@ -21,6 +21,7 @@ import { SearchDialog } from '@/components/search/SearchDialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CookbookCta } from '@/components/home/CookbookCta';
+import { FloatingAssistant } from '@/components/home/FloatingAssistant';
 
 
 const allFeaturedRecipes = [
@@ -226,6 +227,7 @@ export default function Home() {
               {featuredRecipes.map((recipe, index) => (
                 <CarouselItem key={index}>
                   <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
+                    <FloatingAssistant />
                     <Link href={recipe.href} className="block h-full w-full group">
                         <Image
                           src={recipe.image}
