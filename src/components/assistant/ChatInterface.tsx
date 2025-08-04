@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX } from 'lucide-react';
+import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX, Pause, Power } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -100,14 +100,18 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   }, [messages]);
 
 
-  const handleSendMessage = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
+  const handleSendMessage = useCallback(async (e: React.FormEvent | string) => {
+    if (typeof e !== 'string') {
+        e.preventDefault();
+    }
+    
+    const messageContent = typeof e === 'string' ? e : input;
+    if (!messageContent.trim() || loading) return;
 
-    const userMessage: Message = { role: 'user', content: input };
+    const userMessage: Message = { role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    setInput('');
+    if(typeof e !== 'string') setInput('');
     setLoading(true);
 
     try {
@@ -120,7 +124,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
 
       const result = await cookingAssistant({
         history,
-        message: input,
+        message: messageContent,
         isAudioEnabled,
       });
       
@@ -236,7 +240,15 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
               </div>
             </ScrollArea>
           </CardContent>
-          <div className="p-4 border-t">
+          <div className="p-4 border-t space-y-2">
+             <div className="flex justify-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleSendMessage('pause')} disabled={loading}>
+                    <Pause className="h-4 w-4 mr-2"/> Pause
+                </Button>
+                 <Button variant="destructive" size="sm" onClick={() => handleSendMessage('end session')} disabled={loading}>
+                    <Power className="h-4 w-4 mr-2"/> End Session
+                </Button>
+            </div>
             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
               <div className="relative flex-grow">
                 <Input
