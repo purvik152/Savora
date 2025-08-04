@@ -29,12 +29,21 @@ export const cookingAssistantFlow = ai.defineFlow(
   async (input) => {
     const {output} = await cookingAssistantPrompt(input);
     
+    // If the model does not return a meaningful response, provide a default one.
     if (!output?.response) {
-      // Handle cases where the AI doesn't return a response
-      return { response: "Sorry, I couldn't generate a response.", audioDataUri: null };
+      // This handles cases where a command is understood but no text is generated.
+      const defaultResponse = "Okay, I'll wait for your next instruction.";
+      try {
+        const ttsResult = await recipeToSpeech(defaultResponse);
+        return { response: defaultResponse, audioDataUri: ttsResult.audioDataUri };
+      } catch (ttsError) {
+        console.error("TTS Generation failed for default response:", ttsError);
+        return { response: defaultResponse, audioDataUri: null };
+      }
     }
 
     try {
+      // If there is a response, attempt to generate audio for it.
       const ttsResult = await recipeToSpeech(output.response);
       return {
         response: output.response,

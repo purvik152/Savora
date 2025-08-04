@@ -101,15 +101,21 @@ const recipeAssistantFlow = ai.defineFlow(
   async (input) => {
     const {output} = await prompt(input);
 
-    // Add a safeguard for the nextStep index.
-    if (output) {
-        // Allow -1 for ending the session
-        const isOutOfBounds = output.nextStep < -1 || output.nextStep >= input.instructions.length;
-        if (isOutOfBounds) {
-            // If the AI gives an invalid step, fallback to the current step.
-            output.nextStep = input.currentStep;
-        }
+    // Safeguard to ensure the AI returns a valid response.
+    if (!output || !output.responseText) {
+        return {
+            responseText: "Sorry, I didn't catch that. Please say it again.",
+            nextStep: input.currentStep,
+        };
     }
-    return output!;
+    
+    // Safeguard for the nextStep index.
+    const isOutOfBounds = output.nextStep < -1 || output.nextStep >= input.instructions.length;
+    if (isOutOfBounds) {
+        // If the AI gives an invalid step, fallback to the current step.
+        output.nextStep = input.currentStep;
+    }
+    
+    return output;
   }
 );
