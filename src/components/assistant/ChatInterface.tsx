@@ -152,7 +152,6 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       const result = await cookingAssistant({
         history,
         message: messageContent,
-        isAudioEnabled,
       });
       
       if (result?.response) {
