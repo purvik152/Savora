@@ -2,5 +2,5 @@
 import { ChatInterface } from '@/components/assistant/ChatInterface';
 
 export default function CookingAssistantPage() {
-  return <ChatInterface />;
+  return <ChatInterface isDialog={false} />;
 }

@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Loader2, User, Sparkles, Mic } from 'lucide-react';
+import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
 
 
 interface Message {
@@ -27,12 +29,17 @@ interface PromptHistoryMessage {
     content: string;
 }
 
-export function ChatInterface() {
+interface ChatInterfaceProps {
+    isDialog?: boolean;
+}
+
+export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
 
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -114,42 +121,72 @@ export function ChatInterface() {
       const result = await cookingAssistant({
         history,
         message: input,
+        isAudioEnabled,
       });
       
       if (result?.response) {
           const modelMessage: Message = { role: 'model', content: result.response, audioDataUri: result.audioDataUri };
           setMessages(prev => [...prev, modelMessage]);
-          if (result.audioDataUri && audioRef.current) {
+          if (isAudioEnabled && result.audioDataUri && audioRef.current) {
             audioRef.current.src = result.audioDataUri;
             audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
           }
       } else {
-          throw new Error("AI did not return a response.");
+          throw new Error("The AI flow did not return a valid response, so no audio could be generated.");
       }
 
-    } catch (error) {
-      console.error('Error calling cooking assistant flow:', error);
-      const errorMessage: Message = { role: 'model', content: "Sorry, I encountered an error. Please try again." };
-      setMessages(prev => [...prev, errorMessage]);
+    } catch (error: any) {
+        console.error('Error calling cooking assistant flow:', error);
+        let errorMessageContent = "Sorry, I encountered an error. Please try again.";
+        // Check if the error message from the flow should be displayed
+        if (error.message && error.message.includes("The AI flow did not return a valid response")) {
+            errorMessageContent = error.message;
+        }
+        const errorMessage: Message = { role: 'model', content: errorMessageContent };
+        setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
-  }, [messages, input, loading]);
+  }, [messages, input, loading, isAudioEnabled]);
+  
+  const ChatContainer = isDialog ? 'div' : Card;
+  const chatContainerProps = isDialog ? { className: "h-full flex flex-col" } : { className: "h-[75vh] flex flex-col" };
+
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="max-w-3xl mx-auto">
-        <Card className="h-[75vh] flex flex-col">
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-3">
-              <Image src="/images/ai-logo.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" />
-              Savora AI Cooking Assistant
-            </CardTitle>
-            <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
+    <div className={cn(!isDialog && "container mx-auto px-4 py-8 md:py-16")}>
+      <div className={cn(!isDialog && "max-w-3xl mx-auto")}>
+        <ChatContainer {...chatContainerProps}>
+          <CardHeader className="border-b flex-row justify-between items-center">
+            <div>
+              <CardTitle className="flex items-center gap-3">
+                <Image src="/images/ai-logo.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" />
+                Savora AI Cooking Assistant
+              </CardTitle>
+              <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
+            </div>
+             <div className="flex items-center space-x-2">
+                <Switch 
+                    id="audio-responses" 
+                    checked={isAudioEnabled}
+                    onCheckedChange={setIsAudioEnabled}
+                />
+                <Label htmlFor="audio-responses" className="flex items-center gap-1">
+                    {isAudioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-muted-foreground"/>}
+                    <span className="sr-only">Spoken Responses</span>
+                </Label>
+            </div>
           </CardHeader>
           <CardContent className="flex-grow p-0 overflow-hidden">
             <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
               <div className="space-y-6">
+                {messages.length === 0 && (
+                    <div className="text-center text-muted-foreground pt-16">
+                        <Bot className="h-12 w-12 mx-auto mb-4" />
+                        <p className="font-semibold">Hello there!</p>
+                        <p className="text-sm">How can I help you in the kitchen today?</p>
+                    </div>
+                )}
                 {messages.map((message, index) => (
                   <div
                     key={index}
@@ -231,7 +268,7 @@ export function ChatInterface() {
               </Button>
             </form>
           </div>
-        </Card>
+        </ChatContainer>
         <audio ref={audioRef} className="hidden" />
       </div>
     </div>
