@@ -1,11 +1,12 @@
 
+
 'use client';
 
 import Link from 'next/link';
 
 export function FloatingAssistant() {
   return (
-    <div className="absolute -bottom-8 left-0 hidden lg:block z-20 group">
+    <div className="fixed bottom-8 left-8 hidden lg:block z-20 group">
       <Link href="/cooking-assistant" title="Meet your AI Cooking Assistant!">
         <div className="relative w-48 h-48 animate-chef-wobble group-hover:scale-110 transition-transform duration-300">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-16 bg-black/10 rounded-full blur-md" />

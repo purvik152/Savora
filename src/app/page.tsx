@@ -210,7 +210,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      
+      <FloatingAssistant />
       {/* Hero Carousel Section */}
       <section className="mb-16 animate-fade-in-up">
         {hasMounted && featuredRecipes.length > 0 ? (
@@ -227,7 +227,6 @@ export default function Home() {
               {featuredRecipes.map((recipe, index) => (
                 <CarouselItem key={index}>
                   <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
-                    <FloatingAssistant />
                     <Link href={recipe.href} className="block h-full w-full group">
                         <Image
                           src={recipe.image}
