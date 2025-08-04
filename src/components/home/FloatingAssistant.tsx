@@ -9,6 +9,10 @@ export function FloatingAssistant() {
     <div className="fixed bottom-8 left-8 hidden lg:block z-20 group">
       <Link href="/cooking-assistant" title="Meet your AI Cooking Assistant!">
         <div className="relative w-48 h-48 animate-chef-wobble group-hover:scale-110 transition-transform duration-300">
+          <div className="absolute -bottom-2 -right-16 bg-card border rounded-full px-4 py-2 opacity-0 group-hover:opacity-100 group-hover:-translate-y-4 transition-all duration-300 ease-in-out shadow-lg">
+            <p className="font-bold text-primary">Need help?</p>
+            <div className="absolute left-4 -bottom-2 w-0 h-0 border-t-8 border-t-card border-l-8 border-l-transparent border-r-8 border-r-transparent" />
+          </div>
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-16 bg-black/10 rounded-full blur-md" />
           <svg
             viewBox="0 0 200 200"
