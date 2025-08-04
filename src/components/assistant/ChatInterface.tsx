@@ -150,12 +150,12 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   }, [messages, input, loading, isAudioEnabled]);
   
   const ChatContainer = isDialog ? 'div' : Card;
-  const chatContainerProps = isDialog ? { className: "h-full flex flex-col" } : { className: "h-[75vh] flex flex-col" };
+  const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1" } : { className: "h-[75vh] flex flex-col" };
 
 
   return (
-    <div className={cn(!isDialog && "container mx-auto px-4 py-8 md:py-16")}>
-      <div className={cn(!isDialog && "max-w-3xl mx-auto")}>
+    <div className={cn(!isDialog && "container mx-auto px-4 py-8 md:py-16", isDialog && "h-full flex-1 flex-col")}>
+      <div className={cn(!isDialog && "max-w-3xl mx-auto", isDialog && "h-full flex flex-col")}>
         <ChatContainer {...chatContainerProps}>
           <CardHeader className="border-b flex-row justify-between items-center">
             <div>
