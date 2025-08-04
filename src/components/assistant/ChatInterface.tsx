@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX, Pause, Power } from 'lucide-react';
+import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX, Pause, Power, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -40,6 +40,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -79,6 +80,26 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     
     recognitionRef.current = recognition;
   }, [toast]);
+  
+  // Set up audio element listeners
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+        const handlePlay = () => setIsAudioPlaying(true);
+        const handlePause = () => setIsAudioPlaying(false);
+        const handleEnded = () => setIsAudioPlaying(false);
+
+        audioElement.addEventListener('play', handlePlay);
+        audioElement.addEventListener('pause', handlePause);
+        audioElement.addEventListener('ended', handleEnded);
+
+        return () => {
+            audioElement.removeEventListener('play', handlePlay);
+            audioElement.removeEventListener('pause', handlePause);
+            audioElement.removeEventListener('ended', handleEnded);
+        };
+    }
+  }, []);
 
   const handleVoiceSearch = () => {
     if (isListening) {
@@ -107,6 +128,12 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     
     const messageContent = typeof e === 'string' ? e : input;
     if (!messageContent.trim() || loading) return;
+
+    // Stop any currently playing audio before sending a new message
+    if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+    }
 
     const userMessage: Message = { role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
@@ -152,6 +179,16 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       setLoading(false);
     }
   }, [messages, input, loading, isAudioEnabled]);
+
+  const handleAudioPlayback = () => {
+    if (audioRef.current) {
+        if (audioRef.current.paused) {
+            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
+        } else {
+            audioRef.current.pause();
+        }
+    }
+  };
   
   const ChatContainer = isDialog ? 'div' : Card;
   const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1" } : { className: "h-[75vh] flex flex-col" };
@@ -242,8 +279,9 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
           </CardContent>
           <div className="p-4 border-t space-y-2">
              <div className="flex justify-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleSendMessage('pause')} disabled={loading}>
-                    <Pause className="h-4 w-4 mr-2"/> Pause
+                <Button variant="outline" size="sm" onClick={handleAudioPlayback} disabled={loading || !messages.some(m => m.audioDataUri)}>
+                    {isAudioPlaying ? <Pause className="h-4 w-4 mr-2"/> : <Play className="h-4 w-4 mr-2" />}
+                    {isAudioPlaying ? 'Pause' : 'Play'}
                 </Button>
                  <Button variant="destructive" size="sm" onClick={() => handleSendMessage('end session')} disabled={loading}>
                     <Power className="h-4 w-4 mr-2"/> End Session
@@ -286,3 +324,4 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     </div>
   );
 }
+
