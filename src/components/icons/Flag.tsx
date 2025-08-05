@@ -141,7 +141,7 @@ export function Flag({ country, className, ...props }: FlagProps) {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 11" {...props}><path fill="#fff" d="M0 0h16v11H0z"/><path stroke="#0038b8" strokeWidth=".7" d="M0 1.5h16M0 9.5h16"/><path fill="none" stroke="#0038b8" strokeWidth=".7" d="M8 3.4l-2 3.4h4zM8 7.6l2-3.4H6z"/></svg>
     ),
     "South Korea": (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}><path fill="#fff" d="M0 0h900v600H0z"/><g transform="translate(450 300)"><circle fill="#cd2e3a" r="150"/><circle fill="#0047a0" r="150" pathLength="1" stroke-dasharray="0 .5" stroke-dashoffset=".25"/><circle fill="#fff" r="75"/></g><g fill="#000" transform="matrix(150 0 0 150 225 150)"><path d="M-1 0h2v.5h-2z" transform="rotate(30.96)"/><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z"/></g><g fill="#000" transform="matrix(150 0 0 150 675 150)"><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z" transform="rotate(30.96)"/><path d="M-1 0h2v.5h-2z" transform="translate(0 .5)"/></g><g fill="#000" transform="matrix(150 0 0 150 225 450)"><path d="M-1 0h2v.5h-2z" transform="rotate(30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z"/></g><g fill="#000" transform="matrix(150 0 0 150 675 450)"><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z" transform="rotate(30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z"/></g></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}><path fill="#fff" d="M0 0h900v600H0z"/><g transform="translate(450 300)"><circle fill="#cd2e3a" r="150"/><circle fill="#0047a0" r="150" pathLength="1" strokeDasharray="0 .5" strokeDashoffset=".25"/><circle fill="#fff" r="75"/></g><g fill="#000" transform="matrix(150 0 0 150 225 150)"><path d="M-1 0h2v.5h-2z" transform="rotate(30.96)"/><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z"/></g><g fill="#000" transform="matrix(150 0 0 150 675 150)"><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z" transform="rotate(30.96)"/><path d="M-1 0h2v.5h-2z" transform="translate(0 .5)"/></g><g fill="#000" transform="matrix(150 0 0 150 225 450)"><path d="M-1 0h2v.5h-2z" transform="rotate(30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96)"/><path d="M-1 0h2v.5h-2z"/></g><g fill="#000" transform="matrix(150 0 0 150 675 450)"><path d="M-1 0h2v.5h-2z" transform="rotate(-30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z" transform="rotate(30.96) translate(0 .5)"/><path d="M-1 0h2v.5h-2z"/></g></svg>
     ),
     Brazil: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" {...props}><path fill="#009c3b" d="M0 0h1000v700H0z"/><path fill="#ffdf00" d="M500 57.5L95.5 350 500 642.5 904.5 350z"/><circle fill="#002776" cx="500" cy="350" r="175"/></svg>
@@ -153,10 +153,10 @@ export function Flag({ country, className, ...props }: FlagProps) {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}><path fill="#e03c31" d="M0 0h900v300H0z"/><path fill="#002395" d="M0 300h900v300H0z"/><path fill="#fff" d="M0 200h900v200H0z"/><path fill="#007749" d="M0 0v600l300-100 200 100-200 100-300-100z"/><path fill="#ffb612" d="M0 62.1v475.8l262.5-87.5-262.5-300.8z" transform="translate(0 31.05) scale(.9)"/><path d="M0 0v600l300-100-300-400z"/></svg>
     ),
     Morocco: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 3" {...props}><path d="M0 0h5v3H0z" fill="#c1272d"/><path d="M2.5 1.766L2.235 2.5l-.866-1.5.866-1.5L2.5 1.234l.265-.766.866 1.5z" fill="none" stroke="#006233" stroke-width=".12"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 3" {...props}><path d="M0 0h5v3H0z" fill="#c1272d"/><path d="M2.5 1.766L2.235 2.5l-.866-1.5.866-1.5L2.5 1.234l.265-.766.866 1.5z" fill="none" stroke="#006233" strokeWidth=".12"/></svg>
     ),
     Argentina: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 6" {...props}><path d="M0 0h9v6H0z" fill="#75aADB"/><path d="M0 2h9v2H0z" fill="#fff"/><g fill="#F4B400" transform="translate(4.5 3)"><circle r="1"/><path d="M0-1.125V-2M-1 0H-2.125m1 .625L-1.94 1.1M0 1.125V2m1 0h1.125m1-.625L1.94-1.1m0-1.25L1.1-1.94M-1-1.125l-1.06-.81" stroke="#F4B400" stroke-width=".25" stroke-linecap="round"/></g></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 6" {...props}><path d="M0 0h9v6H0z" fill="#75aADB"/><path d="M0 2h9v2H0z" fill="#fff"/><g fill="#F4B400" transform="translate(4.5 3)"><circle r="1"/><path d="M0-1.125V-2M-1 0H-2.125m1 .625L-1.94 1.1M0 1.125V2m1 0h1.125m1-.625L1.94-1.1m0-1.25L1.1-1.94M-1-1.125l-1.06-.81" stroke="#F4B400" strokeWidth=".25" strokeLinecap="round"/></g></svg>
     ),
     Poland: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5" {...props}><path d="M0 0h8v5H0z" fill="#fff"/><path d="M0 2.5h8v2.5H0z" fill="#dc143c"/></svg>
@@ -168,11 +168,18 @@ export function Flag({ country, className, ...props }: FlagProps) {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" {...props}><path d="M0 0h3v2H0z" fill="#fcd116"/><path d="M0 1h3v.5H0z" fill="#003893"/><path d="M0 1.5h3v.5H0z" fill="#ce1126"/></svg>
     ),
     Jamaica: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" {...props}><path d="M0 0h12v6H0z"/><path d="M0 0l6 3L0 6zM12 0L6 3l6 6z" fill="#009b3a"/><path d="M0 0l12 6m0-6L0 6" stroke="#fed100" stroke-width="1.6"/><path d="M0 0l12 6m0-6L0 6" stroke-width=".8"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" {...props}><path d="M0 0h12v6H0z"/><path d="M0 0l6 3L0 6zM12 0L6 3l6 6z" fill="#009b3a"/><path d="M0 0l12 6m0-6L0 6" stroke="#fed100" strokeWidth="1.6"/><path d="M0 0l12 6m0-6L0 6" strokeWidth=".8"/></svg>
     ),
     Sweden: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 10" {...props}><path d="M0 0h16v10H0z" fill="#006aa7"/><path d="M5 0h2v10H5zM0 4h16v2H0z" fill="#fecc00"/></svg>
     ),
+    Peru: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" {...props}>
+            <path fill="#D91023" d="M0 0h1v2H0z"/>
+            <path fill="#fff" d="M1 0h1v2H1z"/>
+            <path fill="#D91023" d="M2 0h1v2H2z"/>
+        </svg>
+    )
   };
 
   const FlagComponent = flags[country] || <div className="h-4 w-6 rounded-sm bg-muted border" />;
