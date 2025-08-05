@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Image from 'next/image';
@@ -25,11 +24,13 @@ import { FloatingAssistant } from '@/components/home/FloatingAssistant';
 
 
 const allFeaturedRecipes = [
-  // You can add your video here. Just replace the videoSrc with your YouTube embed link.
+  // You can add your video here.
+  // 1. Place your video file (e.g., my-video.mp4) inside the `public/images` folder.
+  // 2. Change the `videoSrc` below to `/images/my-video.mp4`.
   {
     type: 'video',
     name: 'Savora in Action',
-    videoSrc: 'https://www.youtube.com/embed/U9YKY7fdwyg?autoplay=1&mute=1&loop=1&playlist=U9YKY7fdwyg&controls=0',
+    videoSrc: '/images/savora-promo.mp4', // <-- CHANGE THIS PATH TO YOUR VIDEO
     description: 'See how Savora makes cooking simpler, faster, and more enjoyable.',
     href: '/#', // Link for the call to action, can be changed
     diet: 'all'
@@ -242,13 +243,16 @@ export default function Home() {
                 <CarouselItem key={index}>
                   <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
                     {recipe.type === 'video' ? (
-                       <iframe
+                       <video
                         src={recipe.videoSrc}
-                        className="absolute top-0 left-0 w-full h-full border-0"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                        title={recipe.name}
-                      ></iframe>
+                        className="absolute top-0 left-0 w-full h-full object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      >
+                        Your browser does not support the video tag.
+                      </video>
                     ) : (
                       <Link href={recipe.href} className="block h-full w-full group">
                         <Image
@@ -411,7 +415,7 @@ export default function Home() {
                   key={recipe.id} 
                   recipe={recipe} 
                   onUpvote={handleCommunityUpvote} 
-                  onRemove={handleRemoveCommunityRecipe}
+                  onRemove={handleCommunityRemoveCommunityRecipe}
                 />
             )) : (
                 <p className="text-muted-foreground text-center col-span-full">No community recipes in this view yet.</p>
