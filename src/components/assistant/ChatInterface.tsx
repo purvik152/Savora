@@ -73,8 +73,20 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
+  const [speechVoices, setSpeechVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
+    const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            setSpeechVoices(voices);
+        }
+    };
+    if ('speechSynthesis' in window) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setIsBrowserSupported(false);
@@ -139,8 +151,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     setMessages(newMessages);
     setInput('');
     setLoading(true);
-    setIsTyping(true);
-
+    
     try {
       const history: PromptHistoryMessage[] = newMessages.slice(0, -1).map(msg => ({
           isUser: msg.role === 'user',
@@ -156,6 +167,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       if (result?.response) {
           const modelMessage: Message = { id: `model-${messageIdCounter++}`, role: 'model', content: result.response };
           setMessages(prev => [...prev, modelMessage]);
+          setIsTyping(true);
       } else {
           throw new Error("The AI flow did not return a valid response.");
       }
@@ -171,15 +183,29 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   }, [messages, input, loading, isTyping]);
   
   const readAloud = (text: string) => {
-    if ('speechSynthesis' in window) {
+    if ('speechSynthesis' in window && speechVoices.length > 0) {
       speechSynthesis.cancel(); // Stop any previous speech
       const utterance = new SpeechSynthesisUtterance(text);
+
+      // Find a graceful female voice
+      let selectedVoice = speechVoices.find(voice => voice.name.includes('Google') && voice.name.includes('Female'));
+      if (!selectedVoice) {
+        selectedVoice = speechVoices.find(voice => voice.name.includes('Microsoft') && voice.name.includes('Female'));
+      }
+      if (!selectedVoice) {
+        selectedVoice = speechVoices.find(voice => voice.lang.startsWith('en') && voice.name.includes('Female'));
+      }
+      
+      utterance.voice = selectedVoice || speechVoices.find(voice => voice.lang.startsWith('en-US')) || speechVoices[0];
+      utterance.pitch = 1;
+      utterance.rate = 1;
+
       speechSynthesis.speak(utterance);
     } else {
       toast({
         variant: 'destructive',
         title: 'Browser Not Supported',
-        description: 'Text-to-speech is not supported by your browser.',
+        description: 'Text-to-speech is not supported by your browser or voices are not available.',
       });
     }
   };
