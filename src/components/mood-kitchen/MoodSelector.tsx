@@ -1,17 +1,17 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Smile, Frown, CloudRain, Zap, Home, Heart } from 'lucide-react';
 
 const moods = [
-  { name: 'Happy', icon: Smile },
-  { name: 'Sad', icon: Frown },
-  { name: 'Stressed', icon: CloudRain },
-  { name: 'Energetic', icon: Zap },
-  { name: 'Cozy', icon: Home },
-  { name: 'Romantic', icon: Heart },
+  { name: 'Happy', emoji: '😊' },
+  { name: 'Sad', emoji: '😢' },
+  { name: 'Stressed', emoji: '😫' },
+  { name: 'Energetic', emoji: '⚡️' },
+  { name: 'Cozy', emoji: '😌' },
+  { name: 'Romantic', emoji: '❤️' },
 ];
 
 interface MoodSelectorProps {
@@ -35,7 +35,7 @@ export function MoodSelector({ onSelectMood, disabled, selectedMood }: MoodSelec
             onClick={() => onSelectMood(mood.name)}
             disabled={disabled}
           >
-            <mood.icon className="h-8 w-8" />
+            <span className="text-4xl">{mood.emoji}</span>
             {mood.name}
           </Button>
         ))}
