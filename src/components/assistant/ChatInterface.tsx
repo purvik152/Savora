@@ -7,17 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, User, Sparkles, Mic, MessageSquare, Power, Volume2, VolumeX, Play, Pause } from 'lucide-react';
+import { Bot, User, Sparkles, Mic, MessageSquare, Volume2, Play, Pause, Speaker } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
 
 interface Message {
   id: string;
   role: 'user' | 'model';
   content: string;
-  audioDataUri?: string | null;
 }
 
 interface PromptHistoryMessage {
@@ -37,6 +35,11 @@ const TypingEffect = ({ text, onComplete }: { text: string, onComplete: () => vo
   
     useEffect(() => {
       setDisplayedText('');
+      if (!text) {
+        onComplete();
+        return;
+      };
+      
       let index = 0;
       const intervalId = setInterval(() => {
         setDisplayedText((prev) => prev + text.charAt(index));
@@ -50,7 +53,7 @@ const TypingEffect = ({ text, onComplete }: { text: string, onComplete: () => vo
       return () => clearInterval(intervalId);
     }, [text, onComplete]);
   
-    return <p className="text-sm whitespace-pre-wrap">{displayedText}</p>;
+    return <p id={`response-text-${text.substring(0, 10)}`} className="text-sm whitespace-pre-wrap">{displayedText}</p>;
 };
 
 const examplePrompts = [
@@ -65,16 +68,11 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
-
-  const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(true);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
-
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -156,15 +154,8 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       });
       
       if (result?.response) {
-          const modelMessage: Message = { id: `model-${messageIdCounter++}`, role: 'model', content: result.response, audioDataUri: result.audioDataUri };
+          const modelMessage: Message = { id: `model-${messageIdCounter++}`, role: 'model', content: result.response };
           setMessages(prev => [...prev, modelMessage]);
-          if(voiceOutputEnabled && result.audioDataUri) {
-              if(audioRef.current) {
-                setCurrentlyPlaying(modelMessage.id);
-                audioRef.current.src = result.audioDataUri;
-                audioRef.current.play();
-              }
-          }
       } else {
           throw new Error("The AI flow did not return a valid response.");
       }
@@ -177,30 +168,22 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     } finally {
       setLoading(false);
     }
-  }, [messages, input, loading, voiceOutputEnabled]);
+  }, [messages, input, loading]);
   
-  const handlePlayAudio = (message: Message) => {
-    if (!audioRef.current || !message.audioDataUri) return;
-
-    if (currentlyPlaying === message.id) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        setCurrentlyPlaying(null);
+  const readAloud = (text: string) => {
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel(); // Stop any previous speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
     } else {
-        setCurrentlyPlaying(message.id);
-        audioRef.current.src = message.audioDataUri;
-        audioRef.current.play();
+      toast({
+        variant: 'destructive',
+        title: 'Browser Not Supported',
+        description: 'Text-to-speech is not supported by your browser.',
+      });
     }
   };
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    const onEnded = () => setCurrentlyPlaying(null);
-    audio?.addEventListener('ended', onEnded);
-    return () => {
-        audio?.removeEventListener('ended', onEnded);
-    }
-  }, []);
 
   const ChatContainer = isDialog ? 'div' : Card;
   const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg" };
@@ -224,15 +207,6 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                         <CardDescription className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-500 inline-block"/>Online</CardDescription>
                      </div>
                 </div>
-                <Button 
-                    variant={voiceOutputEnabled ? "outline" : "secondary"}
-                    size="icon"
-                    onClick={() => setVoiceOutputEnabled(!voiceOutputEnabled)}
-                    className="rounded-full"
-                    title={voiceOutputEnabled ? "Disable voice output" : "Enable voice output"}
-                    >
-                    {voiceOutputEnabled ? <Volume2 className="h-5 w-5"/> : <VolumeX className="h-5 w-5"/>}
-                </Button>
             </div>
           </CardHeader>
           <CardContent className="flex-grow p-0 overflow-hidden">
@@ -271,27 +245,21 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                             <AvatarFallback>AI</AvatarFallback>
                         </Avatar>
                         <div
-                        className={cn(
-                            "max-w-md rounded-xl px-4 py-3 shadow-md",
-                            'bg-secondary text-secondary-foreground rounded-bl-none'
-                        )}
+                            className={cn(
+                                "max-w-md rounded-xl px-4 py-3 shadow-md",
+                                'bg-secondary text-secondary-foreground rounded-bl-none'
+                            )}
                         >
                             {index === messages.length - 1 && loading ? (
                                 <TypingEffect text={message.content} onComplete={() => setIsTyping(false)} />
                             ) : (
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                             )}
+                             <button onClick={() => readAloud(message.content)} className="mt-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
+                                <Speaker className="h-3 w-3" />
+                                Read Aloud
+                             </button>
                         </div>
-                        {message.audioDataUri && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 rounded-full"
-                                onClick={() => handlePlayAudio(message)}
-                            >
-                                {currentlyPlaying === message.id ? <Pause className="h-4 w-4"/> : <Play className="h-4 w-4" />}
-                            </Button>
-                        )}
                       </div>
                     )}
                     {message.role === 'user' && (
@@ -366,7 +334,6 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
           </div>
         </ChatContainer>
       </div>
-      <audio ref={audioRef} className="hidden"/>
     </div>
   );
 }
