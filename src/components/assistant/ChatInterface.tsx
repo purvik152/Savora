@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, User, Sparkles, Mic, MessageSquare, Speaker, StopCircle } from 'lucide-react';
+import { Bot, User, Sparkles, Mic, MessageSquare, Speaker, StopCircle, ChefHat, Carrot, Soup, Cookie } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -237,9 +237,8 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     setLoading(false);
   };
 
-
   const ChatContainer = isDialog ? 'div' : Card;
-  const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg" };
+  const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background relative overflow-hidden" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg relative overflow-hidden" };
 
   const isAssistantBusy = loading || isTyping || isSpeaking;
 
@@ -247,7 +246,15 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     <div className={cn(!isDialog && "container mx-auto px-4 py-8", isDialog && "h-full flex-1 flex flex-col")}>
       <div className={cn(!isDialog && "max-w-4xl mx-auto", isDialog && "h-full flex flex-col")}>
         <ChatContainer {...chatContainerProps}>
-          <CardHeader className="border-b-2">
+          {/* Background Doodles */}
+          <div className="absolute inset-0 z-0 pointer-events-none text-doodle/30">
+              <ChefHat className="absolute -top-4 -left-8 h-32 w-32 opacity-50 animate-float-1"/>
+              <Carrot className="absolute top-1/4 -right-10 h-24 w-24 opacity-50 animate-float-2"/>
+              <Soup className="absolute bottom-1/3 -left-12 h-28 w-28 opacity-50 animate-float-3"/>
+              <Cookie className="absolute -bottom-8 -right-8 h-32 w-32 opacity-50 animate-float-4"/>
+          </div>
+
+          <CardHeader className="border-b-2 z-10 bg-background/80 backdrop-blur-sm">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                      <div className="relative">
@@ -264,7 +271,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                 </div>
             </div>
           </CardHeader>
-          <CardContent className="flex-grow p-0 overflow-hidden">
+          <CardContent className="flex-grow p-0 overflow-hidden z-10">
             <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
               <div className="space-y-6">
                 {messages.length === 0 && (
@@ -277,7 +284,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                                 <button 
                                   key={prompt} 
                                   onClick={() => handleSendMessage(new Event('click'), prompt)}
-                                  className="p-4 border rounded-lg hover:bg-secondary text-sm font-medium transition-colors"
+                                  className="p-4 border rounded-lg hover:bg-secondary text-sm font-medium transition-colors bg-background/50 backdrop-blur-sm"
                                 >
                                   {prompt}
                                 </button>
@@ -357,7 +364,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
               </div>
             </ScrollArea>
           </CardContent>
-          <div className="p-4 border-t-2 bg-background/80">
+          <div className="p-4 border-t-2 bg-background/80 z-10 backdrop-blur-sm">
             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
               <div className="relative flex-grow">
                 <Input
