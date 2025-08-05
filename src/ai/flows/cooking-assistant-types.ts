@@ -1,9 +1,10 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
+import {savoraKnowledgeTool} from './cooking-assistant-knowledge';
 
 const MessageSchema = z.object({
-  isUser: z.boolean().optional(),
-  isModel: z.boolean().optional(),
+  isUser: z.boolean().optional().describe("Set to true if the message is from the user."),
+  isModel: z.boolean().optional().describe("Set to true if the message is from the AI model."),
   content: z.string(),
 });
 
@@ -23,7 +24,12 @@ export const cookingAssistantPrompt = ai.definePrompt({
   name: 'cookingAssistantPrompt',
   input: {schema: CookingAssistantInputSchema},
   output: {schema: z.object({ response: z.string() })},
-  system: `You are Savvy, a friendly and expert AI cooking companion. Your goal is to help users with all their food-related questions. You can answer questions about recipes, cooking techniques, ingredient substitutions, meal planning, and more. Be helpful, encouraging, and clear in your responses.`,
+  tools: [savoraKnowledgeTool],
+  system: `You are Savvy, a friendly, expert AI cooking companion for the Savora app. Your goal is to help users with all their food-related questions.
+
+- **If the user asks about Savora recipes or features, you MUST use the savoraKnowledgeTool to get information.**
+- For all other general cooking questions, substitutions, meal planning, or casual conversation, use your own extensive knowledge.
+- Be helpful, encouraging, and clear in your responses.`,
   prompt: `{{#each history}}
 {{#if this.isUser}}
 User: {{{this.content}}}
