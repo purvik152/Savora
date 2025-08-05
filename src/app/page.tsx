@@ -30,7 +30,7 @@ const allFeaturedRecipes = [
   {
     type: 'video',
     name: 'Savora in Action',
-    videoSrc: '/images/savora-promo.mp4', // <-- CHANGE THIS PATH TO YOUR VIDEO
+    videoSrc: '/images/recipes/savora-promo.mp4', // <-- CHANGE THIS PATH TO YOUR VIDEO
     description: 'See how Savora makes cooking simpler, faster, and more enjoyable.',
     href: '/#', // Link for the call to action, can be changed
     diet: 'all'
@@ -215,7 +215,7 @@ export default function Home() {
   };
   
   const handleRemoveCommunityRecipe = (recipeId: number, recipeTitle: string) => {
-    removeCommunityRecipe(recipeId,);
+    removeCommunityRecipe(recipeId);
     toast({
         title: "Recipe Removed",
         description: `"${recipeTitle}" has been removed from the community kitchen.`
