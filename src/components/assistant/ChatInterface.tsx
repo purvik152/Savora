@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, User, Sparkles, Mic, MessageSquare, Volume2, Play, Pause, Speaker } from 'lucide-react';
+import { Bot, User, Sparkles, Mic, MessageSquare, Speaker } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -132,7 +132,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     e.preventDefault();
     
     const messageContent = messageOverride ?? input;
-    if (!messageContent.trim() || loading) return;
+    if (!messageContent.trim() || loading || isTyping) return;
 
     const userMessage: Message = { id: `user-${messageIdCounter++}`, role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
@@ -168,7 +168,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     } finally {
       setLoading(false);
     }
-  }, [messages, input, loading]);
+  }, [messages, input, loading, isTyping]);
   
   const readAloud = (text: string) => {
     if ('speechSynthesis' in window) {
@@ -250,7 +250,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                                 'bg-secondary text-secondary-foreground rounded-bl-none'
                             )}
                         >
-                            {index === messages.length - 1 && loading ? (
+                            {index === messages.length - 1 && isTyping ? (
                                 <TypingEffect text={message.content} onComplete={() => setIsTyping(false)} />
                             ) : (
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
