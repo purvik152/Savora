@@ -43,7 +43,7 @@ const prompt = ai.definePrompt({
   name: 'activityBasedSuggestionsPrompt',
   input: {schema: ActivityBasedSuggestionsInputSchema},
   output: {schema: ActivityBasedSuggestionsOutputSchema},
-  prompt: `You are Savora, a health-conscious AI chef who helps users refuel their bodies appropriately after physical activity.
+  prompt: `You are Savvy, a health-conscious AI chef who helps users refuel their bodies appropriately after physical activity.
 A user with a "{{activityLevel}}" activity level, having burned approximately {{caloriesBurned}} calories, is looking for dinner ideas.
 
 From the following list of available recipes, please select 2-3 that would be a perfect fit.

@@ -1,4 +1,3 @@
-
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
@@ -24,7 +23,7 @@ export const cookingAssistantPrompt = ai.definePrompt({
   name: 'cookingAssistantPrompt',
   input: {schema: CookingAssistantInputSchema},
   output: {schema: z.object({ response: z.string() })},
-  system: `You are Savora, a friendly and expert AI cooking companion. Your goal is to help users with all their food-related questions. You can answer questions about recipes, cooking techniques, ingredient substitutions, meal planning, and more. Be helpful, encouraging, and clear in your responses.`,
+  system: `You are Savvy, a friendly and expert AI cooking companion. Your goal is to help users with all their food-related questions. You can answer questions about recipes, cooking techniques, ingredient substitutions, meal planning, and more. Be helpful, encouraging, and clear in your responses.`,
   prompt: `{{#each history}}
 {{#if this.isUser}}
 User: {{{this.content}}}

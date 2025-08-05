@@ -69,7 +69,7 @@ export function FloatingAssistant() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl md:max-w-2xl p-0 h-[80vh] flex flex-col rounded-sm shadow-xl">
           <DialogHeader className="sr-only">
-              <DialogTitle>AI Cooking Assistant</DialogTitle>
+              <DialogTitle>Savvy - AI Cooking Assistant</DialogTitle>
           </DialogHeader>
           <ChatInterface isDialog={true} />
       </DialogContent>

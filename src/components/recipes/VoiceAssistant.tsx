@@ -83,22 +83,20 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
         onStepChange?.(nextStep);
       }
       
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(responseText);
-        utterance.lang = langCode;
-        utterance.onstart = () => setIsSpeaking(true);
-        utterance.onend = () => {
-            setIsSpeaking(false);
-            // After speaking, if the session is still active, listen again.
-            if (nextStep !== -1) {
-                try {
-                    recognitionRef.current.start();
-                } catch(e) {
-                    console.error("Could not start recognition", e);
-                }
+      if ('speechSynthesis' in window && assistantResult.audioDataUri) {
+        const audio = new Audio(assistantResult.audioDataUri);
+        audio.play();
+        audio.onplay = () => setIsSpeaking(true);
+        audio.onended = () => {
+          setIsSpeaking(false);
+          if (nextStep !== -1) {
+            try {
+              recognitionRef.current.start();
+            } catch(e) {
+              console.error("Could not start recognition", e);
             }
+          }
         };
-        window.speechSynthesis.speak(utterance);
       } else {
         setIsProcessing(false);
       }
@@ -236,12 +234,12 @@ export function VoiceAssistant({ recipeTitle, instructions, language, onStartCoo
             ) : isProcessing ? (
                 <div className="flex items-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin"/>
-                    <p className="font-semibold">Savora is thinking...</p>
+                    <p className="font-semibold">Savvy is thinking...</p>
                 </div>
             ) : isSpeaking ? (
                  <div className="flex items-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin"/>
-                    <p className="font-semibold">Savora is speaking...</p>
+                    <p className="font-semibold">Savvy is speaking...</p>
                 </div>
             ) : (
                 <p className="font-medium text-lg text-foreground italic">"{assistantResponse}"</p>

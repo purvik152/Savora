@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -11,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
+import { recipeToSpeech } from './text-to-speech-flow';
 
 const RecipeAssistantInputSchema = z.object({
   recipeTitle: z.string().describe('The title of the recipe.'),
@@ -25,6 +25,7 @@ export type RecipeAssistantInput = z.infer<typeof RecipeAssistantInputSchema>;
 const RecipeAssistantOutputSchema = z.object({
   responseText: z.string().describe("The assistant's spoken response to the user. This should be the full text of the recipe instruction when requested, or a helpful answer to a question."),
   nextStep: z.number().describe("The updated step index after the interaction. This should be the index of the step the user should be on now, or -1 to end the session."),
+  audioDataUri: z.string().nullable().optional().describe('The audio version of the response as a data URI.'),
 });
 export type RecipeAssistantOutput = z.infer<typeof RecipeAssistantOutputSchema>;
 
@@ -35,8 +36,8 @@ export async function recipeAssistant(input: RecipeAssistantInput): Promise<Reci
 const prompt = ai.definePrompt({
   name: 'recipeAssistantPrompt',
   input: {schema: RecipeAssistantInputSchema},
-  output: {schema: RecipeAssistantOutputSchema},
-  prompt: `You are Savora, a friendly and helpful voice assistant for cooking. You are guiding a user through the recipe for "{{recipeTitle}}".
+  output: {schema: z.object({ responseText: z.string(), nextStep: z.number() })},
+  prompt: `You are Savvy, a friendly and helpful voice assistant for cooking. You are guiding a user through the recipe for "{{recipeTitle}}".
 
 The user's preferred language is {{language}}. YOU MUST respond clearly and concisely in this language.
 
@@ -106,16 +107,22 @@ const recipeAssistantFlow = ai.defineFlow(
         return {
             responseText: "Sorry, I didn't catch that. Please say it again.",
             nextStep: input.currentStep,
+            audioDataUri: null,
         };
     }
     
     // Safeguard for the nextStep index.
     const isOutOfBounds = output.nextStep < -1 || output.nextStep >= input.instructions.length;
     if (isOutOfBounds) {
-        // If the AI gives an invalid step, fallback to the current step.
         output.nextStep = input.currentStep;
     }
     
-    return output;
+    try {
+        const ttsResult = await recipeToSpeech(output.responseText);
+        return { ...output, audioDataUri: ttsResult.audioDataUri };
+    } catch (error) {
+        console.error("TTS Generation failed:", error);
+        return { ...output, audioDataUri: null };
+    }
   }
 );

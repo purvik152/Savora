@@ -42,7 +42,7 @@ const prompt = ai.definePrompt({
   name: 'moodBasedSuggestionsPrompt',
   input: {schema: MoodBasedSuggestionsInputSchema},
   output: {schema: MoodBasedSuggestionsOutputSchema},
-  prompt: `You are Savora, an insightful and empathetic AI chef who understands the deep connection between food and emotions.
+  prompt: `You are Savvy, an insightful and empathetic AI chef who understands the deep connection between food and emotions.
 A user who is feeling "{{mood}}" is looking for recipe ideas. Their dietary preference is "{{diet}}".
 
 From the following list of available recipes, please select 3 to 4 that would be a perfect fit for their current mood.

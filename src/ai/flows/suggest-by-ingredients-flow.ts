@@ -43,7 +43,7 @@ const prompt = ai.definePrompt({
   name: 'suggestByIngredientsPrompt',
   input: {schema: SuggestByIngredientsInputSchema},
   output: {schema: SuggestByIngredientsOutputSchema},
-  prompt: `You are Savora, a clever AI recipe finder. A user wants to cook something with the ingredients they have available.
+  prompt: `You are Savvy, a clever AI recipe finder. A user wants to cook something with the ingredients they have available.
 
 Your task is to analyze the user's ingredients and suggest 3-4 recipes from the provided list that are the best match.
 

@@ -36,12 +36,12 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   {
-    type: 'image',
+    type: 'video',
     name: 'Plan Your Week with AI',
-    image: '/images/recipes/meal-planning.jpg',
+    videoSrc: '/images/recipes/weekly-planner.mp4', 
     hint: 'meal prep containers',
     description: 'Let our intelligent AI create a personalized weekly meal plan based on your diet, goals, and allergies.',
-    href: '/meal-planner',
+    href: '/#',
     diet: 'all'
   },
   {

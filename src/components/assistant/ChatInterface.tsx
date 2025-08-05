@@ -200,8 +200,8 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
           <CardHeader className="border-b flex-row justify-between items-center">
             <div>
               <CardTitle className="flex items-center gap-3">
-                <Image src="/images/ai-logo.png" alt="Savora AI Assistant" width={40} height={40} className="rounded-full" />
-                Savora AI Cooking Assistant
+                <Image src="/images/ai-logo.png" alt="Savvy AI Assistant" width={40} height={40} className="rounded-full" />
+                Savvy - AI Cooking Assistant
               </CardTitle>
               <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
             </div>
@@ -223,7 +223,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                 {messages.length === 0 && (
                     <div className="text-center text-muted-foreground pt-16">
                         <Bot className="h-12 w-12 mx-auto mb-4" />
-                        <p className="font-semibold">Hello there!</p>
+                        <p className="font-semibold">Hi, I'm Savvy!</p>
                         <p className="text-sm">How can I help you in the kitchen today?</p>
                     </div>
                 )}
@@ -268,7 +268,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                     <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
                       <div className="flex items-center gap-2">
                          <Loader2 className="h-4 w-4 animate-spin" />
-                         <span>Savora is typing...</span>
+                         <span>Savvy is typing...</span>
                       </div>
                     </div>
                   </div>
@@ -323,4 +323,3 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     </div>
   );
 }
-
