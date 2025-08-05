@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, User, Sparkles, Mic, MessageSquare, Speaker } from 'lucide-react';
+import { Bot, User, Sparkles, Mic, MessageSquare, Speaker, StopCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -30,28 +30,38 @@ interface ChatInterfaceProps {
 
 let messageIdCounter = 0;
 
-const TypingEffect = ({ text, onComplete }: { text: string, onComplete: () => void }) => {
+const TypingEffect = ({ text, onComplete, forceComplete }: { text: string, onComplete: () => void, forceComplete: boolean }) => {
     const [displayedText, setDisplayedText] = useState('');
-  
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
     useEffect(() => {
-      setDisplayedText('');
-      if (!text) {
-        onComplete();
-        return;
-      };
-      
-      let index = 0;
-      const intervalId = setInterval(() => {
-        setDisplayedText((prev) => prev + text.charAt(index));
-        index++;
-        if (index >= text.length) {
-          clearInterval(intervalId);
-          onComplete();
+        if (forceComplete) {
+            if(intervalRef.current) clearInterval(intervalRef.current);
+            setDisplayedText(text);
+            onComplete();
+            return;
         }
-      }, 20);
-  
-      return () => clearInterval(intervalId);
-    }, [text, onComplete]);
+
+        setDisplayedText('');
+        if (!text) {
+            onComplete();
+            return;
+        }
+        
+        let index = 0;
+        intervalRef.current = setInterval(() => {
+            setDisplayedText((prev) => prev + text.charAt(index));
+            index++;
+            if (index >= text.length) {
+                if(intervalRef.current) clearInterval(intervalRef.current);
+                onComplete();
+            }
+        }, 20);
+    
+        return () => {
+            if(intervalRef.current) clearInterval(intervalRef.current);
+        };
+    }, [text, onComplete, forceComplete]);
   
     return <p id={`response-text-${text.substring(0, 10)}`} className="text-sm whitespace-pre-wrap">{displayedText}</p>;
 };
@@ -68,6 +78,9 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [forceTypingComplete, setForceTypingComplete] = useState(false);
+
 
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -146,6 +159,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     const messageContent = messageOverride ?? input;
     if (!messageContent.trim() || loading || isTyping) return;
 
+    setForceTypingComplete(false);
     const userMessage: Message = { id: `user-${messageIdCounter++}`, role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
@@ -184,10 +198,9 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   
   const readAloud = (text: string) => {
     if ('speechSynthesis' in window && speechVoices.length > 0) {
-      speechSynthesis.cancel(); // Stop any previous speech
+      speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
 
-      // Find a graceful female voice
       let selectedVoice = speechVoices.find(voice => voice.name.includes('Google') && voice.name.includes('Female'));
       if (!selectedVoice) {
         selectedVoice = speechVoices.find(voice => voice.name.includes('Microsoft') && voice.name.includes('Female'));
@@ -200,6 +213,10 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       utterance.pitch = 1;
       utterance.rate = 1;
 
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
       speechSynthesis.speak(utterance);
     } else {
       toast({
@@ -210,9 +227,21 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     }
   };
 
+  const handleStop = () => {
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel();
+    }
+    setForceTypingComplete(true);
+    setIsTyping(false);
+    setIsSpeaking(false);
+    setLoading(false);
+  };
+
 
   const ChatContainer = isDialog ? 'div' : Card;
   const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg" };
+
+  const isAssistantBusy = loading || isTyping || isSpeaking;
 
   return (
     <div className={cn(!isDialog && "container mx-auto px-4 py-8", isDialog && "h-full flex-1 flex flex-col")}>
@@ -277,7 +306,11 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                             )}
                         >
                             {index === messages.length - 1 && isTyping ? (
-                                <TypingEffect text={message.content} onComplete={() => setIsTyping(false)} />
+                                <TypingEffect 
+                                    text={message.content} 
+                                    onComplete={() => setIsTyping(false)} 
+                                    forceComplete={forceTypingComplete}
+                                />
                             ) : (
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                             )}
@@ -332,7 +365,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask Savvy anything about cooking..."
                   className="pr-20 h-12 text-base rounded-full"
-                  disabled={loading || isTyping}
+                  disabled={isAssistantBusy}
                 />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                      {isBrowserSupported && (
@@ -350,12 +383,18 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                         <span className="sr-only">Search with voice</span>
                         </Button>
                     )}
-                    <Button type="submit" disabled={loading || isTyping || !input.trim()} size="icon" className="rounded-full h-9 w-9">
+                    <Button type="submit" disabled={isAssistantBusy || !input.trim()} size="icon" className="rounded-full h-9 w-9">
                         <Sparkles className="h-5 w-5" />
                         <span className="sr-only">Send message</span>
                     </Button>
                 </div>
               </div>
+              {isAssistantBusy && (
+                <Button type="button" variant="destructive" size="icon" className="rounded-full h-12 w-12" onClick={handleStop}>
+                  <StopCircle className="h-6 w-6" />
+                  <span className="sr-only">Stop generation</span>
+                </Button>
+              )}
             </form>
           </div>
         </ChatContainer>
