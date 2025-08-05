@@ -10,63 +10,37 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ChatInterface } from '../assistant/ChatInterface';
+import { Button } from '../ui/button';
+import { SavoraLogo } from '../icons/SavoraLogo';
+import { MessageSquare } from 'lucide-react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function FloatingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <div className="fixed bottom-8 left-8 hidden lg:block z-20 group cursor-pointer" title="Meet your AI Cooking Assistant!">
-          <div className="relative w-48 h-48 animate-chef-wobble group-hover:scale-110 transition-transform duration-300">
-            <div className="absolute -bottom-2 -right-16 bg-card border rounded-full px-4 py-2 opacity-0 group-hover:opacity-100 group-hover:-translate-y-4 transition-all duration-300 ease-in-out shadow-lg">
-              <p className="font-bold text-primary">Need help?</p>
-              <div className="absolute left-4 -bottom-2 w-0 h-0 border-t-8 border-t-card border-l-8 border-l-transparent border-r-8 border-r-transparent" />
-            </div>
-            <svg
-              viewBox="0 0 200 200"
-              xmlns="http://www.w3.org/2000/svg"
-              className="relative z-10"
-            >
-              {/* Body */}
-              <path
-                d="M 50,150 C 50,80 150,80 150,150 Z"
-                fill="hsl(var(--secondary))"
-                stroke="hsl(var(--border))"
-                strokeWidth="4"
-              />
-              {/* Head */}
-              <circle cx="100" cy="80" r="40" fill="hsl(var(--secondary))" stroke="hsl(var(--border))" strokeWidth="4" />
-              <circle cx="100" cy="80" r="42" fill="transparent" stroke="hsl(var(--primary))" strokeWidth="2" strokeDasharray="4 4" className="animate-spin-slow"/>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+                <Button className="fixed bottom-8 right-8 hidden lg:flex h-16 w-16 rounded-full shadow-2xl z-20 animate-pulse-slow hover:animate-none group" size="icon">
+                    <SavoraLogo className="h-9 w-9 text-primary-foreground transition-transform duration-300 ease-in-out group-hover:scale-110" />
+                    <span className="sr-only">Open AI Assistant</span>
+                </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="left" className="mb-2">
+            <p>Chat with Savvy!</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
-              {/* Eyes */}
-              <circle cx="88" cy="80" r="6" fill="hsl(var(--primary))" />
-              <circle cx="112" cy="80" r="6" fill="hsl(var(--primary))" />
-              <circle cx="86" cy="78" r="2" fill="white" />
-              <circle cx="110" cy="78" r="2" fill="white" />
-
-              {/* Mouth */}
-              <path d="M 92 95 Q 100 105 108 95" stroke="hsl(var(--primary))" strokeWidth="3" fill="none" strokeLinecap="round"/>
-
-              {/* Apron */}
-              <path
-                  d="M 70,120 L 70,140 Q 100,160 130,140 L 130,120 Z"
-                  fill="white"
-                  stroke="hsl(var(--border))"
-                  strokeWidth="2"
-              />
-              <path
-                  d="M 80,120 L 80,110 C 80,100 120,100 120,110 L 120,120"
-                  stroke="hsl(var(--border))"
-                  strokeWidth="2"
-                  fill="none"
-              />
-             <path d="M 95,130 L 105,130" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" />
-             <path d="M 100,125 L 100,135" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" />
-            </svg>
-          </div>
-        </div>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-2xl md:max-w-4xl p-0 h-[85vh] flex flex-col rounded-sm shadow-xl">
           <DialogHeader className="sr-only">
               <DialogTitle>Savvy - AI Cooking Assistant</DialogTitle>
