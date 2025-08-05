@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, User, Sparkles, Mic, MessageSquare, Power, Volume2, VolumeX } from 'lucide-react';
+import { Bot, User, Sparkles, Mic, MessageSquare, Power, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
 interface Message {
+  id: string;
   role: 'user' | 'model';
   content: string;
   audioDataUri?: string | null;
@@ -28,6 +29,8 @@ interface PromptHistoryMessage {
 interface ChatInterfaceProps {
     isDialog?: boolean;
 }
+
+let messageIdCounter = 0;
 
 const TypingEffect = ({ text, onComplete }: { text: string, onComplete: () => void }) => {
     const [displayedText, setDisplayedText] = useState('');
@@ -70,6 +73,8 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const { toast } = useToast();
 
   const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(true);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -131,7 +136,7 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     const messageContent = messageOverride ?? input;
     if (!messageContent.trim() || loading) return;
 
-    const userMessage: Message = { role: 'user', content: messageContent };
+    const userMessage: Message = { id: `user-${messageIdCounter++}`, role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput('');
@@ -151,10 +156,11 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       });
       
       if (result?.response) {
-          const modelMessage: Message = { role: 'model', content: result.response, audioDataUri: result.audioDataUri };
+          const modelMessage: Message = { id: `model-${messageIdCounter++}`, role: 'model', content: result.response, audioDataUri: result.audioDataUri };
           setMessages(prev => [...prev, modelMessage]);
           if(voiceOutputEnabled && result.audioDataUri) {
               if(audioRef.current) {
+                setCurrentlyPlaying(modelMessage.id);
                 audioRef.current.src = result.audioDataUri;
                 audioRef.current.play();
               }
@@ -166,13 +172,36 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     } catch (error: any) {
         console.error('Error calling cooking assistant flow:', error);
         let errorMessageContent = "Sorry, I encountered an error. Please try again.";
-        const errorMessage: Message = { role: 'model', content: errorMessageContent };
+        const errorMessage: Message = { id: `model-${messageIdCounter++}`, role: 'model', content: errorMessageContent };
         setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
   }, [messages, input, loading, voiceOutputEnabled]);
   
+  const handlePlayAudio = (message: Message) => {
+    if (!audioRef.current || !message.audioDataUri) return;
+
+    if (currentlyPlaying === message.id) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setCurrentlyPlaying(null);
+    } else {
+        setCurrentlyPlaying(message.id);
+        audioRef.current.src = message.audioDataUri;
+        audioRef.current.play();
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    const onEnded = () => setCurrentlyPlaying(null);
+    audio?.addEventListener('ended', onEnded);
+    return () => {
+        audio?.removeEventListener('ended', onEnded);
+    }
+  }, []);
+
   const ChatContainer = isDialog ? 'div' : Card;
   const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg" };
 
@@ -229,37 +258,57 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                 )}
                 {messages.map((message, index) => (
                   <div
-                    key={index}
+                    key={message.id}
                     className={cn(
-                      "flex items-start gap-4 animate-fade-in-up",
+                      "flex items-start gap-2 animate-fade-in-up",
                       message.role === 'user' ? 'justify-end' : 'justify-start'
                     )}
                   >
                     {message.role === 'model' && (
-                      <Avatar className="h-9 w-9 border">
-                        <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
-                        <AvatarFallback>AI</AvatarFallback>
-                      </Avatar>
-                    )}
-                    <div
-                      className={cn(
-                        "max-w-md rounded-xl px-4 py-3 shadow-md",
-                        message.role === 'user'
-                          ? 'bg-primary text-primary-foreground rounded-br-none'
-                          : 'bg-secondary text-secondary-foreground rounded-bl-none'
-                      )}
-                    >
-                        {message.role === 'model' && index === messages.length - 1 ? (
-                            <TypingEffect text={message.content} onComplete={() => setIsTyping(false)} />
-                        ) : (
-                            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                       <div className="flex items-end gap-2">
+                        <Avatar className="h-9 w-9 border">
+                            <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
+                            <AvatarFallback>AI</AvatarFallback>
+                        </Avatar>
+                        <div
+                        className={cn(
+                            "max-w-md rounded-xl px-4 py-3 shadow-md",
+                            'bg-secondary text-secondary-foreground rounded-bl-none'
                         )}
-                    </div>
+                        >
+                            {index === messages.length - 1 && loading ? (
+                                <TypingEffect text={message.content} onComplete={() => setIsTyping(false)} />
+                            ) : (
+                                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                            )}
+                        </div>
+                        {message.audioDataUri && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full"
+                                onClick={() => handlePlayAudio(message)}
+                            >
+                                {currentlyPlaying === message.id ? <Pause className="h-4 w-4"/> : <Play className="h-4 w-4" />}
+                            </Button>
+                        )}
+                      </div>
+                    )}
                     {message.role === 'user' && (
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src="https://placehold.co/128x128.png" />
-                        <AvatarFallback>U</AvatarFallback>
-                      </Avatar>
+                       <div className="flex items-end gap-2">
+                         <div
+                            className={cn(
+                                "max-w-md rounded-xl px-4 py-3 shadow-md",
+                                'bg-primary text-primary-foreground rounded-br-none'
+                            )}
+                         >
+                            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                         </div>
+                        <Avatar className="h-9 w-9">
+                            <AvatarImage src="https://placehold.co/128x128.png" />
+                            <AvatarFallback>U</AvatarFallback>
+                        </Avatar>
+                       </div>
                     )}
                   </div>
                 ))}
