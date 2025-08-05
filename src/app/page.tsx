@@ -415,7 +415,7 @@ export default function Home() {
                   key={recipe.id} 
                   recipe={recipe} 
                   onUpvote={handleCommunityUpvote} 
-                  onRemove={handleCommunityRemoveCommunityRecipe}
+                  onRemove={handleRemoveCommunityRecipe}
                 />
             )) : (
                 <p className="text-muted-foreground text-center col-span-full">No community recipes in this view yet.</p>
