@@ -25,7 +25,17 @@ import { FloatingAssistant } from '@/components/home/FloatingAssistant';
 
 
 const allFeaturedRecipes = [
+  // You can add your video here. Just replace the videoSrc with your YouTube embed link.
   {
+    type: 'video',
+    name: 'Savora in Action',
+    videoSrc: 'https://www.youtube.com/embed/U9YKY7fdwyg?autoplay=1&mute=1&loop=1&playlist=U9YKY7fdwyg&controls=0',
+    description: 'See how Savora makes cooking simpler, faster, and more enjoyable.',
+    href: '/#', // Link for the call to action, can be changed
+    diet: 'all'
+  },
+  {
+    type: 'image',
     name: 'Plan Your Week with AI',
     image: '/images/recipes/meal-planning.jpg',
     hint: 'meal prep containers',
@@ -34,6 +44,7 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   {
+    type: 'image',
     name: 'Cook with a Voice Assistant',
     image: '/images/recipes/voice.jpg',
     hint: 'kitchen cooking voice',
@@ -42,6 +53,7 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   {
+    type: 'image',
     name: 'Discover Recipes by Mood',
     image: '/images/recipes/mood-kitchenn.jpg',
     hint: 'comfort food cozy',
@@ -50,6 +62,7 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   {
+    type: 'image',
     name: 'Join the Community Kitchen',
     image: '/images/recipes/community-kitchen.jpg',
     hint: 'community cooking class',
@@ -58,6 +71,7 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   {
+    type: 'image',
     name: 'Take the Chefs Challenge',
     image: '/images/recipes/chef-challengee.jpg',
     hint: 'mystery box ingredients',
@@ -224,12 +238,21 @@ export default function Home() {
             ]}
           >
             <CarouselContent>
-              {featuredRecipes.map((recipe, index) => (
+               {featuredRecipes.map((recipe, index) => (
                 <CarouselItem key={index}>
                   <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
-                    <Link href={recipe.href} className="block h-full w-full group">
+                    {recipe.type === 'video' ? (
+                       <iframe
+                        src={recipe.videoSrc}
+                        className="absolute top-0 left-0 w-full h-full border-0"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowFullScreen
+                        title={recipe.name}
+                      ></iframe>
+                    ) : (
+                      <Link href={recipe.href} className="block h-full w-full group">
                         <Image
-                          src={recipe.image}
+                          src={recipe.image!}
                           alt={recipe.name}
                           fill
                           sizes="100vw"
@@ -237,12 +260,13 @@ export default function Home() {
                           data-ai-hint={recipe.hint}
                           priority
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-                        <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
-                          <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
-                          <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
-                        </div>
-                    </Link>
+                      </Link>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
+                      <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
+                      <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
+                    </div>
                   </div>
                 </CarouselItem>
               ))}
