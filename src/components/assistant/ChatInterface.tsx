@@ -7,22 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Loader2, User, Sparkles, Mic, Volume2, VolumeX, Pause, Power, Play } from 'lucide-react';
+import { Bot, Loader2, User, Sparkles, Mic, MessageSquare, Power } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { Switch } from '../ui/switch';
-import { Label } from '../ui/label';
-
 
 interface Message {
   role: 'user' | 'model';
   content: string;
-  audioDataUri?: string | null;
 }
 
-// The new format that the prompt expects
 interface PromptHistoryMessage {
     isUser?: boolean;
     isModel?: boolean;
@@ -33,14 +28,17 @@ interface ChatInterfaceProps {
     isDialog?: boolean;
 }
 
+const examplePrompts = [
+    "How do I substitute eggs in a recipe?",
+    "What's a good recipe for a quick dinner?",
+    "Tell me about the Mood Kitchen feature.",
+];
+
 export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   const [isListening, setIsListening] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(true);
@@ -65,6 +63,8 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setInput(transcript);
+      // Automatically send the message after voice input
+      handleSendMessage(event, transcript);
     };
 
     recognition.onerror = (event: any) => {
@@ -80,26 +80,6 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
     
     recognitionRef.current = recognition;
   }, [toast]);
-  
-  // Set up audio element listeners
-  useEffect(() => {
-    const audioElement = audioRef.current;
-    if (audioElement) {
-        const handlePlay = () => setIsAudioPlaying(true);
-        const handlePause = () => setIsAudioPlaying(false);
-        const handleEnded = () => setIsAudioPlaying(false);
-
-        audioElement.addEventListener('play', handlePlay);
-        audioElement.addEventListener('pause', handlePause);
-        audioElement.addEventListener('ended', handleEnded);
-
-        return () => {
-            audioElement.removeEventListener('play', handlePlay);
-            audioElement.removeEventListener('pause', handlePause);
-            audioElement.removeEventListener('ended', handleEnded);
-        };
-    }
-  }, []);
 
   const handleVoiceSearch = () => {
     if (isListening) {
@@ -118,31 +98,22 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
             viewport.scrollTop = viewport.scrollHeight;
         }
     }
-  }, [messages]);
+  }, [messages, loading]);
 
 
-  const handleSendMessage = useCallback(async (e: React.FormEvent | string) => {
-    if (typeof e !== 'string') {
-        e.preventDefault();
-    }
+  const handleSendMessage = useCallback(async (e: React.FormEvent | Event, messageOverride?: string) => {
+    e.preventDefault();
     
-    const messageContent = typeof e === 'string' ? e : input;
+    const messageContent = messageOverride ?? input;
     if (!messageContent.trim() || loading) return;
-
-    // Stop any currently playing audio before sending a new message
-    if (audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-    }
 
     const userMessage: Message = { role: 'user', content: messageContent };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    if(typeof e !== 'string') setInput('');
+    setInput('');
     setLoading(true);
 
     try {
-      // Convert the message history to the format the prompt now expects
       const history: PromptHistoryMessage[] = newMessages.slice(0, -1).map(msg => ({
           isUser: msg.role === 'user',
           isModel: msg.role === 'model',
@@ -155,104 +126,91 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
       });
       
       if (result?.response) {
-          const modelMessage: Message = { role: 'model', content: result.response, audioDataUri: result.audioDataUri };
+          const modelMessage: Message = { role: 'model', content: result.response };
           setMessages(prev => [...prev, modelMessage]);
-          if (isAudioEnabled && result.audioDataUri && audioRef.current) {
-            audioRef.current.src = result.audioDataUri;
-            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
-          }
       } else {
-          throw new Error("The AI flow did not return a valid response, so no audio could be generated.");
+          throw new Error("The AI flow did not return a valid response.");
       }
 
     } catch (error: any) {
         console.error('Error calling cooking assistant flow:', error);
         let errorMessageContent = "Sorry, I encountered an error. Please try again.";
-        // Check if the error message from the flow should be displayed
-        if (error.message && error.message.includes("The AI flow did not return a valid response")) {
-            errorMessageContent = error.message;
-        }
         const errorMessage: Message = { role: 'model', content: errorMessageContent };
         setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
-  }, [messages, input, loading, isAudioEnabled]);
-
-  const handleAudioPlayback = () => {
-    if (audioRef.current) {
-        if (audioRef.current.paused) {
-            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
-        } else {
-            audioRef.current.pause();
-        }
-    }
-  };
+  }, [messages, input, loading]);
   
   const ChatContainer = isDialog ? 'div' : Card;
-  const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1" } : { className: "h-[75vh] flex flex-col" };
-
+  const chatContainerProps = isDialog ? { className: "h-full flex flex-col flex-1 bg-background" } : { className: "h-[85vh] flex flex-col shadow-2xl rounded-lg" };
 
   return (
-    <div className={cn(!isDialog && "container mx-auto px-4 py-8 md:py-16", isDialog && "h-full flex-1 flex-col")}>
-      <div className={cn(!isDialog && "max-w-3xl mx-auto", isDialog && "h-full flex flex-col")}>
+    <div className={cn(!isDialog && "container mx-auto px-4 py-8", isDialog && "h-full flex-1 flex flex-col")}>
+      <div className={cn(!isDialog && "max-w-4xl mx-auto", isDialog && "h-full flex flex-col")}>
         <ChatContainer {...chatContainerProps}>
-          <CardHeader className="border-b flex-row justify-between items-center">
-            <div>
-              <CardTitle className="flex items-center gap-3">
-                <Image src="/images/ai-logo.png" alt="Savvy AI Assistant" width={40} height={40} className="rounded-full" />
-                Savvy - AI Cooking Assistant
-              </CardTitle>
-              <CardDescription>Ask me anything about cooking, recipes, or substitutions!</CardDescription>
-            </div>
-             <div className="flex items-center space-x-2">
-                <Switch 
-                    id="audio-responses" 
-                    checked={isAudioEnabled}
-                    onCheckedChange={setIsAudioEnabled}
-                />
-                <Label htmlFor="audio-responses" className="flex items-center gap-1">
-                    {isAudioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-muted-foreground"/>}
-                    <span className="sr-only">Spoken Responses</span>
-                </Label>
+          <CardHeader className="border-b-2">
+            <div className="flex items-center gap-4">
+                 <div className="relative">
+                    <Avatar className="h-12 w-12 border-2 border-primary/50">
+                        <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
+                        <AvatarFallback>AI</AvatarFallback>
+                    </Avatar>
+                    <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
+                 </div>
+                 <div>
+                    <CardTitle className="text-xl">Savvy - AI Cooking Assistant</CardTitle>
+                    <CardDescription className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-500 inline-block"/>Online</CardDescription>
+                 </div>
             </div>
           </CardHeader>
           <CardContent className="flex-grow p-0 overflow-hidden">
             <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
               <div className="space-y-6">
                 {messages.length === 0 && (
-                    <div className="text-center text-muted-foreground pt-16">
-                        <Bot className="h-12 w-12 mx-auto mb-4" />
-                        <p className="font-semibold">Hi, I'm Savvy!</p>
-                        <p className="text-sm">How can I help you in the kitchen today?</p>
+                    <div className="text-center text-muted-foreground pt-10 animate-fade-in-up">
+                        <MessageSquare className="h-16 w-16 mx-auto mb-6 text-primary/80" />
+                        <h2 className="text-2xl font-bold text-foreground">Hi, I'm Savvy!</h2>
+                        <p className="mt-2 mb-8">How can I help you in the kitchen today?</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+                            {examplePrompts.map(prompt => (
+                                <button 
+                                  key={prompt} 
+                                  onClick={() => handleSendMessage(new Event('click'), prompt)}
+                                  className="p-4 border rounded-lg hover:bg-secondary text-sm font-medium transition-colors"
+                                >
+                                  {prompt}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
                 {messages.map((message, index) => (
                   <div
                     key={index}
                     className={cn(
-                      "flex items-start gap-4",
+                      "flex items-start gap-4 animate-fade-in-up",
                       message.role === 'user' ? 'justify-end' : 'justify-start'
                     )}
                   >
                     {message.role === 'model' && (
-                      <Avatar className="h-8 w-8 border-2 border-primary">
+                      <Avatar className="h-9 w-9 border">
                         <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
                         <AvatarFallback>AI</AvatarFallback>
                       </Avatar>
                     )}
                     <div
                       className={cn(
-                        "max-w-sm sm:max-w-md md:max-w-lg rounded-xl px-4 py-3 shadow-md",
+                        "max-w-md rounded-xl px-4 py-3 shadow-md",
                         message.role === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-secondary text-secondary-foreground'
+                          ? 'bg-primary text-primary-foreground rounded-br-none'
+                          : 'bg-secondary text-secondary-foreground rounded-bl-none'
                       )}
                     >
-                      <p className="text-sm">{message.content}</p>
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     </div>
                     {message.role === 'user' && (
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="h-9 w-9">
                         <AvatarImage src="https://placehold.co/128x128.png" />
                         <AvatarFallback>U</AvatarFallback>
                       </Avatar>
@@ -260,15 +218,16 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
                   </div>
                 ))}
                 {loading && (
-                  <div className="flex items-start gap-4 justify-start">
-                    <Avatar className="h-8 w-8 border-2 border-primary">
+                  <div className="flex items-start gap-4 justify-start animate-fade-in-up">
+                    <Avatar className="h-9 w-9 border">
                       <AvatarImage src="/images/ai-logo.png" alt="AI Assistant" />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
-                    <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
+                    <div className="max-w-sm rounded-xl px-4 py-3 shadow-md bg-secondary text-secondary-foreground rounded-bl-none">
                       <div className="flex items-center gap-2">
-                         <Loader2 className="h-4 w-4 animate-spin" />
-                         <span>Savvy is typing...</span>
+                         <span className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0s'}}/>
+                         <span className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}/>
+                         <span className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.4s'}}/>
                       </div>
                     </div>
                   </div>
@@ -276,49 +235,41 @@ export function ChatInterface({ isDialog = false }: ChatInterfaceProps) {
               </div>
             </ScrollArea>
           </CardContent>
-          <div className="p-4 border-t space-y-2">
-             <div className="flex justify-center gap-2">
-                <Button variant="outline" size="sm" onClick={handleAudioPlayback} disabled={loading || !messages.some(m => m.audioDataUri)}>
-                    {isAudioPlaying ? <Pause className="h-4 w-4 mr-2"/> : <Play className="h-4 w-4 mr-2" />}
-                    {isAudioPlaying ? 'Pause' : 'Play'}
-                </Button>
-                 <Button variant="destructive" size="sm" onClick={() => handleSendMessage('end session')} disabled={loading}>
-                    <Power className="h-4 w-4 mr-2"/> End Session
-                </Button>
-            </div>
+          <div className="p-4 border-t-2 bg-background/80">
             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
               <div className="relative flex-grow">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="e.g., How can I substitute eggs in this recipe?"
-                  className="pr-10"
+                  placeholder="Ask Savvy anything about cooking..."
+                  className="pr-20 h-12 text-base rounded-full"
                   disabled={loading}
                 />
-                 {isBrowserSupported && (
-                    <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleVoiceSearch}
-                    className={cn(
-                        "absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8",
-                        isListening && 'text-destructive animate-pulse'
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                     {isBrowserSupported && (
+                        <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleVoiceSearch}
+                        className={cn(
+                            "rounded-full h-9 w-9",
+                            isListening && 'text-destructive bg-destructive/10 animate-pulse'
+                        )}
+                        >
+                        <Mic className="h-5 w-5" />
+                        <span className="sr-only">Search with voice</span>
+                        </Button>
                     )}
-                    >
-                    <Mic className="h-4 w-4" />
-                    <span className="sr-only">Search with voice</span>
+                    <Button type="submit" disabled={loading || !input.trim()} size="icon" className="rounded-full h-9 w-9">
+                        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
+                        <span className="sr-only">Send message</span>
                     </Button>
-                )}
+                </div>
               </div>
-              <Button type="submit" disabled={loading || !input.trim()}>
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                <span className="sr-only">Send message</span>
-              </Button>
             </form>
           </div>
         </ChatContainer>
-        <audio ref={audioRef} className="hidden" />
       </div>
     </div>
   );
