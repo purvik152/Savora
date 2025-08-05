@@ -191,7 +191,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                     <li key={recipe.id}>
                       <Link
                         href={`/recipes/${recipe.slug}`}
-                        className="flex items-center gap-4 p-2 rounded-md hover:bg-accent"
+                        className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary"
                         onClick={handleResultClick}
                       >
                         <Image
