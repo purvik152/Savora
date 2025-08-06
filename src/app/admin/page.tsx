@@ -12,7 +12,7 @@ function AdminDashboard() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12">
             <div className='text-center md:text-left'>
                 <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-                <p className="text-muted-foreground mt-1">Welcome, Admin.</p>
+                <p className="text-muted-foreground mt-1 max-w-2xl">Manage users, recipes, and site analytics from this central hub. Approve community submissions and monitor the health of the application.</p>
             </div>
              <Button variant="outline">Logout</Button>
         </div>

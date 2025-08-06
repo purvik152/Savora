@@ -152,7 +152,7 @@ function RecipesContent() {
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="text-center mb-12 animate-fade-in-up">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Explore Our Recipes</h1>
-        <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">From quick bites to family feasts, find your next favorite meal here.</p>
+        <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">From quick bites to family feasts, find your next favorite meal here. Browse by cuisine or filter by country.</p>
       </div>
       
       <div className="max-w-md mx-auto mb-12 animate-fade-in-up" style={{animationDelay: '100ms'}}>

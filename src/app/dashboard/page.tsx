@@ -176,6 +176,7 @@ export default function DashboardPage() {
         <div className="text-center md:text-left">
           <h1 className="text-4xl font-bold">{user.name}</h1>
           <p className="text-muted-foreground mt-1">{user.email}</p>
+          <p className="text-muted-foreground mt-2 max-w-xl">This is your personal space to track your culinary journey, manage your favorite recipes, and access offline content.</p>
           <div className="flex items-center justify-center md:justify-start gap-6 mt-4 text-muted-foreground">
             <div className="text-center">
               <p className="text-2xl font-bold text-foreground">{filteredPastRecipes.length}</p>

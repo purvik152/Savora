@@ -87,7 +87,7 @@ export default function NewsPage() {
         <Newspaper className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Food & Health News</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Stay updated with the latest headlines, or get a personalized feed based on your tastes.
+          Stay updated with the latest headlines, or get a personalized feed based on your dietary interests and cooking habits.
         </p>
       </div>
       

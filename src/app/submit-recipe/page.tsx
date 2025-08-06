@@ -1,3 +1,4 @@
+
 import { SubmitRecipeForm } from '@/components/community/SubmitRecipeForm';
 import { Upload } from 'lucide-react';
 
@@ -8,7 +9,7 @@ export default function SubmitRecipePage() {
         <Upload className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Share Your Recipe</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Become a part of the Savora community by sharing your own culinary creations. Fill out the form below to get started.
+          Become a part of the Savora community by sharing your own culinary creations. Fill out the form below and let our AI help you with titles and images!
         </p>
       </div>
       <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
