@@ -29,6 +29,15 @@ const allFeaturedRecipes = [
   // 2. Change the `videoSrc` below to `/images/my-video.mp4`.
   {
     type: 'video',
+    name: 'Take the Chefs Challenge',
+    videoSrc: '/images/recipes/chef-challange.mp4', 
+    hint: 'mystery box ingredients',
+    description: 'Challenge our AI chef to invent a brand new recipe from a random set of ingredients.',
+    href: '/chef-challenge',
+    diet: 'all'
+  },
+  {
+    type: 'video',
     name: 'Join the Community Kitchen',
     videoSrc: '/images/recipes/savora-promo.mp4', // <-- CHANGE THIS PATH TO YOUR VIDEO
     hint: 'community cooking class',
@@ -64,15 +73,7 @@ const allFeaturedRecipes = [
     diet: 'all'
   },
   
-  {
-    type: 'image',
-    name: 'Take the Chefs Challenge',
-    image: '/images/recipes/chef-challengee.jpg',
-    hint: 'mystery box ingredients',
-    description: 'Challenge our AI chef to invent a brand new recipe from a random set of ingredients.',
-    href: '/chef-challenge',
-    diet: 'all'
-  },
+
 ];
 
 const allSubCategories = [
@@ -226,7 +227,7 @@ export default function Home() {
             className="w-full"
             plugins={[
               Autoplay({
-                delay: 5000,
+                delay: 8000,
                 stopOnInteraction: true,
               }),
             ]}
