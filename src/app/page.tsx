@@ -29,10 +29,11 @@ const allFeaturedRecipes = [
   // 2. Change the `videoSrc` below to `/images/my-video.mp4`.
   {
     type: 'video',
-    name: 'Savora in Action',
+    name: 'Join the Community Kitchen',
     videoSrc: '/images/recipes/savora-promo.mp4', // <-- CHANGE THIS PATH TO YOUR VIDEO
-    description: 'See how Savora makes cooking simpler, faster, and more enjoyable.',
-    href: '/#', // Link for the call to action, can be changed
+    hint: 'community cooking class',
+    description: 'Share your own creations and discover new favorites from home cooks just like you.',
+    href: '/community',
     diet: 'all'
   },
   {
@@ -41,36 +42,28 @@ const allFeaturedRecipes = [
     videoSrc: '/images/recipes/weekly-planner.mp4', 
     hint: 'meal prep containers',
     description: 'Let our intelligent AI create a personalized weekly meal plan based on your diet, goals, and allergies.',
-    href: '/#',
+    href: '/meal-planner',
     diet: 'all'
   },
   {
-    type: 'image',
+    type: 'video',
     name: 'Cook with a Voice Assistant',
-    image: '/images/recipes/voice.jpg',
+    videoSrc: '/images/recipes/ai-cook.mp4', 
     hint: 'kitchen cooking voice',
     description: 'Navigate recipes hands-free. Just tell Savora to start, stop, or go to the next step.',
     href: '/recipes/creamy-tomato-pasta',
     diet: 'all'
   },
   {
-    type: 'image',
+    type: 'video',
     name: 'Discover Recipes by Mood',
-    image: '/images/recipes/mood-kitchenn.jpg',
+    videoSrc: '/images/recipes/mood-kitchen.mp4', 
     hint: 'comfort food cozy',
     description: 'Feeling cozy, energetic, or stressed? Our Mood Kitchen suggests the perfect dish for how you feel.',
     href: '/mood-kitchen',
     diet: 'all'
   },
-  {
-    type: 'image',
-    name: 'Join the Community Kitchen',
-    image: '/images/recipes/community-kitchen.jpg',
-    hint: 'community cooking class',
-    description: 'Share your own creations and discover new favorites from home cooks just like you.',
-    href: '/community',
-    diet: 'all'
-  },
+  
   {
     type: 'image',
     name: 'Take the Chefs Challenge',
@@ -241,37 +234,37 @@ export default function Home() {
             <CarouselContent>
                {featuredRecipes.map((recipe, index) => (
                 <CarouselItem key={index}>
-                  <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
-                    {recipe.type === 'video' ? (
-                       <video
-                        src={recipe.videoSrc}
-                        className="absolute top-0 left-0 w-full h-full object-cover"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : (
-                      <Link href={recipe.href} className="block h-full w-full group">
-                        <Image
-                          src={recipe.image!}
-                          alt={recipe.name}
-                          fill
-                          sizes="100vw"
-                          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                          data-ai-hint={recipe.hint}
-                          priority
-                        />
-                      </Link>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
-                      <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
-                      <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
+                  <Link href={recipe.href} className="block h-full w-full group">
+                    <div className="relative h-[550px] w-full overflow-hidden rounded-sm bg-secondary">
+                      {recipe.type === 'video' ? (
+                        <video
+                          src={recipe.videoSrc}
+                          className="absolute top-0 left-0 w-full h-full object-cover"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                          <Image
+                            src={recipe.image!}
+                            alt={recipe.name}
+                            fill
+                            sizes="100vw"
+                            className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                            data-ai-hint={recipe.hint}
+                            priority
+                          />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none" />
+                      <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
+                        <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg animate-zoom-in">{recipe.name}</h2>
+                        <p className="mt-2 text-lg max-w-xl drop-shadow-md">{recipe.description}</p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </CarouselItem>
               ))}
             </CarouselContent>
